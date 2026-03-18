@@ -1,0 +1,5 @@
+[project]
+name = "steam-analyzer"
+version = "0.1.0"
+description = "Steam game data analyzer (placeholder)"
+requires-python = ">=3.12"
