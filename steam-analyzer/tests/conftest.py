@@ -15,6 +15,8 @@ def db_conn(db_path):
     from steam_crawler.db.schema import init_db
 
     conn = init_db(str(db_path))
+    from steam_analyzer.error_logger import init_analysis_logs
+    init_analysis_logs(conn)
     yield conn
     conn.close()
 
