@@ -13,10 +13,12 @@ from steam_crawler.api.rate_limiter import (
 )
 from steam_crawler.api.resilience import FailureTracker
 from steam_crawler.api.steam_reviews import SteamReviewsClient
+from steam_crawler.api.steam_store import SteamStoreClient
 from steam_crawler.api.steamspy import SteamSpyClient
 from steam_crawler.db.repository import create_version, update_version_status
 from steam_crawler.pipeline.step1_collect import run_step1
 from steam_crawler.pipeline.step1b_enrich import run_step1b
+from steam_crawler.pipeline.step1c_store import run_step1c
 from steam_crawler.pipeline.step2_scan import run_step2
 from steam_crawler.pipeline.step3_crawl import run_step3
 
@@ -72,12 +74,15 @@ def run_pipeline(
 
     spy_delay = load_optimal_delay(conn, "steamspy") or 1000
     rev_delay = load_optimal_delay(conn, "steam_reviews") or 1500
+    store_delay = load_optimal_delay(conn, "steam_store") or 1500
     spy_limiter = AdaptiveRateLimiter(api_name="steamspy", default_delay_ms=spy_delay)
     rev_limiter = AdaptiveRateLimiter(
         api_name="steam_reviews", default_delay_ms=rev_delay
     )
+    store_limiter = AdaptiveRateLimiter(api_name="steam_store", default_delay_ms=store_delay)
     spy_client = SteamSpyClient(rate_limiter=spy_limiter)
     rev_client = SteamReviewsClient(rate_limiter=rev_limiter)
+    store_client = SteamStoreClient(rate_limiter=store_limiter)
 
     # Resume: find last interrupted version
     if resume:
@@ -138,6 +143,10 @@ def run_pipeline(
             run_step1b(
                 conn, version, source_tag=source_tag, steamspy_client=spy_client
             )
+            run_step1c(
+                conn, version, source_tag=source_tag, store_client=store_client,
+                failure_tracker=tracker,
+            )
         if step is None or step == 2:
             run_step2(
                 conn,
@@ -191,6 +200,7 @@ def run_pipeline(
     finally:
         save_rate_stats(conn, spy_limiter, session_id=version)
         save_rate_stats(conn, rev_limiter, session_id=version)
+        save_rate_stats(conn, store_limiter, session_id=version)
 
         summary = tracker.get_session_summary(conn, session_id=version)
         if summary["total"] > 0:
@@ -202,3 +212,4 @@ def run_pipeline(
 
         spy_client.close()
         rev_client.close()
+        store_client.close()

@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS games (
     steam_positive INTEGER,
     steam_negative INTEGER,
     review_score   TEXT,
+    short_description TEXT,
+    header_image   TEXT,
     source_tag     TEXT,
     first_seen_ver INTEGER,
     updated_at     TIMESTAMP
@@ -136,6 +138,18 @@ CREATE TABLE IF NOT EXISTS game_genres (
 );
 
 CREATE INDEX IF NOT EXISTS idx_game_genres_genre ON game_genres(genre_name);
+
+CREATE TABLE IF NOT EXISTS game_media (
+    appid          INTEGER REFERENCES games(appid),
+    media_type     TEXT NOT NULL,
+    media_id       INTEGER NOT NULL,
+    name           TEXT,
+    url_thumbnail  TEXT,
+    url_full       TEXT,
+    PRIMARY KEY (appid, media_type, media_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_media_appid ON game_media(appid);
 
 CREATE TABLE IF NOT EXISTS game_collection_status (
     appid           INTEGER,

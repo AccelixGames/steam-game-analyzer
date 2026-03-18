@@ -283,6 +283,39 @@ def upsert_game_tags(conn: sqlite3.Connection, appid: int, tags: dict[str, int])
     return inserted
 
 
+def update_game_store_details(
+    conn: sqlite3.Connection,
+    appid: int,
+    short_description: str | None = None,
+    header_image: str | None = None,
+) -> None:
+    """Update store page details on the games table."""
+    conn.execute(
+        "UPDATE games SET short_description=?, header_image=?, updated_at=? WHERE appid=?",
+        (short_description, header_image, _now(), appid),
+    )
+    conn.commit()
+
+
+def upsert_game_media(
+    conn: sqlite3.Connection,
+    appid: int,
+    media_type: str,
+    media_id: int,
+    name: str | None = None,
+    url_thumbnail: str | None = None,
+    url_full: str | None = None,
+) -> None:
+    """Insert or replace a media item (screenshot or movie)."""
+    conn.execute(
+        """INSERT OR REPLACE INTO game_media
+        (appid, media_type, media_id, name, url_thumbnail, url_full)
+        VALUES (?, ?, ?, ?, ?, ?)""",
+        (appid, media_type, media_id, name, url_thumbnail, url_full),
+    )
+    conn.commit()
+
+
 def update_collection_status(
     conn: sqlite3.Connection, appid: int, version: int, **kwargs: Any
 ) -> None:

@@ -14,6 +14,7 @@ def test_init_db_creates_all_tables(db_conn):
         "game_tags",
         "genre_catalog",
         "game_genres",
+        "game_media",
         "game_collection_status",
     }
     assert expected.issubset(tables)
@@ -41,4 +42,4 @@ def test_init_db_is_idempotent(db_path):
         "SELECT count(*) FROM sqlite_master WHERE type='table'"
     ).fetchone()[0]
     conn2.close()
-    assert tables >= 11
+    assert tables >= 12
