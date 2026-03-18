@@ -23,6 +23,7 @@ def run_step1e(
     api_key: str | None = None,
     rawg_client: RAWGClient | None = None,
     failure_tracker: FailureTracker | None = None,
+    lock_owner: str | None = None,
 ) -> int:
     """Enrich games with RAWG data. Returns count enriched."""
     if api_key is None and rawg_client is None:
@@ -32,7 +33,7 @@ def run_step1e(
     client = rawg_client or RAWGClient(api_key=api_key)
     tracker = failure_tracker or FailureTracker()
     matcher = GameMatcher()
-    games = get_games_needing_enrichment(conn, source="rawg", source_tag=source_tag)
+    games = get_games_needing_enrichment(conn, source="rawg", source_tag=source_tag, lock_owner=lock_owner)
     enriched = 0
 
     if not games:
@@ -67,11 +68,34 @@ def run_step1e(
                 if details is None:
                     continue
 
+                # Parse added_by_status (retention proxy)
+                abs_data = details.get("added_by_status") or {}
+                # Parse ratings (list of {id, title, count, percent})
+                ratings_data = details.get("ratings") or []
+                rating_pcts = {}
+                for r in ratings_data:
+                    title = r.get("title", "")
+                    pct = r.get("percent", 0.0)
+                    if title in ("exceptional", "recommended", "meh", "skip"):
+                        rating_pcts[f"rawg_{title}_pct"] = pct
+
                 update_game_rawg_details(
                     conn, appid=appid, rawg_id=rawg_id,
                     rawg_description=details.get("description_raw"),
                     rawg_rating=details.get("rating"),
                     metacritic_score=details.get("metacritic"),
+                    rawg_ratings_count=details.get("ratings_count"),
+                    rawg_added=details.get("added"),
+                    rawg_status_yet=abs_data.get("yet"),
+                    rawg_status_owned=abs_data.get("owned"),
+                    rawg_status_beaten=abs_data.get("beaten"),
+                    rawg_status_toplay=abs_data.get("toplay"),
+                    rawg_status_dropped=abs_data.get("dropped"),
+                    rawg_status_playing=abs_data.get("playing"),
+                    rawg_exceptional_pct=rating_pcts.get("rawg_exceptional_pct"),
+                    rawg_recommended_pct=rating_pcts.get("rawg_recommended_pct"),
+                    rawg_meh_pct=rating_pcts.get("rawg_meh_pct"),
+                    rawg_skip_pct=rating_pcts.get("rawg_skip_pct"),
                 )
                 enriched += 1
 
