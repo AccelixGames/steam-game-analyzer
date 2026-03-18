@@ -8,6 +8,13 @@ from steam_crawler.models.game import GameSummary
 
 STEAMSPY_BASE = "https://steamspy.com/api.php"
 
+# Valve-defined Steam genres (fixed list)
+STEAM_GENRES = [
+    "Action", "Adventure", "Casual", "Early Access", "Free To Play",
+    "Indie", "Massively Multiplayer", "RPG", "Racing", "Simulation",
+    "Sports", "Strategy",
+]
+
 
 class SteamSpyClient:
     def __init__(self, rate_limiter: AdaptiveRateLimiter | None = None):
@@ -47,6 +54,13 @@ class SteamSpyClient:
         if limit:
             games = games[:limit]
         return games
+
+    def fetch_genre_count(self, genre: str) -> int:
+        """Fetch the number of games in a genre without parsing individual games."""
+        response = self._client.get(STEAMSPY_BASE, params={"request": "genre", "genre": genre})
+        response.raise_for_status()
+        data = response.json()
+        return sum(1 for v in data.values() if isinstance(v, dict) and "appid" in v)
 
     def close(self):
         self._client.close()

@@ -122,5 +122,40 @@ def status(db):
     conn.close()
 
 
+@main.command()
+def genres():
+    """Fetch and display all Steam genres with game counts from SteamSpy."""
+    from steam_crawler.api.steamspy import SteamSpyClient, STEAM_GENRES
+
+    console.print("[bold]Fetching genre data from SteamSpy...[/bold]")
+    client = SteamSpyClient()
+
+    table = Table(title="Steam Genres")
+    table.add_column("#", style="dim")
+    table.add_column("Genre", style="bold")
+    table.add_column("Games", justify="right")
+
+    results = []
+    for genre in STEAM_GENRES:
+        try:
+            count = client.fetch_genre_count(genre)
+            results.append((genre, count))
+            console.print(f"  {genre}: {count:,}")
+        except Exception as e:
+            results.append((genre, -1))
+            console.print(f"  [red]{genre}: error ({e})[/red]")
+
+    client.close()
+
+    results.sort(key=lambda x: x[1], reverse=True)
+    for i, (genre, count) in enumerate(results, 1):
+        count_str = f"{count:,}" if count >= 0 else "error"
+        table.add_row(str(i), genre, count_str)
+
+    console.print()
+    console.print(table)
+    console.print(f"\n[dim]Total: {sum(c for _, c in results if c > 0):,} game-genre entries[/dim]")
+
+
 if __name__ == "__main__":
     main()
