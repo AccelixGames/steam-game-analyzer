@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS games (
     review_score   TEXT,
     short_description_en TEXT,
     short_description_ko TEXT,
+    detailed_description_en TEXT,
+    detailed_description_ko TEXT,
     header_image   TEXT,
     igdb_id          INTEGER,
     igdb_summary     TEXT,
@@ -209,6 +211,13 @@ CREATE TABLE IF NOT EXISTS game_collection_status (
     updated_at      TIMESTAMP,
     PRIMARY KEY (appid, version)
 );
+
+CREATE TABLE IF NOT EXISTS crawl_locks (
+    appid       INTEGER PRIMARY KEY,
+    locked_at   TIMESTAMP NOT NULL,
+    expires_at  TIMESTAMP NOT NULL,
+    owner       TEXT
+);
 """
 
 
@@ -222,4 +231,38 @@ def init_db(db_path: str) -> sqlite3.Connection:
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
     conn.executescript(SCHEMA_SQL)
+    _migrate(conn)
     return conn
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Add columns that may be missing in older databases."""
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(games)").fetchall()}
+    migrations = [
+        ("detailed_description_en", "TEXT"),
+        ("detailed_description_ko", "TEXT"),
+        # RAWG retention proxy
+        ("rawg_ratings_count", "INTEGER"),
+        ("rawg_added", "INTEGER"),
+        ("rawg_status_yet", "INTEGER"),
+        ("rawg_status_owned", "INTEGER"),
+        ("rawg_status_beaten", "INTEGER"),
+        ("rawg_status_toplay", "INTEGER"),
+        ("rawg_status_dropped", "INTEGER"),
+        ("rawg_status_playing", "INTEGER"),
+        ("rawg_exceptional_pct", "REAL"),
+        ("rawg_recommended_pct", "REAL"),
+        ("rawg_meh_pct", "REAL"),
+        ("rawg_skip_pct", "REAL"),
+        # Twitch streaming
+        ("twitch_game_id", "TEXT"),
+        ("twitch_stream_count", "INTEGER"),
+        ("twitch_viewer_count", "INTEGER"),
+        ("twitch_top_language", "TEXT"),
+        ("twitch_lang_distribution", "TEXT"),
+        ("twitch_fetched_at", "TIMESTAMP"),
+    ]
+    for col, col_type in migrations:
+        if col not in existing:
+            conn.execute(f"ALTER TABLE games ADD COLUMN {col} {col_type}")
+    conn.commit()

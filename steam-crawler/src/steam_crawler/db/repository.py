@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import sqlite3
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from steam_crawler.models.game import GameSummary
@@ -97,13 +97,19 @@ def insert_reviews_batch(
     for review in reviews:
         cursor = conn.execute(
             """
-            INSERT OR IGNORE INTO reviews
+            INSERT INTO reviews
                 (recommendation_id, appid, language, review_text, voted_up,
                  playtime_forever, playtime_at_review, early_access, steam_purchase,
                  received_for_free, dev_response, timestamp_created, votes_up,
                  votes_funny, weighted_vote_score, comment_count, author_steamid,
                  author_num_reviews, author_playtime_forever, collected_ver, collected_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(recommendation_id) DO UPDATE SET
+                votes_up = excluded.votes_up,
+                votes_funny = excluded.votes_funny,
+                weighted_vote_score = excluded.weighted_vote_score,
+                comment_count = excluded.comment_count,
+                collected_at = excluded.collected_at
             """,
             (
                 review.recommendation_id, review.appid, review.language,
@@ -178,16 +184,45 @@ def update_game_review_stats(
 
 
 def get_games_by_version(
-    conn: sqlite3.Connection, source_tag: str | None = None
+    conn: sqlite3.Connection,
+    source_tag: str | None = None,
+    lock_owner: str | None = None,
 ) -> list[dict]:
-    """Return games filtered by source_tag, sorted by positive desc."""
-    if source_tag is not None:
-        cursor = conn.execute(
-            "SELECT * FROM games WHERE source_tag = ? ORDER BY positive DESC",
-            (source_tag,),
-        )
+    """Return games filtered by source_tag, sorted by positive desc.
+
+    If lock_owner is provided, excludes games locked by a different owner
+    (non-expired locks only).
+    """
+    now = datetime.now(timezone.utc).isoformat()
+
+    if lock_owner is not None:
+        if source_tag is not None:
+            cursor = conn.execute(
+                """SELECT g.* FROM games g
+                   LEFT JOIN crawl_locks cl
+                     ON g.appid = cl.appid AND cl.expires_at >= ? AND cl.owner != ?
+                   WHERE g.source_tag = ? AND cl.appid IS NULL
+                   ORDER BY g.positive DESC""",
+                (now, lock_owner, source_tag),
+            )
+        else:
+            cursor = conn.execute(
+                """SELECT g.* FROM games g
+                   LEFT JOIN crawl_locks cl
+                     ON g.appid = cl.appid AND cl.expires_at >= ? AND cl.owner != ?
+                   WHERE cl.appid IS NULL
+                   ORDER BY g.positive DESC""",
+                (now, lock_owner),
+            )
     else:
-        cursor = conn.execute("SELECT * FROM games ORDER BY positive DESC")
+        if source_tag is not None:
+            cursor = conn.execute(
+                "SELECT * FROM games WHERE source_tag = ? ORDER BY positive DESC",
+                (source_tag,),
+            )
+        else:
+            cursor = conn.execute("SELECT * FROM games ORDER BY positive DESC")
+
     return [dict(row) for row in cursor.fetchall()]
 
 
@@ -288,12 +323,14 @@ def update_game_store_details(
     appid: int,
     short_description_en: str | None = None,
     short_description_ko: str | None = None,
+    detailed_description_en: str | None = None,
+    detailed_description_ko: str | None = None,
     header_image: str | None = None,
 ) -> None:
     """Update store page details on the games table."""
     conn.execute(
-        "UPDATE games SET short_description_en=?, short_description_ko=?, header_image=?, updated_at=? WHERE appid=?",
-        (short_description_en, short_description_ko, header_image, _now(), appid),
+        "UPDATE games SET short_description_en=?, short_description_ko=?, detailed_description_en=?, detailed_description_ko=?, header_image=?, updated_at=? WHERE appid=?",
+        (short_description_en, short_description_ko, detailed_description_en, detailed_description_ko, header_image, _now(), appid),
     )
     conn.commit()
 
@@ -340,11 +377,56 @@ def update_game_rawg_details(
     rawg_description: str | None = None,
     rawg_rating: float | None = None,
     metacritic_score: int | None = None,
+    rawg_ratings_count: int | None = None,
+    rawg_added: int | None = None,
+    rawg_status_yet: int | None = None,
+    rawg_status_owned: int | None = None,
+    rawg_status_beaten: int | None = None,
+    rawg_status_toplay: int | None = None,
+    rawg_status_dropped: int | None = None,
+    rawg_status_playing: int | None = None,
+    rawg_exceptional_pct: float | None = None,
+    rawg_recommended_pct: float | None = None,
+    rawg_meh_pct: float | None = None,
+    rawg_skip_pct: float | None = None,
 ) -> None:
     """Update RAWG enrichment data on the games table."""
     conn.execute(
-        "UPDATE games SET rawg_id=?, rawg_description=?, rawg_rating=?, metacritic_score=?, updated_at=? WHERE appid=?",
-        (rawg_id, rawg_description, rawg_rating, metacritic_score, _now(), appid),
+        """UPDATE games SET rawg_id=?, rawg_description=?, rawg_rating=?,
+           metacritic_score=?, rawg_ratings_count=?, rawg_added=?,
+           rawg_status_yet=?, rawg_status_owned=?, rawg_status_beaten=?,
+           rawg_status_toplay=?, rawg_status_dropped=?, rawg_status_playing=?,
+           rawg_exceptional_pct=?, rawg_recommended_pct=?,
+           rawg_meh_pct=?, rawg_skip_pct=?,
+           updated_at=? WHERE appid=?""",
+        (rawg_id, rawg_description, rawg_rating, metacritic_score,
+         rawg_ratings_count, rawg_added,
+         rawg_status_yet, rawg_status_owned, rawg_status_beaten,
+         rawg_status_toplay, rawg_status_dropped, rawg_status_playing,
+         rawg_exceptional_pct, rawg_recommended_pct,
+         rawg_meh_pct, rawg_skip_pct,
+         _now(), appid),
+    )
+    conn.commit()
+
+
+def update_game_twitch_stats(
+    conn: sqlite3.Connection,
+    appid: int,
+    twitch_game_id: str,
+    stream_count: int,
+    viewer_count: int,
+    top_language: str | None = None,
+    lang_distribution: str | None = None,
+) -> None:
+    """Update Twitch streaming stats on the games table."""
+    conn.execute(
+        """UPDATE games SET twitch_game_id=?, twitch_stream_count=?,
+           twitch_viewer_count=?, twitch_top_language=?,
+           twitch_lang_distribution=?, twitch_fetched_at=?,
+           updated_at=? WHERE appid=?""",
+        (twitch_game_id, stream_count, viewer_count,
+         top_language, lang_distribution, _now(), _now(), appid),
     )
     conn.commit()
 
@@ -385,21 +467,114 @@ def upsert_game_keywords(conn: sqlite3.Connection, appid: int, keywords: dict[in
     return inserted
 
 
+def validate_source_tags(
+    conn: sqlite3.Connection,
+    source_tag: str | None = None,
+) -> list[dict]:
+    """Validate that games' source_tag matches their actual tags in game_tags/game_genres.
+
+    For source_tag like "tag:X", checks game_tags for tag_name = X.
+    For source_tag like "genre:X", checks game_genres for genre_name = X.
+    Games that fail validation get source_tag set to "unverified:<original>".
+
+    Returns list of mismatched games [{appid, name, source_tag}].
+    """
+    if source_tag is None:
+        return []
+
+    # Parse source_tag prefix and value
+    if ":" not in source_tag:
+        return []
+    prefix, _, tag_value = source_tag.partition(":")
+    if not tag_value:
+        return []
+
+    # Pick the right join table
+    if prefix == "tag":
+        check_sql = """
+            SELECT g.appid, g.name, g.source_tag
+            FROM games g
+            WHERE g.source_tag = ?
+              AND g.appid NOT IN (
+                  SELECT gt.appid FROM game_tags gt WHERE gt.tag_name = ?
+              )
+              AND g.appid IN (
+                  SELECT gt2.appid FROM game_tags gt2
+              )
+        """
+    elif prefix == "genre":
+        check_sql = """
+            SELECT g.appid, g.name, g.source_tag
+            FROM games g
+            WHERE g.source_tag = ?
+              AND g.appid NOT IN (
+                  SELECT gg.appid FROM game_genres gg WHERE gg.genre_name = ?
+              )
+              AND g.appid IN (
+                  SELECT gg2.appid FROM game_genres gg2
+              )
+        """
+    else:
+        return []
+
+    rows = conn.execute(check_sql, (source_tag, tag_value)).fetchall()
+    mismatched = [dict(r) for r in rows]
+
+    if mismatched:
+        now = _now()
+        for game in mismatched:
+            conn.execute(
+                "UPDATE games SET source_tag = ?, updated_at = ? WHERE appid = ?",
+                (f"unverified:{source_tag}", now, game["appid"]),
+            )
+        conn.commit()
+
+    return mismatched
+
+
 def get_games_needing_enrichment(
-    conn: sqlite3.Connection, source: str, source_tag: str | None = None,
+    conn: sqlite3.Connection,
+    source: str,
+    source_tag: str | None = None,
+    lock_owner: str | None = None,
 ) -> list[dict]:
     """Return games that haven't been enriched by the given source.
-    source: 'igdb' or 'rawg'. Excludes id=-1 (unmatchable)."""
-    id_col = "igdb_id" if source == "igdb" else "rawg_id"
-    if source_tag:
-        rows = conn.execute(
-            f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) AND source_tag = ? ORDER BY positive DESC",
-            (source_tag,),
-        ).fetchall()
+    source: 'igdb' or 'rawg'. Excludes id=-1 (unmatchable).
+    If lock_owner is provided, excludes games locked by a different owner.
+    """
+    id_col_map = {"igdb": "igdb_id", "rawg": "rawg_id", "twitch": "twitch_game_id"}
+    id_col = id_col_map[source]
+    now = datetime.now(timezone.utc).isoformat()
+
+    if lock_owner is not None:
+        if source_tag:
+            rows = conn.execute(
+                f"""SELECT g.appid, g.name FROM games g
+                    LEFT JOIN crawl_locks cl
+                      ON g.appid = cl.appid AND cl.expires_at >= ? AND cl.owner != ?
+                    WHERE g.{id_col} IS NULL AND g.source_tag = ? AND cl.appid IS NULL
+                    ORDER BY g.positive DESC""",
+                (now, lock_owner, source_tag),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                f"""SELECT g.appid, g.name FROM games g
+                    LEFT JOIN crawl_locks cl
+                      ON g.appid = cl.appid AND cl.expires_at >= ? AND cl.owner != ?
+                    WHERE g.{id_col} IS NULL AND cl.appid IS NULL
+                    ORDER BY g.positive DESC""",
+                (now, lock_owner),
+            ).fetchall()
     else:
-        rows = conn.execute(
-            f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) ORDER BY positive DESC"
-        ).fetchall()
+        if source_tag:
+            rows = conn.execute(
+                f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) AND source_tag = ? ORDER BY positive DESC",
+                (source_tag,),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) ORDER BY positive DESC"
+            ).fetchall()
     return [dict(r) for r in rows]
 
 
@@ -434,3 +609,60 @@ def update_collection_status(
         )
 
     conn.commit()
+
+
+# --------------- Crawl Locks ---------------
+
+LOCK_TTL_SECONDS = 300  # 5 minutes
+
+
+def acquire_crawl_lock(
+    conn: sqlite3.Connection, appid: int, owner: str = "",
+) -> bool:
+    """Try to acquire a crawl lock for the given appid.
+
+    Atomically inserts a lock row. Returns True if acquired, False if
+    another active (non-expired) lock exists.
+    """
+    now = datetime.now(timezone.utc)
+    expires = now + timedelta(seconds=LOCK_TTL_SECONDS)
+
+    # Clean up expired locks for this appid first
+    conn.execute(
+        "DELETE FROM crawl_locks WHERE appid = ? AND expires_at < ?",
+        (appid, now.isoformat()),
+    )
+
+    # Atomic acquire: INSERT OR IGNORE ensures only one winner
+    cursor = conn.execute(
+        "INSERT OR IGNORE INTO crawl_locks (appid, locked_at, expires_at, owner) VALUES (?, ?, ?, ?)",
+        (appid, now.isoformat(), expires.isoformat(), owner),
+    )
+    conn.commit()
+    return cursor.rowcount == 1
+
+
+def release_crawl_lock(conn: sqlite3.Connection, appid: int) -> None:
+    """Release a crawl lock for the given appid."""
+    conn.execute("DELETE FROM crawl_locks WHERE appid = ?", (appid,))
+    conn.commit()
+
+
+def cleanup_expired_locks(conn: sqlite3.Connection) -> int:
+    """Remove all expired locks. Returns count removed."""
+    now = datetime.now(timezone.utc).isoformat()
+    cursor = conn.execute(
+        "DELETE FROM crawl_locks WHERE expires_at < ?", (now,)
+    )
+    conn.commit()
+    return cursor.rowcount
+
+
+def get_active_locks(conn: sqlite3.Connection) -> list[dict]:
+    """Return all currently active (non-expired) locks."""
+    now = datetime.now(timezone.utc).isoformat()
+    rows = conn.execute(
+        "SELECT appid, locked_at, expires_at, owner FROM crawl_locks WHERE expires_at >= ?",
+        (now,),
+    ).fetchall()
+    return [dict(r) for r in rows]
