@@ -4,7 +4,6 @@ from __future__ import annotations
 import json
 import sqlite3
 
-import httpx
 from rich.console import Console
 
 from steam_crawler.api.resilience import FailureTracker
@@ -29,6 +28,7 @@ def run_step3(
     review_type: str = "all",
     reviews_client: SteamReviewsClient | None = None,
     failure_tracker: FailureTracker | None = None,
+    lock_owner: str | None = None,
 ) -> int:
     """Crawl review text for top N games.
 
@@ -36,7 +36,7 @@ def run_step3(
     """
     client = reviews_client or SteamReviewsClient()
     tracker = failure_tracker or FailureTracker()
-    games = get_games_by_version(conn, source_tag=source_tag)[:top_n]
+    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)[:top_n]
     total_collected = 0
     try:
         for game_row in games:
@@ -99,7 +99,7 @@ def run_step3(
                 tracker.log_failure(
                     conn=conn, session_id=version, api_name="steam_reviews_crawl",
                     appid=appid, step="step3", error_message=str(e),
-                    error_type="connection_error" if isinstance(e, httpx.ConnectError) else None,
+                    error_type="connection_error" if isinstance(e, (ConnectionError, OSError)) else None,
                     http_status=getattr(e, 'response', {}).get('status_code') if hasattr(e, 'response') else None,
                 )
                 console.print(f"  [red]Error for appid={appid}: {e}[/red]")

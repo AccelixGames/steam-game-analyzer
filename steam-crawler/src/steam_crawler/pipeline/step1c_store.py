@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import sqlite3
 
-import httpx
 from rich.console import Console
 
 from steam_crawler.api.resilience import FailureTracker
@@ -24,11 +23,12 @@ def run_step1c(
     source_tag: str | None = None,
     store_client: SteamStoreClient | None = None,
     failure_tracker: FailureTracker | None = None,
+    lock_owner: str | None = None,
 ) -> int:
     """Fetch store details for games. Returns count enriched."""
     client = store_client or SteamStoreClient()
     tracker = failure_tracker or FailureTracker()
-    games = get_games_by_version(conn, source_tag=source_tag)
+    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)
     enriched = 0
 
     try:
@@ -43,6 +43,8 @@ def run_step1c(
                     conn, appid=appid,
                     short_description_en=details.short_description_en,
                     short_description_ko=details.short_description_ko,
+                    detailed_description_en=details.detailed_description_en,
+                    detailed_description_ko=details.detailed_description_ko,
                     header_image=details.header_image,
                 )
 
@@ -61,7 +63,7 @@ def run_step1c(
                 tracker.log_failure(
                     conn=conn, session_id=version, api_name="steam_store",
                     appid=appid, step="step1c", error_message=str(e),
-                    error_type="connection_error" if isinstance(e, httpx.ConnectError) else None,
+                    error_type="connection_error" if isinstance(e, (ConnectionError, OSError)) else None,
                 )
                 console.print(f"  [red]Error for appid={appid}: {e}[/red]")
                 continue

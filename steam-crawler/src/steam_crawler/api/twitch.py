@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-import httpx
+from curl_cffi.requests import Session
 
 from steam_crawler.api.rate_limiter import AdaptiveRateLimiter
 
@@ -24,7 +24,7 @@ class TwitchClient:
         self._client_id = client_id
         self._client_secret = client_secret
         self._rate_limiter = rate_limiter
-        self._http = httpx.Client(timeout=timeout)
+        self._http = Session(timeout=timeout, impersonate="chrome")
         self._token: str | None = None
         self._token_expires_at: float = 0
 

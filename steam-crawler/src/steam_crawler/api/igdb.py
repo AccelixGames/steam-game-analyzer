@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-import httpx
+from curl_cffi.requests import Session
 
 from steam_crawler.api.rate_limiter import AdaptiveRateLimiter
 
@@ -28,7 +28,7 @@ class IGDBClient:
         self._client_id = client_id
         self._client_secret = client_secret
         self._rate_limiter = rate_limiter
-        self._http = httpx.Client(timeout=timeout)
+        self._http = Session(timeout=timeout, impersonate="chrome")
         self._token: str | None = None
         self._token_expires_at: float = 0
 
@@ -66,7 +66,7 @@ class IGDBClient:
         }
 
         start = time.monotonic()
-        response = self._http.post(url, content=query, headers=headers)
+        response = self._http.post(url, data=query, headers=headers)
         elapsed_ms = (time.monotonic() - start) * 1000
 
         if self._rate_limiter:
@@ -79,7 +79,7 @@ class IGDBClient:
                         self._rate_limiter.record_server_error()
                     time.sleep(delay_ms / 1000)
                     start = time.monotonic()
-                    response = self._http.post(url, content=query, headers=headers)
+                    response = self._http.post(url, data=query, headers=headers)
                     elapsed_ms = (time.monotonic() - start) * 1000
                     if response.status_code < 400:
                         break
