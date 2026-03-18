@@ -192,15 +192,6 @@ class GameMatcher:
 
 ## Pipeline Steps
 
-### game_collection_status 확장
-
-기존 game_collection_status 테이블에 새 스텝 추적 컬럼 추가:
-
-```sql
-igdb_enriched    INTEGER NOT NULL DEFAULT 0,  -- 1=완료
-rawg_enriched    INTEGER NOT NULL DEFAULT 0   -- 1=완료
-```
-
 ### Step 1d: IGDB Enrichment
 
 ```python
@@ -273,7 +264,6 @@ steam-crawler/src/steam_crawler/
 ├── db/
 │   ├── schema.py         -- (수정) 테이블 추가
 │   └── repository.py     -- (수정) upsert 함수 추가
-│   └── matching.py       -- (NEW) GameMatcher (api 패키지 내)
 └── ...
 
 steam-crawler/tests/
