@@ -1,3 +1,18 @@
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _seed_data_version(db_conn):
+    """Insert a dummy data_versions row so FK constraints are satisfied."""
+    db_conn.execute(
+        "INSERT INTO data_versions (version, query_type, status) VALUES (1, 'test', 'done')"
+    )
+    db_conn.execute(
+        "INSERT INTO data_versions (version, query_type, status) VALUES (2, 'test', 'done')"
+    )
+    db_conn.commit()
+
+
 def test_log_game_added(db_conn):
     from steam_crawler.db.changelog import log_game_added
 

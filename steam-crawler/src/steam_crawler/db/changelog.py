@@ -20,20 +20,14 @@ def _log(
     new_value: str | None = None,
 ) -> None:
     """Internal helper to insert a changelog entry."""
-    # Temporarily disable FK enforcement so changelog entries can reference
-    # version IDs that may not yet exist in data_versions (e.g., in tests).
-    conn.execute("PRAGMA foreign_keys=OFF")
-    try:
-        conn.execute(
-            """
-            INSERT INTO changelog (version, change_type, appid, field_name, old_value, new_value, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            (version, change_type, appid, field_name, old_value, new_value, _now()),
-        )
-        conn.commit()
-    finally:
-        conn.execute("PRAGMA foreign_keys=ON")
+    conn.execute(
+        """
+        INSERT INTO changelog (version, change_type, appid, field_name, old_value, new_value, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (version, change_type, appid, field_name, old_value, new_value, _now()),
+    )
+    conn.commit()
 
 
 def log_game_added(conn: sqlite3.Connection, version: int, appid: int) -> None:
