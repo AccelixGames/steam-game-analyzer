@@ -91,7 +91,30 @@ WHERE k.appid = ?;
 - **IGDB themes**: 대분류 시선. Steam 태그보다 상위 수준의 분류로, 게임의 장르적 위치를 확인
 - themes/keywords가 없으면 "IGDB 메타데이터 없음" 명시
 
-### 2-C. RAWG 리텐션 프록시 (유저 상태 분포)
+### 2-C. Wikidata 구조화 기획 데이터
+
+Wikidata의 커뮤니티 온톨로지에서 추출한 구조화된 기획 데이터. IGDB/Steam과 독립적인 제3의 분류 체계.
+
+```sql
+-- Wikidata 기본 정보
+SELECT wikidata_id FROM games WHERE appid = ?;
+
+-- 전체 claims (mechanic, character, location, depicts, award 등)
+SELECT claim_type, name, wikidata_id
+FROM game_wikidata_claims WHERE appid = ?
+ORDER BY claim_type, name;
+```
+
+분석 포인트:
+- **Wikidata genre vs Steam tags vs IGDB keywords 3중 교차**: 세 소스에서 공통으로 나타나는 분류는 게임의 확실한 정체성, 하나에만 있는 것은 관점 차이
+- **P4151 mechanic**: open world, crafting, permadeath 등 구조화된 메카닉 분류. Steam 태그보다 정밀한 기획 패턴 식별
+- **P674 character**: 등장인물 수와 목록 → 내러티브 규모 측정
+- **P840 location**: 배경 세계 구조 → 레벨/맵 디자인 규모
+- **P166/P1411 award**: 수상 이력 → 어떤 기획 요소가 업계에서 인정받았는지 (Best Design, Best Narrative 등 카테고리별 의미)
+- **P180 depicts**: 게임이 다루는 주제/소재 (mythology, LGBTQ 등) → 문화적 포지셔닝
+- wikidata_id가 NULL 또는 'not_found'이면 "Wikidata 데이터 없음" 명시
+
+### 2-D. RAWG 리텐션 프록시 (유저 상태 분포)
 
 RAWG의 `added_by_status`는 유저가 게임을 어떻게 분류했는지 보여주는 리텐션 프록시다.
 
@@ -111,7 +134,7 @@ FROM games WHERE appid = ?;
 - **Steam 긍정률 vs RAWG 평가 괴리**: Steam에서 긍정적이지만 RAWG에서 meh가 높으면, "재미있지만 추천하기 어려운" 게임
 - rawg_added가 NULL이면 "RAWG 리텐션 데이터 없음" 명시
 
-### 2-D. HowLongToBeat 게임 길이 (기획 밀도 분석)
+### 2-E. HowLongToBeat 게임 길이 (기획 밀도 분석)
 
 ```sql
 SELECT hltb_main_story, hltb_main_extra, hltb_completionist
@@ -123,13 +146,9 @@ FROM games WHERE appid = ?;
 - **Steam 리뷰 평균 playtime_at_review와 비교** → 유저가 메인스토리 길이의 몇 %에서 리뷰를 쓰는가? 50% 미만이면 초반 강점, 150% 이상이면 리플레이 가치
 - hltb_main_story가 NULL이면 "HLTB 데이터 없음" 명시
 
-### 2-E. ProtonDB 호환성 + PCGamingWiki 기술 스펙 (기술 완성도)
+### 2-F. PCGamingWiki 기술 스펙 (기술 완성도)
 
 ```sql
--- ProtonDB 호환성
-SELECT protondb_tier, protondb_confidence, protondb_trending_tier
-FROM games WHERE appid = ?;
-
 -- PCGamingWiki 기술 스펙
 SELECT pcgw_engine, pcgw_has_ultrawide, pcgw_has_hdr,
        pcgw_has_controller, pcgw_graphics_api
@@ -137,12 +156,10 @@ FROM games WHERE appid = ?;
 ```
 
 분석 포인트:
-- **ProtonDB tier**: platinum/gold = Steam Deck Ready (시장 도달 범위 넓음), bronze/borked = 기술 부채
 - **엔진**: 엔진 선택은 기획적 제약을 결정 (예: Unity → 모바일 포팅 용이, Unreal → 비주얼 강점)
 - **울트라와이드/HDR/컨트롤러**: 기술적 세심함의 지표. 인디 게임이 이를 지원하면 기술 품질 높음
-- protondb_tier가 NULL이면 "ProtonDB 데이터 없음" 명시
 
-### 2-F. 종합 분석
+### 2-G. 종합 분석
 
 분석 포인트:
 - **detailed_description에서 추출한 피처 vs 제3자 설명 교차**: 개발사가 나열한 피처 중 IGDB/RAWG에서도 확인되는 것은 실제 구현된 것, 제3자 설명에만 있는 것은 마케팅에서 빠진 요소
@@ -340,9 +357,10 @@ Step 02: 메커니즘 실체
 │   ├── 외부 루프 (성장): 수익 재투자 → 확장/자동화
 │   └── 핵심 텐션: 확정 보상 vs 가변 보상 설명
 ├── IGDB Themes/Keywords 교차 분석 (Steam 태그 vs IGDB 키워드 비교)
+├── Wikidata 기획 온톨로지 — 메카닉/캐릭터/배경/수상 (NEW)
 ├── RAWG 리텐션 프록시 — 드롭률/클리어률/평가 분포
 ├── HowLongToBeat 게임 길이 — 기획 밀도 분석 (NEW)
-├── ProtonDB 호환성 + PCGamingWiki 기술 스펙 (NEW)
+├── PCGamingWiki 기술 스펙 (NEW)
 └── 마케팅이 말하지 않은 시스템들 (IGDB/RAWG 기반)
 
 Step 03: 유저 경험
