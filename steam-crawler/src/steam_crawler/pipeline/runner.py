@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 
 from rich.console import Console
@@ -19,6 +20,8 @@ from steam_crawler.db.repository import create_version, update_version_status
 from steam_crawler.pipeline.step1_collect import run_step1
 from steam_crawler.pipeline.step1b_enrich import run_step1b
 from steam_crawler.pipeline.step1c_store import run_step1c
+from steam_crawler.pipeline.step1d_igdb import run_step1d
+from steam_crawler.pipeline.step1e_rawg import run_step1e
 from steam_crawler.pipeline.step2_scan import run_step2
 from steam_crawler.pipeline.step3_crawl import run_step3
 
@@ -145,6 +148,23 @@ def run_pipeline(
             )
             run_step1c(
                 conn, version, source_tag=source_tag, store_client=store_client,
+                failure_tracker=tracker,
+            )
+
+            # Step 1d: IGDB enrichment (optional, needs env vars)
+            igdb_cid = os.environ.get("TWITCH_CLIENT_ID")
+            igdb_csec = os.environ.get("TWITCH_CLIENT_SECRET")
+            run_step1d(
+                conn, version, source_tag=source_tag,
+                client_id=igdb_cid, client_secret=igdb_csec,
+                failure_tracker=tracker,
+            )
+
+            # Step 1e: RAWG enrichment (optional, needs env var)
+            rawg_key = os.environ.get("RAWG_API_KEY")
+            run_step1e(
+                conn, version, source_tag=source_tag,
+                api_key=rawg_key,
                 failure_tracker=tracker,
             )
         if step is None or step == 2:
