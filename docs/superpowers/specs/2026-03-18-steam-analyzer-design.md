@@ -20,7 +20,8 @@ steam-analyzer/
 │   ├── tools/
 │   │   ├── __init__.py
 │   │   ├── search_reviews.py   # search_reviews tool
-│   │   └── analyze_design.py   # analyze_design tool
+│   │   ├── analyze_design.py   # analyze_design tool
+│   │   └── analysis_logs.py    # get_analysis_logs tool (진단용)
 │   └── stats/
 │       ├── __init__.py
 │       └── review_stats.py     # 키워드 빈도, 긍부정 비율 등 통계 로직
@@ -205,12 +206,74 @@ cd ../steam-analyzer && pip install -e ".[dev]"
 → 기획서 + 경쟁작 데이터 반환
 → Claude가 피드백 생성
 
-## 에러 처리
+## 에러 로깅 & 자가 복구
 
-- DB 파일 미존재: `{"error": "Database not found at <path>. Run steam-crawler first."}`
-- 데이터 없음: 정상 응답 구조에 `games_count: 0`, 빈 배열 반환
-- 기획서 파일 미존재/읽기 실패: `{"error": "Cannot read design file: <path>"}`
-- 기획서 크기 초과 (>1MB): `{"error": "Design file too large (max 1MB)"}`
+### 원칙
+
+모든 에러는 `analysis_logs` 테이블에 기록한다. 에러 응답에는 항상 `error_id`와 `suggestion`을 포함하여
+Claude가 원인을 파악하고 자동으로 재시도하거나 우회할 수 있게 한다.
+
+### analysis_logs 테이블
+
+```sql
+CREATE TABLE IF NOT EXISTS analysis_logs (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    tool_name   TEXT NOT NULL,           -- "search_reviews", "analyze_design"
+    params      TEXT,                    -- 요청 파라미터 JSON
+    error_type  TEXT NOT NULL,           -- "db_not_found", "no_data", "file_error", "query_error", "unknown"
+    error_message TEXT,
+    suggestion  TEXT,                    -- Claude가 참고할 복구 제안
+    resolved    INTEGER DEFAULT 0,
+    resolution  TEXT,                    -- 해결 방법 기록
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### 에러 유형별 처리
+
+| error_type | 상황 | suggestion (Claude에게 전달) |
+|---|---|---|
+| `db_not_found` | DB 파일 미존재 | `"Run steam-crawler to collect data first. DB expected at: <path>"` |
+| `no_data` | 태그/앱ID에 데이터 없음 | `"No data for tag '<tag>'. Available tags: [RPG, Action, ...]. Try a different tag or run steam-crawler collect --tag <tag>"` |
+| `file_error` | 기획서 읽기 실패 | `"Cannot read '<path>'. Check file exists and is text-based (md/txt). Try design_text parameter instead."` |
+| `query_error` | SQL 실행 오류 | `"Query failed: <detail>. This may indicate a schema mismatch. Check steam-crawler version."` |
+| `unknown` | 예상치 못한 에러 | `"Unexpected error. Check analysis_logs id=<id> for details."` |
+
+### 에러 응답 구조
+
+모든 에러는 정상 JSON으로 반환 (MCP 서버 크래시 방지):
+
+```json
+{
+  "error": true,
+  "error_id": 42,
+  "error_type": "no_data",
+  "error_message": "No games found for tag 'NonexistentTag'",
+  "suggestion": "No data for tag 'NonexistentTag'. Available tags: [RPG, Roguelike, ...]. Try a different tag.",
+  "available_tags": ["RPG", "Roguelike", "Action"]
+}
+```
+
+### 자가 복구 흐름
+
+1. tool 실행 중 에러 발생
+2. `analysis_logs`에 기록, `error_id` 발급
+3. `suggestion` + 컨텍스트(사용 가능한 태그 목록 등)와 함께 에러 응답 반환
+4. Claude가 `suggestion`을 읽고 자동으로 파라미터를 수정하여 재시도
+5. 재시도 성공 시 `analysis_logs`에서 `resolved=1`, `resolution` 기록
+
+### 진단 Tool 추가: `get_analysis_logs`
+
+에러 이력을 조회하여 반복 문제를 파악할 수 있는 보조 tool:
+
+**파라미터:**
+
+| 이름 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `unresolved_only` | bool | 아니오 | 미해결만 조회 (기본: true) |
+| `limit` | int | 아니오 | 최대 반환 수 (기본: 10) |
+
+**반환:** 에러 로그 목록. Claude가 패턴을 파악하여 근본 원인 진단 가능.
 
 ## 테스트 전략
 
