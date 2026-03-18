@@ -1,0 +1,225 @@
+"""Database CRUD operations for steam-crawler."""
+
+from __future__ import annotations
+
+import sqlite3
+from datetime import datetime, timezone
+from typing import Any
+
+from steam_crawler.models.game import GameSummary
+from steam_crawler.models.review import Review
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def upsert_game(
+    conn: sqlite3.Connection, game: GameSummary, version: int
+) -> tuple[bool, dict[str, tuple[str, str]]]:
+    """UPSERT a game record. Returns (is_new, changes_dict).
+
+    changes_dict maps field_name -> (old_value, new_value) as strings.
+    """
+    existing = conn.execute(
+        "SELECT * FROM games WHERE appid = ?", (game.appid,)
+    ).fetchone()
+
+    now = _now()
+
+    if existing is None:
+        conn.execute(
+            """
+            INSERT INTO games
+                (appid, name, positive, negative, owners, price, tags,
+                 avg_playtime, score_rank, source_tag, first_seen_ver, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                game.appid, game.name, game.positive, game.negative,
+                game.owners, game.price, game.tags_json(),
+                game.avg_playtime, game.score_rank, game.source_tag,
+                version, now,
+            ),
+        )
+        conn.commit()
+        return True, {}
+
+    # Detect changes in tracked fields
+    tracked_fields = ["positive", "negative", "owners", "price", "avg_playtime", "score_rank"]
+    changes: dict[str, tuple[str, str]] = {}
+
+    new_values = {
+        "positive": game.positive,
+        "negative": game.negative,
+        "owners": game.owners,
+        "price": game.price,
+        "avg_playtime": game.avg_playtime,
+        "score_rank": game.score_rank,
+    }
+
+    for field in tracked_fields:
+        old_val = existing[field]
+        new_val = new_values[field]
+        if new_val is not None and str(old_val) != str(new_val):
+            changes[field] = (str(old_val), str(new_val))
+
+    conn.execute(
+        """
+        UPDATE games SET
+            name = ?, positive = ?, negative = ?, owners = ?, price = ?,
+            tags = ?, avg_playtime = ?, score_rank = ?, updated_at = ?
+        WHERE appid = ?
+        """,
+        (
+            game.name,
+            game.positive if game.positive is not None else existing["positive"],
+            game.negative if game.negative is not None else existing["negative"],
+            game.owners if game.owners is not None else existing["owners"],
+            game.price if game.price is not None else existing["price"],
+            game.tags_json() if game.tags is not None else existing["tags"],
+            game.avg_playtime if game.avg_playtime is not None else existing["avg_playtime"],
+            game.score_rank if game.score_rank is not None else existing["score_rank"],
+            now,
+            game.appid,
+        ),
+    )
+    conn.commit()
+    return False, changes
+
+
+def insert_reviews_batch(
+    conn: sqlite3.Connection, reviews: list[Review], version: int = 0
+) -> int:
+    """INSERT OR IGNORE reviews. Returns number actually inserted."""
+    now = _now()
+    inserted = 0
+
+    for review in reviews:
+        cursor = conn.execute(
+            """
+            INSERT OR IGNORE INTO reviews
+                (recommendation_id, appid, language, review_text, voted_up,
+                 playtime_forever, playtime_at_review, early_access, steam_purchase,
+                 received_for_free, dev_response, timestamp_created, votes_up,
+                 votes_funny, weighted_vote_score, comment_count, author_steamid,
+                 author_num_reviews, author_playtime_forever, collected_ver, collected_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                review.recommendation_id, review.appid, review.language,
+                review.review_text, review.voted_up, review.playtime_forever,
+                review.playtime_at_review, review.early_access, review.steam_purchase,
+                review.received_for_free, review.dev_response, review.timestamp_created,
+                review.votes_up, review.votes_funny, review.weighted_vote_score,
+                review.comment_count, review.author_steamid, review.author_num_reviews,
+                review.author_playtime_forever, version, now,
+            ),
+        )
+        inserted += cursor.rowcount
+
+    conn.commit()
+    return inserted
+
+
+def create_version(
+    conn: sqlite3.Connection,
+    query_type: str,
+    query_value: str | None = None,
+    config: str | None = None,
+    note: str | None = None,
+) -> int:
+    """Create a data_versions entry with status='running'. Returns version id."""
+    cursor = conn.execute(
+        """
+        INSERT INTO data_versions (query_type, query_value, status, config, note)
+        VALUES (?, ?, 'running', ?, ?)
+        """,
+        (query_type, query_value, config, note),
+    )
+    conn.commit()
+    return cursor.lastrowid
+
+
+def update_version_status(
+    conn: sqlite3.Connection,
+    version: int,
+    status: str,
+    games_total: int | None = None,
+    reviews_total: int | None = None,
+) -> None:
+    """Update the status and totals of a data_versions entry."""
+    conn.execute(
+        """
+        UPDATE data_versions SET status = ?, games_total = ?, reviews_total = ?
+        WHERE version = ?
+        """,
+        (status, games_total, reviews_total, version),
+    )
+    conn.commit()
+
+
+def update_game_review_stats(
+    conn: sqlite3.Connection,
+    appid: int,
+    steam_positive: int | None = None,
+    steam_negative: int | None = None,
+    review_score: str | None = None,
+) -> None:
+    """Update Steam review stats on the games table."""
+    conn.execute(
+        """
+        UPDATE games SET steam_positive = ?, steam_negative = ?, review_score = ?,
+            updated_at = ?
+        WHERE appid = ?
+        """,
+        (steam_positive, steam_negative, review_score, _now(), appid),
+    )
+    conn.commit()
+
+
+def get_games_by_version(
+    conn: sqlite3.Connection, source_tag: str | None = None
+) -> list[dict]:
+    """Return games filtered by source_tag, sorted by positive desc."""
+    if source_tag is not None:
+        cursor = conn.execute(
+            "SELECT * FROM games WHERE source_tag = ? ORDER BY positive DESC",
+            (source_tag,),
+        )
+    else:
+        cursor = conn.execute("SELECT * FROM games ORDER BY positive DESC")
+    return [dict(row) for row in cursor.fetchall()]
+
+
+def update_collection_status(
+    conn: sqlite3.Connection, appid: int, version: int, **kwargs: Any
+) -> None:
+    """Upsert game_collection_status for (appid, version)."""
+    now = _now()
+
+    existing = conn.execute(
+        "SELECT * FROM game_collection_status WHERE appid = ? AND version = ?",
+        (appid, version),
+    ).fetchone()
+
+    if existing is None:
+        fields = ["appid", "version", "updated_at"] + list(kwargs.keys())
+        values = [appid, version, now] + list(kwargs.values())
+        placeholders = ", ".join("?" * len(values))
+        col_names = ", ".join(fields)
+        conn.execute(
+            f"INSERT INTO game_collection_status ({col_names}) VALUES ({placeholders})",
+            values,
+        )
+    else:
+        if not kwargs:
+            return
+        set_clause = ", ".join(f"{k} = ?" for k in kwargs)
+        values = list(kwargs.values()) + [now, appid, version]
+        conn.execute(
+            f"UPDATE game_collection_status SET {set_clause}, updated_at = ? WHERE appid = ? AND version = ?",
+            values,
+        )
+
+    conn.commit()
