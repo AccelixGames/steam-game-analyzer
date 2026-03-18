@@ -35,11 +35,11 @@ from steam_crawler.pipeline.step1c_store import run_step1c
 from steam_crawler.pipeline.step1d_igdb import run_step1d
 from steam_crawler.pipeline.step1e_rawg import run_step1e
 from steam_crawler.pipeline.step1f_twitch import run_step1f
-from steam_crawler.pipeline.step1g_protondb import run_step1g
 from steam_crawler.pipeline.step1h_hltb import run_step1h
 from steam_crawler.pipeline.step1i_cheapshark import run_step1i
 from steam_crawler.pipeline.step1j_opencritic import run_step1j
 from steam_crawler.pipeline.step1k_pcgamingwiki import run_step1k
+from steam_crawler.pipeline.step1l_wikidata import run_step1l
 from steam_crawler.pipeline.step2_scan import run_step2
 from steam_crawler.pipeline.step3_crawl import run_step3
 
@@ -231,12 +231,6 @@ def run_pipeline(
                 failure_tracker=tracker, lock_owner=lock_owner,
             )
 
-            # Step 1g: ProtonDB compatibility (no auth needed)
-            run_step1g(
-                conn, version, source_tag=source_tag,
-                failure_tracker=tracker, lock_owner=lock_owner,
-            )
-
             # Step 1h: HowLongToBeat completion times (no auth needed)
             run_step1h(
                 conn, version, source_tag=source_tag,
@@ -259,6 +253,12 @@ def run_pipeline(
 
             # Step 1k: PCGamingWiki technical data (no auth needed)
             run_step1k(
+                conn, version, source_tag=source_tag,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1l: Wikidata structured design data (no auth needed)
+            run_step1l(
                 conn, version, source_tag=source_tag,
                 failure_tracker=tracker, lock_owner=lock_owner,
             )
