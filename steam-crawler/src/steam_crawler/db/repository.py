@@ -546,11 +546,11 @@ def get_games_needing_enrichment(
         "igdb": "igdb_id",
         "rawg": "rawg_id",
         "twitch": "twitch_game_id",
-        "protondb": "protondb_tier",
         "hltb": "hltb_id",
         "cheapshark": "cheapshark_deal_rating",
         "opencritic": "opencritic_id",
         "pcgamingwiki": "pcgw_engine",
+        "wikidata": "wikidata_id",
     }
     id_col = id_col_map[source]
     now = datetime.now(timezone.utc).isoformat()
@@ -619,23 +619,6 @@ def update_collection_status(
 
     conn.commit()
 
-
-def update_game_protondb(
-    conn: sqlite3.Connection,
-    appid: int,
-    tier: str,
-    confidence: str | None = None,
-    trending_tier: str | None = None,
-    report_count: int | None = None,
-) -> None:
-    """Update ProtonDB compatibility data."""
-    conn.execute(
-        """UPDATE games SET protondb_tier=?, protondb_confidence=?,
-           protondb_trending_tier=?, protondb_report_count=?,
-           updated_at=? WHERE appid=?""",
-        (tier, confidence, trending_tier, report_count, _now(), appid),
-    )
-    conn.commit()
 
 
 def update_game_hltb(
@@ -763,6 +746,65 @@ def get_external_reviews(
             (appid,),
         ).fetchall()
     return [dict(r) for r in rows]
+
+
+def upsert_wikidata_claims(
+    conn: sqlite3.Connection,
+    appid: int,
+    claims: list[dict],
+) -> int:
+    """Insert or update Wikidata claims for a game.
+    Each claim dict: {claim_type, name, wikidata_id, property_id, extra?}
+    Returns count inserted/updated.
+    """
+    now = _now()
+    count = 0
+    for claim in claims:
+        conn.execute(
+            """INSERT INTO game_wikidata_claims
+               (appid, claim_type, name, wikidata_id, property_id, extra, fetched_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?)
+               ON CONFLICT(appid, claim_type, wikidata_id) DO UPDATE SET
+                   name=excluded.name, extra=excluded.extra, fetched_at=excluded.fetched_at""",
+            (appid, claim["claim_type"], claim["name"],
+             claim.get("wikidata_id"), claim.get("property_id"),
+             claim.get("extra"), now),
+        )
+        count += 1
+    conn.commit()
+    return count
+
+
+def get_wikidata_claims(
+    conn: sqlite3.Connection,
+    appid: int,
+    claim_type: str | None = None,
+) -> list[dict]:
+    """Get Wikidata claims for a game, optionally filtered by type."""
+    if claim_type:
+        rows = conn.execute(
+            "SELECT * FROM game_wikidata_claims WHERE appid=? AND claim_type=? ORDER BY name",
+            (appid, claim_type),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT * FROM game_wikidata_claims WHERE appid=? ORDER BY claim_type, name",
+            (appid,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def update_game_wikidata(
+    conn: sqlite3.Connection,
+    appid: int,
+    wikidata_id: str,
+) -> None:
+    """Update Wikidata Q-ID and fetch timestamp on games table."""
+    conn.execute(
+        "UPDATE games SET wikidata_id=?, wikidata_fetched_at=?, updated_at=? WHERE appid=?",
+        (wikidata_id, _now(), _now(), appid),
+    )
+    conn.commit()
 
 
 # --------------- Crawl Locks ---------------

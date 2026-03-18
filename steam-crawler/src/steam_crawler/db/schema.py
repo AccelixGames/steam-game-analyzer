@@ -239,6 +239,22 @@ CREATE TABLE IF NOT EXISTS external_reviews (
 
 CREATE INDEX IF NOT EXISTS idx_ext_reviews_appid ON external_reviews(appid);
 CREATE INDEX IF NOT EXISTS idx_ext_reviews_source ON external_reviews(source);
+
+CREATE TABLE IF NOT EXISTS game_wikidata_claims (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    appid       INTEGER NOT NULL REFERENCES games(appid),
+    claim_type  TEXT NOT NULL,
+    name        TEXT NOT NULL,
+    wikidata_id TEXT,
+    property_id TEXT,
+    extra       TEXT,
+    fetched_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(appid, claim_type, wikidata_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_wdc_appid ON game_wikidata_claims(appid);
+CREATE INDEX IF NOT EXISTS idx_wdc_type ON game_wikidata_claims(claim_type);
+CREATE INDEX IF NOT EXISTS idx_wdc_name ON game_wikidata_claims(name);
 """
 
 
@@ -282,11 +298,6 @@ def _migrate(conn: sqlite3.Connection) -> None:
         ("twitch_top_language", "TEXT"),
         ("twitch_lang_distribution", "TEXT"),
         ("twitch_fetched_at", "TIMESTAMP"),
-        # ProtonDB
-        ("protondb_tier", "TEXT"),
-        ("protondb_confidence", "TEXT"),
-        ("protondb_trending_tier", "TEXT"),
-        ("protondb_report_count", "INTEGER"),
         # HowLongToBeat
         ("hltb_id", "INTEGER"),
         ("hltb_main_story", "REAL"),
@@ -302,6 +313,9 @@ def _migrate(conn: sqlite3.Connection) -> None:
         ("opencritic_pct_recommend", "REAL"),
         ("opencritic_tier", "TEXT"),
         ("opencritic_review_count", "INTEGER"),
+        # Wikidata
+        ("wikidata_id", "TEXT"),
+        ("wikidata_fetched_at", "TIMESTAMP"),
         # PCGamingWiki
         ("pcgw_engine", "TEXT"),
         ("pcgw_has_ultrawide", "INTEGER"),
