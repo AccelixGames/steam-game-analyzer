@@ -117,9 +117,15 @@ CREATE TABLE IF NOT EXISTS game_tags (
 
 CREATE INDEX IF NOT EXISTS idx_game_tags_tag ON game_tags(tag_name);
 
+CREATE TABLE IF NOT EXISTS genre_catalog (
+    genre_name     TEXT PRIMARY KEY,
+    total_games    INTEGER,
+    fetched_at     TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS game_genres (
     appid          INTEGER REFERENCES games(appid),
-    genre_name     TEXT NOT NULL,
+    genre_name     TEXT REFERENCES genre_catalog(genre_name),
     PRIMARY KEY (appid, genre_name)
 );
 

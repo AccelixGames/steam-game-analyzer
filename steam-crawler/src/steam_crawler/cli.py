@@ -123,38 +123,55 @@ def status(db):
 
 
 @main.command()
-def genres():
-    """Fetch and display all Steam genres with game counts from SteamSpy."""
-    from steam_crawler.api.steamspy import SteamSpyClient, STEAM_GENRES
+@click.option("--refresh", is_flag=True, help="Force refresh from SteamSpy API")
+@click.option("--db", default=DEFAULT_DB, help="Database path")
+def genres(refresh, db):
+    """Show all Steam genres with game counts. Fetches from SteamSpy on first run, then uses cache."""
+    from steam_crawler.db.repository import upsert_genre_catalog, get_genre_catalog
 
-    console.print("[bold]Fetching genre data from SteamSpy...[/bold]")
-    client = SteamSpyClient()
+    conn = init_db(db)
+    catalog = get_genre_catalog(conn)
+
+    if not catalog or refresh:
+        from steam_crawler.api.steamspy import SteamSpyClient, STEAM_GENRES
+
+        console.print("[bold]Fetching genre data from SteamSpy...[/bold]")
+        client = SteamSpyClient()
+
+        for genre in STEAM_GENRES:
+            try:
+                count = client.fetch_genre_count(genre)
+                upsert_genre_catalog(conn, genre, count)
+                console.print(f"  {genre}: {count:,}")
+            except Exception as e:
+                console.print(f"  [red]{genre}: error ({e})[/red]")
+
+        client.close()
+        catalog = get_genre_catalog(conn)
 
     table = Table(title="Steam Genres")
     table.add_column("#", style="dim")
     table.add_column("Genre", style="bold")
-    table.add_column("Games", justify="right")
+    table.add_column("Steam Total", justify="right")
+    table.add_column("Collected", justify="right")
+    table.add_column("Coverage", justify="right")
 
-    results = []
-    for genre in STEAM_GENRES:
-        try:
-            count = client.fetch_genre_count(genre)
-            results.append((genre, count))
-            console.print(f"  {genre}: {count:,}")
-        except Exception as e:
-            results.append((genre, -1))
-            console.print(f"  [red]{genre}: error ({e})[/red]")
-
-    client.close()
-
-    results.sort(key=lambda x: x[1], reverse=True)
-    for i, (genre, count) in enumerate(results, 1):
-        count_str = f"{count:,}" if count >= 0 else "error"
-        table.add_row(str(i), genre, count_str)
+    for i, row in enumerate(catalog, 1):
+        total = row["total_games"] or 0
+        collected = row["collected_games"] or 0
+        coverage = f"{100 * collected / total:.1f}%" if total > 0 else "-"
+        table.add_row(
+            str(i), row["genre_name"],
+            f"{total:,}", str(collected),
+            coverage,
+        )
 
     console.print()
     console.print(table)
-    console.print(f"\n[dim]Total: {sum(c for _, c in results if c > 0):,} game-genre entries[/dim]")
+    total_all = sum(r["total_games"] or 0 for r in catalog)
+    collected_all = sum(r["collected_games"] or 0 for r in catalog)
+    console.print(f"\n[dim]Total: {total_all:,} game-genre entries | Collected: {collected_all}[/dim]")
+    conn.close()
 
 
 if __name__ == "__main__":

@@ -191,10 +191,40 @@ def get_games_by_version(
     return [dict(row) for row in cursor.fetchall()]
 
 
+def upsert_genre_catalog(conn: sqlite3.Connection, genre_name: str, total_games: int) -> None:
+    """Insert or update a genre in the catalog."""
+    conn.execute(
+        "INSERT OR REPLACE INTO genre_catalog (genre_name, total_games, fetched_at) VALUES (?, ?, ?)",
+        (genre_name, total_games, _now()),
+    )
+    conn.commit()
+
+
+def get_genre_catalog(conn: sqlite3.Connection) -> list[dict]:
+    """Get genre catalog with collection coverage."""
+    rows = conn.execute("""
+        SELECT gc.genre_name, gc.total_games, gc.fetched_at,
+               count(gg.appid) as collected_games
+        FROM genre_catalog gc
+        LEFT JOIN game_genres gg ON gc.genre_name = gg.genre_name
+        GROUP BY gc.genre_name
+        ORDER BY gc.total_games DESC
+    """).fetchall()
+    return [dict(r) for r in rows]
+
+
 def upsert_game_genres(conn: sqlite3.Connection, appid: int, genres: list[str]) -> int:
-    """Insert or replace game genres into game_genres table. Returns count inserted."""
+    """Insert or replace game genres into game_genres table.
+    Auto-creates genre_catalog entries if they don't exist.
+    Returns count inserted.
+    """
     inserted = 0
     for genre_name in genres:
+        # Ensure genre exists in catalog (FK constraint)
+        conn.execute(
+            "INSERT OR IGNORE INTO genre_catalog (genre_name) VALUES (?)",
+            (genre_name,),
+        )
         conn.execute(
             "INSERT OR REPLACE INTO game_genres (appid, genre_name) VALUES (?, ?)",
             (appid, genre_name),
