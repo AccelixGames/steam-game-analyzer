@@ -152,8 +152,8 @@ def run_pipeline(
             )
 
             # Step 1d: IGDB enrichment (optional, needs env vars)
-            igdb_cid = os.environ.get("TWITCH_CLIENT_ID")
-            igdb_csec = os.environ.get("TWITCH_CLIENT_SECRET")
+            igdb_cid = os.environ.get("TWITCH_CLIENT_ID") or None
+            igdb_csec = os.environ.get("TWITCH_CLIENT_SECRET") or None
             run_step1d(
                 conn, version, source_tag=source_tag,
                 client_id=igdb_cid, client_secret=igdb_csec,
@@ -161,7 +161,7 @@ def run_pipeline(
             )
 
             # Step 1e: RAWG enrichment (optional, needs env var)
-            rawg_key = os.environ.get("RAWG_API_KEY")
+            rawg_key = os.environ.get("RAWG_API_KEY") or None
             run_step1e(
                 conn, version, source_tag=source_tag,
                 api_key=rawg_key,

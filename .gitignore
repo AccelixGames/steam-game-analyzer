@@ -2,6 +2,9 @@
 data/
 *.db
 
+# Secrets
+.env
+
 # Python
 __pycache__/
 *.py[cod]
