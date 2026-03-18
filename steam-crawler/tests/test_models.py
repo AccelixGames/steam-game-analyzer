@@ -20,6 +20,7 @@ def test_game_summary_from_steamspy_tag_response():
     assert game.price == 5999
     assert game.source_tag == "tag:RPG"
     assert game.tags is None
+    assert game.genres is None
 
 
 def test_game_summary_from_steamspy_appdetails():
@@ -34,9 +35,11 @@ def test_game_summary_from_steamspy_appdetails():
         "median_forever": 2000, "median_2weeks": 300,
         "price": "5999", "initialprice": "5999", "discount": "0", "ccu": 50000,
         "tags": {"RPG": 5000, "Open World": 4000},
+        "genre": "Action, RPG",
     }
     game = GameSummary.from_steamspy(raw, source_tag="tag:RPG")
     assert game.tags == {"RPG": 5000, "Open World": 4000}
+    assert game.genres == ["Action", "RPG"]
 
 
 def test_review_from_steam_api():

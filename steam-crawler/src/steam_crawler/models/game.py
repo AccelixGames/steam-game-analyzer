@@ -15,6 +15,7 @@ class GameSummary:
     owners: str | None = None
     price: int | None = None
     tags: dict[str, int] | None = None
+    genres: list[str] | None = None
     avg_playtime: int | None = None
     score_rank: str | None = None
     source_tag: str | None = None
@@ -23,6 +24,9 @@ class GameSummary:
     def from_steamspy(cls, data: dict[str, Any], source_tag: str | None = None) -> GameSummary:
         tags_raw = data.get("tags")
         tags = tags_raw if isinstance(tags_raw, dict) else None
+
+        genre_raw = data.get("genre")
+        genres = [g.strip() for g in genre_raw.split(",")] if genre_raw else None
 
         price_raw = data.get("price")
         price = int(price_raw) if price_raw is not None else None
@@ -35,6 +39,7 @@ class GameSummary:
             owners=data.get("owners"),
             price=price,
             tags=tags,
+            genres=genres,
             avg_playtime=data.get("average_forever"),
             score_rank=data.get("score_rank") or None,
             source_tag=source_tag,

@@ -8,7 +8,7 @@ from rich.console import Console
 
 from steam_crawler.api.resilience import FailureTracker
 from steam_crawler.api.steamspy import SteamSpyClient
-from steam_crawler.db.repository import get_games_by_version, update_collection_status, upsert_game_tags
+from steam_crawler.db.repository import get_games_by_version, update_collection_status, upsert_game_genres, upsert_game_tags
 
 console = Console()
 
@@ -35,6 +35,9 @@ def run_step1b(
                 detail = client.fetch_app_details(appid)
                 if detail.tags:
                     upsert_game_tags(conn, appid, detail.tags)
+                if detail.genres:
+                    upsert_game_genres(conn, appid, detail.genres)
+                if detail.tags or detail.genres:
                     enriched += 1
                 update_collection_status(
                     conn, appid=appid, version=version, steamspy_done=True

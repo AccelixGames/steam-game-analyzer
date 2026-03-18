@@ -191,6 +191,19 @@ def get_games_by_version(
     return [dict(row) for row in cursor.fetchall()]
 
 
+def upsert_game_genres(conn: sqlite3.Connection, appid: int, genres: list[str]) -> int:
+    """Insert or replace game genres into game_genres table. Returns count inserted."""
+    inserted = 0
+    for genre_name in genres:
+        conn.execute(
+            "INSERT OR REPLACE INTO game_genres (appid, genre_name) VALUES (?, ?)",
+            (appid, genre_name),
+        )
+        inserted += 1
+    conn.commit()
+    return inserted
+
+
 def upsert_game_tags(conn: sqlite3.Connection, appid: int, tags: dict[str, int]) -> int:
     """Insert or replace game tags into game_tags table. Returns count inserted."""
     inserted = 0

@@ -117,6 +117,14 @@ CREATE TABLE IF NOT EXISTS game_tags (
 
 CREATE INDEX IF NOT EXISTS idx_game_tags_tag ON game_tags(tag_name);
 
+CREATE TABLE IF NOT EXISTS game_genres (
+    appid          INTEGER REFERENCES games(appid),
+    genre_name     TEXT NOT NULL,
+    PRIMARY KEY (appid, genre_name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_genres_genre ON game_genres(genre_name);
+
 CREATE TABLE IF NOT EXISTS game_collection_status (
     appid           INTEGER,
     version         INTEGER REFERENCES data_versions(version),

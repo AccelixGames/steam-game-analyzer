@@ -80,6 +80,21 @@ def test_update_game_review_stats(db_conn):
     assert row["review_score"] == "Very Positive"
 
 
+def test_upsert_game_genres(db_conn):
+    from steam_crawler.db.repository import upsert_game, upsert_game_genres
+
+    upsert_game(db_conn, GameSummary(appid=730, name="CS2"), version=1)
+    inserted = upsert_game_genres(db_conn, 730, ["Action", "Free To Play"])
+    assert inserted == 2
+
+    rows = db_conn.execute(
+        "SELECT genre_name FROM game_genres WHERE appid=730 ORDER BY genre_name"
+    ).fetchall()
+    assert len(rows) == 2
+    assert rows[0]["genre_name"] == "Action"
+    assert rows[1]["genre_name"] == "Free To Play"
+
+
 def test_upsert_game_tags(db_conn):
     from steam_crawler.db.repository import upsert_game, upsert_game_tags
 

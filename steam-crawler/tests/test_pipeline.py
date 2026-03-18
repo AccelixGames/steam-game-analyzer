@@ -41,6 +41,7 @@ MOCK_APPDETAILS_730 = {
     "score_rank": "",
     "userscore": 0,
     "tags": {"FPS": 90000, "Shooter": 65000},
+    "genre": "Action, Free To Play",
 }
 
 MOCK_SUMMARY_RESPONSE = {
@@ -128,6 +129,13 @@ def test_step1b_enrich(httpx_mock, db_conn):
     tag_names = [t["tag_name"] for t in tags]
     assert "FPS" in tag_names
     assert "Shooter" in tag_names
+
+    genres = db_conn.execute(
+        "SELECT genre_name FROM game_genres WHERE appid=730 ORDER BY genre_name"
+    ).fetchall()
+    genre_names = [g["genre_name"] for g in genres]
+    assert "Action" in genre_names
+    assert "Free To Play" in genre_names
 
 
 def test_step2_scan(httpx_mock, db_conn):
