@@ -111,7 +111,38 @@ FROM games WHERE appid = ?;
 - **Steam 긍정률 vs RAWG 평가 괴리**: Steam에서 긍정적이지만 RAWG에서 meh가 높으면, "재미있지만 추천하기 어려운" 게임
 - rawg_added가 NULL이면 "RAWG 리텐션 데이터 없음" 명시
 
-### 2-D. 종합 분석
+### 2-D. HowLongToBeat 게임 길이 (기획 밀도 분석)
+
+```sql
+SELECT hltb_main_story, hltb_main_extra, hltb_completionist
+FROM games WHERE appid = ?;
+```
+
+분석 포인트:
+- **main_story/completionist 비율** → 콘텐츠 깊이 vs 패딩 판단. 비율이 1:1.5 이하면 메인 경험에 집중된 설계, 1:5 이상이면 반복 콘텐츠/수집 요소 무거움
+- **Steam 리뷰 평균 playtime_at_review와 비교** → 유저가 메인스토리 길이의 몇 %에서 리뷰를 쓰는가? 50% 미만이면 초반 강점, 150% 이상이면 리플레이 가치
+- hltb_main_story가 NULL이면 "HLTB 데이터 없음" 명시
+
+### 2-E. ProtonDB 호환성 + PCGamingWiki 기술 스펙 (기술 완성도)
+
+```sql
+-- ProtonDB 호환성
+SELECT protondb_tier, protondb_confidence, protondb_trending_tier
+FROM games WHERE appid = ?;
+
+-- PCGamingWiki 기술 스펙
+SELECT pcgw_engine, pcgw_has_ultrawide, pcgw_has_hdr,
+       pcgw_has_controller, pcgw_graphics_api
+FROM games WHERE appid = ?;
+```
+
+분석 포인트:
+- **ProtonDB tier**: platinum/gold = Steam Deck Ready (시장 도달 범위 넓음), bronze/borked = 기술 부채
+- **엔진**: 엔진 선택은 기획적 제약을 결정 (예: Unity → 모바일 포팅 용이, Unreal → 비주얼 강점)
+- **울트라와이드/HDR/컨트롤러**: 기술적 세심함의 지표. 인디 게임이 이를 지원하면 기술 품질 높음
+- protondb_tier가 NULL이면 "ProtonDB 데이터 없음" 명시
+
+### 2-F. 종합 분석
 
 분석 포인트:
 - **detailed_description에서 추출한 피처 vs 제3자 설명 교차**: 개발사가 나열한 피처 중 IGDB/RAWG에서도 확인되는 것은 실제 구현된 것, 제3자 설명에만 있는 것은 마케팅에서 빠진 요소
@@ -228,7 +259,41 @@ FROM games WHERE appid = ?;
 - Twitch 데이터는 **스냅샷**(수집 시점의 라이브 데이터)이므로 `twitch_fetched_at` 시점을 반드시 명시
 - twitch_stream_count가 NULL이면 "Twitch 데이터 없음" 명시
 
-### 5-B. 기존 분석 포인트
+### 5-B. OpenCritic 전문가 평가 (Steam 유저 리뷰와 교차 검증)
+
+```sql
+-- 집계 점수
+SELECT opencritic_score, opencritic_pct_recommend, opencritic_tier,
+       opencritic_review_count
+FROM games WHERE appid = ?;
+
+-- 개별 매체 리뷰 (상위 5개)
+SELECT outlet, score, snippet, published_at
+FROM external_reviews WHERE appid = ? AND source = 'opencritic'
+ORDER BY score DESC LIMIT 5;
+```
+
+분석 포인트:
+- **OpenCritic score vs Steam 긍정률 괴리**: 전문가와 유저 시각 차이. 전문가 높고 유저 낮으면 "완성도 높지만 취향 갈림", 반대면 "대중적이지만 평론 기준 미달"
+- **percentRecommended**: 전문가 추천률 — score보다 직관적인 지표
+- **tier**: Mighty(90+), Strong(75+), Fair(60+), Weak(<60)
+- 개별 리뷰 snippet에서 반복되는 키워드 → 전문가가 인식한 핵심 특성
+- opencritic_score가 NULL이면 "OpenCritic 데이터 없음" 명시
+
+### 5-C. CheapShark 가격 이력 (비즈니스 전략)
+
+```sql
+SELECT cheapshark_deal_rating, cheapshark_lowest_price, cheapshark_lowest_price_date
+FROM games WHERE appid = ?;
+```
+
+분석 포인트:
+- **deal_rating 높고 lowest_price 낮으면** → 공격적 할인 전략 (유저 유입 우선)
+- **lowest_price가 출시가와 비슷하면** → 가격 자신감 (프리미엄 포지셔닝)
+- **할인 시점**: lowest_price_date가 출시 후 얼마 지나서인가? 빠르면 초기 판매 부진
+- cheapshark_deal_rating이 NULL이면 "CheapShark 데이터 없음" 명시
+
+### 5-D. 기존 분석 포인트
 
 분석 포인트:
 - 가격대 (price ÷ 100 = 달러)
@@ -276,6 +341,8 @@ Step 02: 메커니즘 실체
 │   └── 핵심 텐션: 확정 보상 vs 가변 보상 설명
 ├── IGDB Themes/Keywords 교차 분석 (Steam 태그 vs IGDB 키워드 비교)
 ├── RAWG 리텐션 프록시 — 드롭률/클리어률/평가 분포
+├── HowLongToBeat 게임 길이 — 기획 밀도 분석 (NEW)
+├── ProtonDB 호환성 + PCGamingWiki 기술 스펙 (NEW)
 └── 마케팅이 말하지 않은 시스템들 (IGDB/RAWG 기반)
 
 Step 03: 유저 경험
@@ -294,6 +361,8 @@ Step 04: 삼각 검증 (Triangulation Table)
 Step 05: 비즈니스 구조
 ├── 추정 매출, 가성비, 수익 모델
 ├── Twitch 스트리밍 데이터 (채널 수, 시청자, 언어 분포)
+├── OpenCritic 전문가 평가 — 유저 vs 전문가 교차 검증 (NEW)
+├── CheapShark 가격 이력 — 할인 전략 분석 (NEW)
 └── 수익 확장 가능성
 
 결론
