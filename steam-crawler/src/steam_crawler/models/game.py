@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
 from typing import Any
 
@@ -40,6 +39,3 @@ class GameSummary:
             score_rank=data.get("score_rank") or None,
             source_tag=source_tag,
         )
-
-    def tags_json(self) -> str | None:
-        return json.dumps(self.tags) if self.tags else None

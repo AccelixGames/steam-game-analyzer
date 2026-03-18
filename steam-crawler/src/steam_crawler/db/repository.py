@@ -31,13 +31,13 @@ def upsert_game(
         conn.execute(
             """
             INSERT INTO games
-                (appid, name, positive, negative, owners, price, tags,
+                (appid, name, positive, negative, owners, price,
                  avg_playtime, score_rank, source_tag, first_seen_ver, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 game.appid, game.name, game.positive, game.negative,
-                game.owners, game.price, game.tags_json(),
+                game.owners, game.price,
                 game.avg_playtime, game.score_rank, game.source_tag,
                 version, now,
             ),
@@ -68,7 +68,7 @@ def upsert_game(
         """
         UPDATE games SET
             name = ?, positive = ?, negative = ?, owners = ?, price = ?,
-            tags = ?, avg_playtime = ?, score_rank = ?, updated_at = ?
+            avg_playtime = ?, score_rank = ?, updated_at = ?
         WHERE appid = ?
         """,
         (
@@ -77,7 +77,6 @@ def upsert_game(
             game.negative if game.negative is not None else existing["negative"],
             game.owners if game.owners is not None else existing["owners"],
             game.price if game.price is not None else existing["price"],
-            game.tags_json() if game.tags is not None else existing["tags"],
             game.avg_playtime if game.avg_playtime is not None else existing["avg_playtime"],
             game.score_rank if game.score_rank is not None else existing["score_rank"],
             now,

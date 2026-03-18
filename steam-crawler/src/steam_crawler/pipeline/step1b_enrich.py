@@ -1,7 +1,6 @@
 """Step 1.5: Enrich games with SteamSpy appdetails (tags field)."""
 from __future__ import annotations
 
-import json
 import sqlite3
 
 import httpx
@@ -35,10 +34,6 @@ def run_step1b(
             try:
                 detail = client.fetch_app_details(appid)
                 if detail.tags:
-                    tags_json = json.dumps(detail.tags)
-                    conn.execute(
-                        "UPDATE games SET tags = ? WHERE appid = ?", (tags_json, appid)
-                    )
                     upsert_game_tags(conn, appid, detail.tags)
                     enriched += 1
                 update_collection_status(

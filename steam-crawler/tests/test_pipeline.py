@@ -1,5 +1,3 @@
-import json
-
 import pytest
 
 
@@ -124,9 +122,12 @@ def test_step1b_enrich(httpx_mock, db_conn):
     run_step1(db_conn, query_type="tag", query_value="FPS", limit=1, version=version)
     httpx_mock.add_response(json=MOCK_APPDETAILS_730)
     run_step1b(db_conn, version=version, source_tag="tag:FPS")
-    row = db_conn.execute("SELECT tags FROM games WHERE appid=730").fetchone()
-    tags = json.loads(row["tags"])
-    assert "FPS" in tags
+    tags = db_conn.execute(
+        "SELECT tag_name, vote_count FROM game_tags WHERE appid=730 ORDER BY vote_count DESC"
+    ).fetchall()
+    tag_names = [t["tag_name"] for t in tags]
+    assert "FPS" in tag_names
+    assert "Shooter" in tag_names
 
 
 def test_step2_scan(httpx_mock, db_conn):

@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS games (
     negative       INTEGER,
     owners         TEXT,
     price          INTEGER,
-    tags           TEXT,
     avg_playtime   INTEGER,
     score_rank     TEXT,
     steam_positive INTEGER,
