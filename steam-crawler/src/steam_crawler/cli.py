@@ -2,12 +2,9 @@
 from __future__ import annotations
 from pathlib import Path
 import click
-from dotenv import load_dotenv
 from rich.console import Console
 from rich.table import Table
 from steam_crawler.db.schema import init_db
-
-load_dotenv()
 
 console = Console()
 DEFAULT_DB = str(Path.cwd().parent / "data" / "steam.db")
@@ -16,7 +13,8 @@ DEFAULT_DB = str(Path.cwd().parent / "data" / "steam.db")
 @click.group()
 def main():
     """Steam game data crawler."""
-    pass
+    from dotenv import load_dotenv
+    load_dotenv()
 
 
 @main.command()

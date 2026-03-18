@@ -9,7 +9,9 @@ MOCK_TOKEN_RESPONSE = {
     "token_type": "bearer",
 }
 
-MOCK_IGDB_GAME_BY_STEAM = [
+MOCK_EXTERNAL_GAMES_RESULT = [{"id": 12345, "game": 1942, "uid": "292030"}]
+
+MOCK_IGDB_GAME_DETAILS = [
     {
         "id": 1942,
         "name": "The Witcher 3: Wild Hunt",
@@ -18,7 +20,6 @@ MOCK_IGDB_GAME_BY_STEAM = [
         "aggregated_rating": 92.5,
         "themes": [{"id": 1, "name": "Fantasy"}, {"id": 17, "name": "Open World"}],
         "keywords": [{"id": 42, "name": "rpg"}, {"id": 99, "name": "choices-matter"}],
-        "external_games": [{"uid": "292030", "category": 1}],
     }
 ]
 
@@ -40,7 +41,8 @@ def test_authenticate(httpx_mock):
 
 def test_search_by_steam_id(httpx_mock):
     httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
-    httpx_mock.add_response(json=MOCK_IGDB_GAME_BY_STEAM)
+    httpx_mock.add_response(json=MOCK_EXTERNAL_GAMES_RESULT)  # external_games
+    httpx_mock.add_response(json=MOCK_IGDB_GAME_DETAILS)      # games (fetch_game_details)
     client = IGDBClient("client_id", "client_secret")
     result = client.search_by_steam_id(292030)
     assert result is not None
@@ -67,7 +69,7 @@ def test_search_by_name(httpx_mock):
 
 def test_fetch_game_details(httpx_mock):
     httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
-    httpx_mock.add_response(json=MOCK_IGDB_GAME_BY_STEAM)
+    httpx_mock.add_response(json=MOCK_IGDB_GAME_DETAILS)
     client = IGDBClient("client_id", "client_secret")
     details = client.fetch_game_details(1942)
     assert details["summary"] == "An open world RPG"
@@ -83,7 +85,8 @@ def test_auto_reauthenticate_on_expired_token(httpx_mock):
     client.authenticate()
     client._token_expires_at = time.time() - 100
     httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
-    httpx_mock.add_response(json=MOCK_IGDB_GAME_BY_STEAM)
+    httpx_mock.add_response(json=MOCK_EXTERNAL_GAMES_RESULT)
+    httpx_mock.add_response(json=MOCK_IGDB_GAME_DETAILS)
     result = client.search_by_steam_id(292030)
     assert result is not None
 

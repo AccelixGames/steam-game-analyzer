@@ -96,16 +96,19 @@ class IGDBClient:
         return response.json()
 
     def search_by_steam_id(self, appid: int) -> dict | None:
-        """Search IGDB for a game by Steam AppID. Returns game dict or None."""
-        query = (
-            f"fields name, summary, storyline, aggregated_rating, "
-            f"themes.id, themes.name, keywords.id, keywords.name, "
-            f"external_games.uid, external_games.category; "
-            f"where external_games.category = 1 & external_games.uid = \"{appid}\"; "
-            f"limit 1;"
-        )
-        results = self._post("games", query)
-        return results[0] if results else None
+        """Search IGDB for a game by Steam AppID via external_games endpoint.
+
+        Two-step: 1) find game ID from external_games by uid,
+                  2) fetch full game details by ID.
+        """
+        ext_query = f'fields game; where uid = "{appid}"; limit 1;'
+        ext_results = self._post("external_games", ext_query)
+        if not ext_results:
+            return None
+        game_id = ext_results[0].get("game")
+        if not game_id:
+            return None
+        return self.fetch_game_details(game_id)
 
     def search_by_name(self, name: str) -> list[dict]:
         """Search IGDB for games by name. Returns list of candidates."""

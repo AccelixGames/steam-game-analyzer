@@ -70,7 +70,10 @@ MOCK_REVIEWS = {
 MOCK_EMPTY = {"success": 1, "reviews": [], "cursor": "next=="}
 
 
-def test_run_pipeline_full(httpx_mock, db_conn):
+def test_run_pipeline_full(httpx_mock, db_conn, monkeypatch):
+    monkeypatch.delenv("TWITCH_CLIENT_ID", raising=False)
+    monkeypatch.delenv("TWITCH_CLIENT_SECRET", raising=False)
+    monkeypatch.delenv("RAWG_API_KEY", raising=False)
     from steam_crawler.pipeline.runner import run_pipeline
 
     httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
@@ -94,7 +97,10 @@ def test_run_pipeline_full(httpx_mock, db_conn):
     assert len(stats) >= 2
 
 
-def test_run_pipeline_uses_learned_delays(httpx_mock, db_conn):
+def test_run_pipeline_uses_learned_delays(httpx_mock, db_conn, monkeypatch):
+    monkeypatch.delenv("TWITCH_CLIENT_ID", raising=False)
+    monkeypatch.delenv("TWITCH_CLIENT_SECRET", raising=False)
+    monkeypatch.delenv("RAWG_API_KEY", raising=False)
     from steam_crawler.api.rate_limiter import AdaptiveRateLimiter, save_rate_stats
     from steam_crawler.db.repository import create_version
     from steam_crawler.pipeline.runner import run_pipeline
@@ -151,10 +157,11 @@ def test_runner_calls_step1d_step1e(httpx_mock, db_conn, monkeypatch):
     }}})
     # Step1d mock (IGDB auth)
     httpx_mock.add_response(json={"access_token": "tok", "expires_in": 5000, "token_type": "bearer"})
-    # Step1d mock (IGDB search by steam id)
+    # Step1d mock (IGDB external_games lookup)
+    httpx_mock.add_response(json=[{"id": 999, "game": 1942, "uid": "730"}])
+    # Step1d mock (IGDB fetch_game_details)
     httpx_mock.add_response(json=[{
         "id": 1942, "name": "CS2", "summary": "A FPS", "themes": [], "keywords": [],
-        "external_games": [{"uid": "730", "category": 1}],
     }])
     # Step1e mock (RAWG search)
     httpx_mock.add_response(json={"count": 1, "results": [

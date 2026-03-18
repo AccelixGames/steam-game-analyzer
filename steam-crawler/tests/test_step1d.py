@@ -3,6 +3,8 @@ import pytest
 
 MOCK_TOKEN = {"access_token": "tok", "expires_in": 5000, "token_type": "bearer"}
 
+MOCK_EXTERNAL_GAMES = [{"id": 999, "game": 1942, "uid": "730"}]
+
 MOCK_IGDB_GAME = [
     {
         "id": 1942,
@@ -12,7 +14,6 @@ MOCK_IGDB_GAME = [
         "aggregated_rating": 88.0,
         "themes": [{"id": 1, "name": "Action"}],
         "keywords": [{"id": 10, "name": "fps"}, {"id": 20, "name": "multiplayer"}],
-        "external_games": [{"uid": "730", "category": 1}],
     }
 ]
 
@@ -33,7 +34,8 @@ def test_step1d_enriches_game(httpx_mock, db_conn):
 
     version = _setup_game(db_conn)
     httpx_mock.add_response(json=MOCK_TOKEN)
-    httpx_mock.add_response(json=MOCK_IGDB_GAME)
+    httpx_mock.add_response(json=MOCK_EXTERNAL_GAMES)  # external_games
+    httpx_mock.add_response(json=MOCK_IGDB_GAME)       # fetch_game_details
 
     count = run_step1d(
         db_conn, version=version, source_tag="tag:FPS",
