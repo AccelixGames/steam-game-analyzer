@@ -9,7 +9,7 @@ from rich.console import Console
 
 from steam_crawler.api.resilience import FailureTracker
 from steam_crawler.api.steamspy import SteamSpyClient
-from steam_crawler.db.repository import get_games_by_version, update_collection_status
+from steam_crawler.db.repository import get_games_by_version, update_collection_status, upsert_game_tags
 
 console = Console()
 
@@ -39,7 +39,7 @@ def run_step1b(
                     conn.execute(
                         "UPDATE games SET tags = ? WHERE appid = ?", (tags_json, appid)
                     )
-                    conn.commit()
+                    upsert_game_tags(conn, appid, detail.tags)
                     enriched += 1
                 update_collection_status(
                     conn, appid=appid, version=version, steamspy_done=True

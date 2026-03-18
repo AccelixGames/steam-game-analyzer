@@ -78,3 +78,34 @@ def test_update_game_review_stats(db_conn):
     row = db_conn.execute("SELECT steam_positive, review_score FROM games WHERE appid=730").fetchone()
     assert row["steam_positive"] == 5000
     assert row["review_score"] == "Very Positive"
+
+
+def test_upsert_game_tags(db_conn):
+    from steam_crawler.db.repository import upsert_game, upsert_game_tags
+
+    upsert_game(db_conn, GameSummary(appid=730, name="CS2"), version=1)
+    tags = {"FPS": 90000, "Shooter": 65000, "Multiplayer": 55000}
+    inserted = upsert_game_tags(db_conn, 730, tags)
+    assert inserted == 3
+
+    rows = db_conn.execute(
+        "SELECT tag_name, vote_count FROM game_tags WHERE appid=730 ORDER BY vote_count DESC"
+    ).fetchall()
+    assert len(rows) == 3
+    assert rows[0]["tag_name"] == "FPS"
+    assert rows[0]["vote_count"] == 90000
+
+
+def test_upsert_game_tags_updates_existing(db_conn):
+    from steam_crawler.db.repository import upsert_game, upsert_game_tags
+
+    upsert_game(db_conn, GameSummary(appid=730, name="CS2"), version=1)
+    upsert_game_tags(db_conn, 730, {"FPS": 90000})
+    upsert_game_tags(db_conn, 730, {"FPS": 95000, "Action": 50000})
+
+    rows = db_conn.execute(
+        "SELECT tag_name, vote_count FROM game_tags WHERE appid=730 ORDER BY vote_count DESC"
+    ).fetchall()
+    assert len(rows) == 2
+    assert rows[0]["tag_name"] == "FPS"
+    assert rows[0]["vote_count"] == 95000

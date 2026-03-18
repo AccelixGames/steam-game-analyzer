@@ -109,6 +109,15 @@ CREATE INDEX IF NOT EXISTS idx_failure_logs_type ON failure_logs(failure_type);
 CREATE INDEX IF NOT EXISTS idx_failure_logs_session ON failure_logs(session_id);
 CREATE INDEX IF NOT EXISTS idx_failure_logs_unresolved ON failure_logs(resolved) WHERE resolved = 0;
 
+CREATE TABLE IF NOT EXISTS game_tags (
+    appid          INTEGER REFERENCES games(appid),
+    tag_name       TEXT NOT NULL,
+    vote_count     INTEGER NOT NULL,
+    PRIMARY KEY (appid, tag_name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_tags_tag ON game_tags(tag_name);
+
 CREATE TABLE IF NOT EXISTS game_collection_status (
     appid           INTEGER,
     version         INTEGER REFERENCES data_versions(version),

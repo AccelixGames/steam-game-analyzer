@@ -10,6 +10,7 @@ def test_init_db_creates_all_tables(db_conn):
         "changelog",
         "rate_limit_stats",
         "failure_logs",
+        "game_tags",
         "game_collection_status",
     }
     assert expected.issubset(tables)
@@ -23,6 +24,7 @@ def test_init_db_creates_indexes(db_conn):
     assert "idx_reviews_appid" in indexes
     assert "idx_changelog_version" in indexes
     assert "idx_failure_logs_type" in indexes
+    assert "idx_game_tags_tag" in indexes
 
 
 def test_init_db_is_idempotent(db_path):
@@ -35,4 +37,4 @@ def test_init_db_is_idempotent(db_path):
         "SELECT count(*) FROM sqlite_master WHERE type='table'"
     ).fetchone()[0]
     conn2.close()
-    assert tables >= 7
+    assert tables >= 8

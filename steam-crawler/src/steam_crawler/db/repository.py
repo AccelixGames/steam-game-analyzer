@@ -192,6 +192,19 @@ def get_games_by_version(
     return [dict(row) for row in cursor.fetchall()]
 
 
+def upsert_game_tags(conn: sqlite3.Connection, appid: int, tags: dict[str, int]) -> int:
+    """Insert or replace game tags into game_tags table. Returns count inserted."""
+    inserted = 0
+    for tag_name, vote_count in tags.items():
+        conn.execute(
+            "INSERT OR REPLACE INTO game_tags (appid, tag_name, vote_count) VALUES (?, ?, ?)",
+            (appid, tag_name, vote_count),
+        )
+        inserted += 1
+    conn.commit()
+    return inserted
+
+
 def update_collection_status(
     conn: sqlite3.Connection, appid: int, version: int, **kwargs: Any
 ) -> None:
