@@ -23,17 +23,18 @@ class MediaItem:
 @dataclass
 class StoreDetails:
     appid: int
-    short_description: str | None = None
-    detailed_description: str | None = None
+    short_description_en: str | None = None
+    short_description_ko: str | None = None
     header_image: str | None = None
     website: str | None = None
     media: list[MediaItem] = field(default_factory=list)
 
     @classmethod
-    def from_steam_api(cls, appid: int, data: dict[str, Any]) -> StoreDetails:
+    def from_steam_api(cls, appid: int, data_en: dict[str, Any],
+                       data_ko: dict[str, Any] | None = None) -> StoreDetails:
         media = []
 
-        for ss in data.get("screenshots", []):
+        for ss in data_en.get("screenshots", []):
             media.append(MediaItem(
                 media_type="screenshot",
                 media_id=ss.get("id", 0),
@@ -41,7 +42,7 @@ class StoreDetails:
                 url_full=ss.get("path_full"),
             ))
 
-        for mv in data.get("movies", []):
+        for mv in data_en.get("movies", []):
             webm = mv.get("webm", {})
             mp4 = mv.get("mp4", {})
             media.append(MediaItem(
@@ -54,10 +55,10 @@ class StoreDetails:
 
         return cls(
             appid=appid,
-            short_description=data.get("short_description"),
-            detailed_description=data.get("detailed_description"),
-            header_image=data.get("header_image"),
-            website=data.get("website"),
+            short_description_en=data_en.get("short_description"),
+            short_description_ko=data_ko.get("short_description") if data_ko else None,
+            header_image=data_en.get("header_image"),
+            website=data_en.get("website"),
             media=media,
         )
 
@@ -70,19 +71,27 @@ class SteamStoreClient:
             ),
         )
 
-    def fetch_app_details(self, appid: int) -> StoreDetails | None:
-        """Fetch store page details for a game. Returns None if not found."""
+    def _fetch_raw(self, appid: int, lang: str = "en") -> dict | None:
+        """Fetch raw app data for a language. Returns None if not found."""
         response = self._client.get(
-            STORE_BASE, params={"appids": str(appid), "cc": "us", "l": "en"}
+            STORE_BASE, params={"appids": str(appid), "cc": "us", "l": lang}
         )
         response.raise_for_status()
         data = response.json()
-
         app_data = data.get(str(appid), {})
         if not app_data.get("success"):
             return None
+        return app_data["data"]
 
-        return StoreDetails.from_steam_api(appid, app_data["data"])
+    def fetch_app_details(self, appid: int) -> StoreDetails | None:
+        """Fetch store page details in English + Korean."""
+        data_en = self._fetch_raw(appid, lang="english")
+        if data_en is None:
+            return None
+
+        data_ko = self._fetch_raw(appid, lang="koreana")
+
+        return StoreDetails.from_steam_api(appid, data_en, data_ko)
 
     def close(self):
         self._client.close()

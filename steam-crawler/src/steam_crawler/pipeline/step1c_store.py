@@ -41,7 +41,8 @@ def run_step1c(
 
                 update_game_store_details(
                     conn, appid=appid,
-                    short_description=details.short_description,
+                    short_description_en=details.short_description_en,
+                    short_description_ko=details.short_description_ko,
                     header_image=details.header_image,
                 )
 
