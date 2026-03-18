@@ -317,6 +317,92 @@ def upsert_game_media(
     conn.commit()
 
 
+def update_game_igdb_details(
+    conn: sqlite3.Connection,
+    appid: int,
+    igdb_id: int,
+    igdb_summary: str | None = None,
+    igdb_storyline: str | None = None,
+    igdb_rating: float | None = None,
+) -> None:
+    """Update IGDB enrichment data on the games table."""
+    conn.execute(
+        "UPDATE games SET igdb_id=?, igdb_summary=?, igdb_storyline=?, igdb_rating=?, updated_at=? WHERE appid=?",
+        (igdb_id, igdb_summary, igdb_storyline, igdb_rating, _now(), appid),
+    )
+    conn.commit()
+
+
+def update_game_rawg_details(
+    conn: sqlite3.Connection,
+    appid: int,
+    rawg_id: int,
+    rawg_description: str | None = None,
+    rawg_rating: float | None = None,
+    metacritic_score: int | None = None,
+) -> None:
+    """Update RAWG enrichment data on the games table."""
+    conn.execute(
+        "UPDATE games SET rawg_id=?, rawg_description=?, rawg_rating=?, metacritic_score=?, updated_at=? WHERE appid=?",
+        (rawg_id, rawg_description, rawg_rating, metacritic_score, _now(), appid),
+    )
+    conn.commit()
+
+
+def upsert_game_themes(conn: sqlite3.Connection, appid: int, themes: dict[int, str]) -> int:
+    """Insert or replace game themes. themes = {igdb_theme_id: theme_name}.
+    Auto-creates theme_catalog entries. Returns count inserted."""
+    inserted = 0
+    for theme_id, theme_name in themes.items():
+        conn.execute(
+            "INSERT OR REPLACE INTO theme_catalog (id, name) VALUES (?, ?)",
+            (theme_id, theme_name),
+        )
+        conn.execute(
+            "INSERT OR REPLACE INTO game_themes (appid, theme_id, source) VALUES (?, ?, 'igdb')",
+            (appid, theme_id),
+        )
+        inserted += 1
+    conn.commit()
+    return inserted
+
+
+def upsert_game_keywords(conn: sqlite3.Connection, appid: int, keywords: dict[int, str]) -> int:
+    """Insert or replace game keywords. keywords = {igdb_keyword_id: keyword_name}.
+    Auto-creates keyword_catalog entries. Returns count inserted."""
+    inserted = 0
+    for keyword_id, keyword_name in keywords.items():
+        conn.execute(
+            "INSERT OR REPLACE INTO keyword_catalog (id, name) VALUES (?, ?)",
+            (keyword_id, keyword_name),
+        )
+        conn.execute(
+            "INSERT OR REPLACE INTO game_keywords (appid, keyword_id, source) VALUES (?, ?, 'igdb')",
+            (appid, keyword_id),
+        )
+        inserted += 1
+    conn.commit()
+    return inserted
+
+
+def get_games_needing_enrichment(
+    conn: sqlite3.Connection, source: str, source_tag: str | None = None,
+) -> list[dict]:
+    """Return games that haven't been enriched by the given source.
+    source: 'igdb' or 'rawg'. Excludes id=-1 (unmatchable)."""
+    id_col = "igdb_id" if source == "igdb" else "rawg_id"
+    if source_tag:
+        rows = conn.execute(
+            f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) AND source_tag = ? ORDER BY positive DESC",
+            (source_tag,),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) ORDER BY positive DESC"
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
 def update_collection_status(
     conn: sqlite3.Connection, appid: int, version: int, **kwargs: Any
 ) -> None:
