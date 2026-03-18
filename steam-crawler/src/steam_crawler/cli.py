@@ -174,5 +174,37 @@ def genres(refresh, db):
     conn.close()
 
 
+@main.command()
+@click.option("--db", default=DEFAULT_DB, help="Database path")
+@click.option("--limit", default=30, help="Max tags to show")
+def tags(db, limit):
+    """Show collected tag catalog with game counts."""
+    from steam_crawler.db.repository import get_tag_catalog
+
+    conn = init_db(db)
+    catalog = get_tag_catalog(conn)
+
+    if not catalog:
+        console.print("No tags collected yet. Run [bold]collect[/bold] first to populate tags.")
+        conn.close()
+        return
+
+    table = Table(title=f"Tag Catalog (top {min(limit, len(catalog))} of {len(catalog)})")
+    table.add_column("#", style="dim")
+    table.add_column("Tag", style="bold")
+    table.add_column("Games", justify="right", style="green")
+    table.add_column("Total Votes", justify="right")
+
+    for i, row in enumerate(catalog[:limit], 1):
+        collected = row["collected_games"] or 0
+        votes = f"{row['total_votes']:,}" if row["total_votes"] else "-"
+        table.add_row(str(i), row["tag_name"], str(collected), votes)
+
+    console.print()
+    console.print(table)
+    console.print(f"\n[dim]Total unique tags: {len(catalog)}[/dim]")
+    conn.close()
+
+
 if __name__ == "__main__":
     main()

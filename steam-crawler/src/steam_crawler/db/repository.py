@@ -234,10 +234,46 @@ def upsert_game_genres(conn: sqlite3.Connection, appid: int, genres: list[str]) 
     return inserted
 
 
+def upsert_tag_catalog(conn: sqlite3.Connection, tag_name: str, total_games: int | None = None) -> None:
+    """Insert or update a tag in the catalog."""
+    if total_games is not None:
+        conn.execute(
+            "INSERT OR REPLACE INTO tag_catalog (tag_name, total_games, fetched_at) VALUES (?, ?, ?)",
+            (tag_name, total_games, _now()),
+        )
+    else:
+        conn.execute(
+            "INSERT OR IGNORE INTO tag_catalog (tag_name) VALUES (?)",
+            (tag_name,),
+        )
+    conn.commit()
+
+
+def get_tag_catalog(conn: sqlite3.Connection) -> list[dict]:
+    """Get tag catalog with collection coverage."""
+    rows = conn.execute("""
+        SELECT tc.tag_name, tc.total_games, tc.fetched_at,
+               count(gt.appid) as collected_games,
+               sum(gt.vote_count) as total_votes
+        FROM tag_catalog tc
+        LEFT JOIN game_tags gt ON tc.tag_name = gt.tag_name
+        GROUP BY tc.tag_name
+        ORDER BY collected_games DESC, total_votes DESC
+    """).fetchall()
+    return [dict(r) for r in rows]
+
+
 def upsert_game_tags(conn: sqlite3.Connection, appid: int, tags: dict[str, int]) -> int:
-    """Insert or replace game tags into game_tags table. Returns count inserted."""
+    """Insert or replace game tags into game_tags table.
+    Auto-creates tag_catalog entries if they don't exist.
+    Returns count inserted.
+    """
     inserted = 0
     for tag_name, vote_count in tags.items():
+        conn.execute(
+            "INSERT OR IGNORE INTO tag_catalog (tag_name) VALUES (?)",
+            (tag_name,),
+        )
         conn.execute(
             "INSERT OR REPLACE INTO game_tags (appid, tag_name, vote_count) VALUES (?, ?, ?)",
             (appid, tag_name, vote_count),

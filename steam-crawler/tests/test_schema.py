@@ -10,6 +10,7 @@ def test_init_db_creates_all_tables(db_conn):
         "changelog",
         "rate_limit_stats",
         "failure_logs",
+        "tag_catalog",
         "game_tags",
         "genre_catalog",
         "game_genres",
@@ -40,4 +41,4 @@ def test_init_db_is_idempotent(db_path):
         "SELECT count(*) FROM sqlite_master WHERE type='table'"
     ).fetchone()[0]
     conn2.close()
-    assert tables >= 10
+    assert tables >= 11
