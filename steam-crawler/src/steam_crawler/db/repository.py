@@ -542,7 +542,16 @@ def get_games_needing_enrichment(
     source: 'igdb' or 'rawg'. Excludes id=-1 (unmatchable).
     If lock_owner is provided, excludes games locked by a different owner.
     """
-    id_col_map = {"igdb": "igdb_id", "rawg": "rawg_id", "twitch": "twitch_game_id"}
+    id_col_map = {
+        "igdb": "igdb_id",
+        "rawg": "rawg_id",
+        "twitch": "twitch_game_id",
+        "protondb": "protondb_tier",
+        "hltb": "hltb_id",
+        "cheapshark": "cheapshark_deal_rating",
+        "opencritic": "opencritic_id",
+        "pcgamingwiki": "pcgw_engine",
+    }
     id_col = id_col_map[source]
     now = datetime.now(timezone.utc).isoformat()
 
@@ -609,6 +618,151 @@ def update_collection_status(
         )
 
     conn.commit()
+
+
+def update_game_protondb(
+    conn: sqlite3.Connection,
+    appid: int,
+    tier: str,
+    confidence: str | None = None,
+    trending_tier: str | None = None,
+    report_count: int | None = None,
+) -> None:
+    """Update ProtonDB compatibility data."""
+    conn.execute(
+        """UPDATE games SET protondb_tier=?, protondb_confidence=?,
+           protondb_trending_tier=?, protondb_report_count=?,
+           updated_at=? WHERE appid=?""",
+        (tier, confidence, trending_tier, report_count, _now(), appid),
+    )
+    conn.commit()
+
+
+def update_game_hltb(
+    conn: sqlite3.Connection,
+    appid: int,
+    hltb_id: int,
+    main_story: float | None = None,
+    main_extra: float | None = None,
+    completionist: float | None = None,
+) -> None:
+    """Update HowLongToBeat completion times."""
+    conn.execute(
+        """UPDATE games SET hltb_id=?, hltb_main_story=?,
+           hltb_main_extra=?, hltb_completionist=?,
+           updated_at=? WHERE appid=?""",
+        (hltb_id, main_story, main_extra, completionist, _now(), appid),
+    )
+    conn.commit()
+
+
+def update_game_cheapshark(
+    conn: sqlite3.Connection,
+    appid: int,
+    deal_rating: float | None = None,
+    lowest_price: float | None = None,
+    lowest_price_date: str | None = None,
+) -> None:
+    """Update CheapShark deal/price data."""
+    conn.execute(
+        """UPDATE games SET cheapshark_deal_rating=?,
+           cheapshark_lowest_price=?, cheapshark_lowest_price_date=?,
+           updated_at=? WHERE appid=?""",
+        (deal_rating, lowest_price, lowest_price_date, _now(), appid),
+    )
+    conn.commit()
+
+
+def update_game_opencritic(
+    conn: sqlite3.Connection,
+    appid: int,
+    opencritic_id: int,
+    score: float | None = None,
+    pct_recommend: float | None = None,
+    tier: str | None = None,
+    review_count: int | None = None,
+) -> None:
+    """Update OpenCritic aggregate scores."""
+    conn.execute(
+        """UPDATE games SET opencritic_id=?, opencritic_score=?,
+           opencritic_pct_recommend=?, opencritic_tier=?,
+           opencritic_review_count=?,
+           updated_at=? WHERE appid=?""",
+        (opencritic_id, score, pct_recommend, tier, review_count, _now(), appid),
+    )
+    conn.commit()
+
+
+def update_game_pcgamingwiki(
+    conn: sqlite3.Connection,
+    appid: int,
+    engine: str | None = None,
+    has_ultrawide: bool | None = None,
+    has_hdr: bool | None = None,
+    has_controller: bool | None = None,
+    graphics_api: str | None = None,
+) -> None:
+    """Update PCGamingWiki technical data."""
+    conn.execute(
+        """UPDATE games SET pcgw_engine=?, pcgw_has_ultrawide=?,
+           pcgw_has_hdr=?, pcgw_has_controller=?, pcgw_graphics_api=?,
+           updated_at=? WHERE appid=?""",
+        (engine, int(has_ultrawide) if has_ultrawide is not None else None,
+         int(has_hdr) if has_hdr is not None else None,
+         int(has_controller) if has_controller is not None else None,
+         graphics_api, _now(), appid),
+    )
+    conn.commit()
+
+
+def upsert_external_review(
+    conn: sqlite3.Connection,
+    appid: int,
+    source: str,
+    source_id: str,
+    title: str | None = None,
+    score: float | None = None,
+    author: str | None = None,
+    outlet: str | None = None,
+    url: str | None = None,
+    snippet: str | None = None,
+    view_count: int | None = None,
+    like_ratio: float | None = None,
+    published_at: str | None = None,
+) -> None:
+    """Insert or update an external review."""
+    conn.execute(
+        """INSERT INTO external_reviews
+           (appid, source, source_id, title, score, author, outlet, url,
+            snippet, view_count, like_ratio, published_at, fetched_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT(appid, source, source_id) DO UPDATE SET
+               title=excluded.title, score=excluded.score,
+               snippet=excluded.snippet, view_count=excluded.view_count,
+               like_ratio=excluded.like_ratio, fetched_at=excluded.fetched_at""",
+        (appid, source, source_id, title, score, author, outlet, url,
+         snippet, view_count, like_ratio, published_at, _now()),
+    )
+    conn.commit()
+
+
+def get_external_reviews(
+    conn: sqlite3.Connection,
+    appid: int,
+    source: str | None = None,
+) -> list[dict]:
+    """Get external reviews for a game, optionally filtered by source."""
+    if source:
+        rows = conn.execute(
+            "SELECT * FROM external_reviews WHERE appid=? AND source=? ORDER BY score DESC",
+            (appid, source),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT * FROM external_reviews WHERE appid=? ORDER BY source, score DESC",
+            (appid,),
+        ).fetchall()
+    return [dict(r) for r in rows]
 
 
 # --------------- Crawl Locks ---------------

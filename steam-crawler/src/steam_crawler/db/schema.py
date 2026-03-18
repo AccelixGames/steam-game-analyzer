@@ -218,6 +218,27 @@ CREATE TABLE IF NOT EXISTS crawl_locks (
     expires_at  TIMESTAMP NOT NULL,
     owner       TEXT
 );
+
+CREATE TABLE IF NOT EXISTS external_reviews (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    appid         INTEGER REFERENCES games(appid),
+    source        TEXT NOT NULL,
+    source_id     TEXT,
+    title         TEXT,
+    score         REAL,
+    author        TEXT,
+    outlet        TEXT,
+    url           TEXT,
+    snippet       TEXT,
+    view_count    INTEGER,
+    like_ratio    REAL,
+    published_at  TIMESTAMP,
+    fetched_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(appid, source, source_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_ext_reviews_appid ON external_reviews(appid);
+CREATE INDEX IF NOT EXISTS idx_ext_reviews_source ON external_reviews(source);
 """
 
 
@@ -261,8 +282,38 @@ def _migrate(conn: sqlite3.Connection) -> None:
         ("twitch_top_language", "TEXT"),
         ("twitch_lang_distribution", "TEXT"),
         ("twitch_fetched_at", "TIMESTAMP"),
+        # ProtonDB
+        ("protondb_tier", "TEXT"),
+        ("protondb_confidence", "TEXT"),
+        ("protondb_trending_tier", "TEXT"),
+        ("protondb_report_count", "INTEGER"),
+        # HowLongToBeat
+        ("hltb_id", "INTEGER"),
+        ("hltb_main_story", "REAL"),
+        ("hltb_main_extra", "REAL"),
+        ("hltb_completionist", "REAL"),
+        # CheapShark
+        ("cheapshark_deal_rating", "REAL"),
+        ("cheapshark_lowest_price", "REAL"),
+        ("cheapshark_lowest_price_date", "TEXT"),
+        # OpenCritic
+        ("opencritic_id", "INTEGER"),
+        ("opencritic_score", "REAL"),
+        ("opencritic_pct_recommend", "REAL"),
+        ("opencritic_tier", "TEXT"),
+        ("opencritic_review_count", "INTEGER"),
+        # PCGamingWiki
+        ("pcgw_engine", "TEXT"),
+        ("pcgw_has_ultrawide", "INTEGER"),
+        ("pcgw_has_hdr", "INTEGER"),
+        ("pcgw_has_controller", "INTEGER"),
+        ("pcgw_graphics_api", "TEXT"),
     ]
     for col, col_type in migrations:
         if col not in existing:
             conn.execute(f"ALTER TABLE games ADD COLUMN {col} {col_type}")
+    conn.commit()
+    # Indexes on migrated columns
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_games_opencritic_id ON games(opencritic_id)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_games_hltb_id ON games(hltb_id)")
     conn.commit()
