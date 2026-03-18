@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "steam-analyzer": {
+      "command": "python",
+      "args": ["-m", "steam_analyzer.server"],
+      "cwd": "./steam-analyzer",
+      "env": {
+        "STEAM_DB_PATH": "../data/steam.db"
+      }
+    }
+  }
+}
