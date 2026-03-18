@@ -43,3 +43,48 @@ def test_init_db_is_idempotent(db_path):
     ).fetchone()[0]
     conn2.close()
     assert tables >= 12
+
+
+def test_games_has_igdb_columns(db_conn):
+    """games table has IGDB enrichment columns."""
+    row = db_conn.execute("PRAGMA table_info(games)").fetchall()
+    col_names = [r["name"] for r in row]
+    assert "igdb_id" in col_names
+    assert "igdb_summary" in col_names
+    assert "igdb_storyline" in col_names
+    assert "igdb_rating" in col_names
+
+
+def test_games_has_rawg_columns(db_conn):
+    """games table has RAWG enrichment columns."""
+    row = db_conn.execute("PRAGMA table_info(games)").fetchall()
+    col_names = [r["name"] for r in row]
+    assert "rawg_id" in col_names
+    assert "rawg_description" in col_names
+    assert "rawg_rating" in col_names
+    assert "metacritic_score" in col_names
+
+
+def test_theme_catalog_table_exists(db_conn):
+    """theme_catalog and game_themes tables exist with correct schema."""
+    db_conn.execute("INSERT INTO theme_catalog (id, name) VALUES (1, 'Horror')")
+    db_conn.execute("INSERT INTO games (appid, name) VALUES (730, 'CS2')")
+    db_conn.execute(
+        "INSERT INTO game_themes (appid, theme_id, source) VALUES (730, 1, 'igdb')"
+    )
+    db_conn.commit()
+    row = db_conn.execute("SELECT * FROM game_themes WHERE appid=730").fetchone()
+    assert row["theme_id"] == 1
+    assert row["source"] == "igdb"
+
+
+def test_keyword_catalog_table_exists(db_conn):
+    """keyword_catalog and game_keywords tables exist with correct schema."""
+    db_conn.execute("INSERT INTO keyword_catalog (id, name) VALUES (1, 'roguelike')")
+    db_conn.execute("INSERT INTO games (appid, name) VALUES (730, 'CS2')")
+    db_conn.execute(
+        "INSERT INTO game_keywords (appid, keyword_id, source) VALUES (730, 1, 'igdb')"
+    )
+    db_conn.commit()
+    row = db_conn.execute("SELECT * FROM game_keywords WHERE appid=730").fetchone()
+    assert row["keyword_id"] == 1

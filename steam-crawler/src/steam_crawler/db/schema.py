@@ -19,6 +19,14 @@ CREATE TABLE IF NOT EXISTS games (
     short_description_en TEXT,
     short_description_ko TEXT,
     header_image   TEXT,
+    igdb_id          INTEGER,
+    igdb_summary     TEXT,
+    igdb_storyline   TEXT,
+    igdb_rating      REAL,
+    rawg_id          INTEGER,
+    rawg_description TEXT,
+    rawg_rating      REAL,
+    metacritic_score INTEGER,
     source_tag     TEXT,
     first_seen_ver INTEGER,
     updated_at     TIMESTAMP
@@ -151,6 +159,41 @@ CREATE TABLE IF NOT EXISTS game_media (
 );
 
 CREATE INDEX IF NOT EXISTS idx_game_media_appid ON game_media(appid);
+
+CREATE TABLE IF NOT EXISTS theme_catalog (
+    id   INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS game_themes (
+    appid    INTEGER NOT NULL,
+    theme_id INTEGER NOT NULL,
+    source   TEXT NOT NULL DEFAULT 'igdb',
+    PRIMARY KEY (appid, theme_id),
+    FOREIGN KEY (appid) REFERENCES games(appid),
+    FOREIGN KEY (theme_id) REFERENCES theme_catalog(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_themes_theme ON game_themes(theme_id);
+
+CREATE TABLE IF NOT EXISTS keyword_catalog (
+    id   INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS game_keywords (
+    appid      INTEGER NOT NULL,
+    keyword_id INTEGER NOT NULL,
+    source     TEXT NOT NULL DEFAULT 'igdb',
+    PRIMARY KEY (appid, keyword_id),
+    FOREIGN KEY (appid) REFERENCES games(appid),
+    FOREIGN KEY (keyword_id) REFERENCES keyword_catalog(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_keywords_keyword ON game_keywords(keyword_id);
+
+CREATE INDEX IF NOT EXISTS idx_games_igdb_id ON games(igdb_id);
+CREATE INDEX IF NOT EXISTS idx_games_rawg_id ON games(rawg_id);
 
 CREATE TABLE IF NOT EXISTS game_collection_status (
     appid           INTEGER,
