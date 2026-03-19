@@ -30,10 +30,11 @@ class SteamReviewsClient:
     def fetch_reviews_page(
         self, appid: int, cursor: str = "*",
         language: str = "all", review_type: str = "all",
+        review_filter: str = "recent",
     ) -> tuple[list[Review], str, bool]:
         response = self._client.get(
             f"{REVIEWS_BASE}/{appid}",
-            params={"json": "1", "cursor": cursor, "filter": "recent",
+            params={"json": "1", "cursor": cursor, "filter": review_filter,
                     "purchase_type": "all", "num_per_page": "80",
                     "language": language, "review_type": review_type},
         )

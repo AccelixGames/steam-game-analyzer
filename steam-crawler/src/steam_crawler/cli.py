@@ -23,7 +23,7 @@ def main():
 @click.option("--top100", is_flag=True, help="Top 100 in last 2 weeks")
 @click.option("--limit", default=50, help="Max games to collect in Step 1")
 @click.option("--top-n", default=10, help="Top N games for review crawling")
-@click.option("--max-reviews", default=500, help="Max reviews per game")
+@click.option("--max-reviews", default=1000, help="Max reviews per game")
 @click.option("--language", default="all", help="Review language filter")
 @click.option("--review-type", default="all", type=click.Choice(["all", "positive", "negative"]))
 @click.option("--resume", is_flag=True, help="Resume interrupted collection")

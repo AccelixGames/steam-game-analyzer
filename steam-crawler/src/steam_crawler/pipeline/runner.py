@@ -59,7 +59,7 @@ def run_pipeline(
     query_value: str | None = None,
     limit: int = 50,
     top_n: int = 10,
-    max_reviews: int = 500,
+    max_reviews: int = 1000,
     language: str = "all",
     review_type: str = "all",
     step: int | None = None,
