@@ -156,6 +156,7 @@ def run_step3(
     reviews_client: SteamReviewsClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Crawl review text for top N games.
 
@@ -163,7 +164,17 @@ def run_step3(
     """
     client = reviews_client or SteamReviewsClient()
     tracker = failure_tracker or FailureTracker()
-    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)[:top_n]
+    if appids is not None:
+        games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner, appids=appids)
+    else:
+        games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)[:top_n]
+
+    # ── Preflight log ──
+    console.print(f"\n[bold cyan][Preflight] Step 3: {len(games)} game(s) targeted[/bold cyan]")
+    for g in games:
+        existing = _count_reviews(conn, g["appid"])
+        console.print(f"  - {g['name']} (appid={g['appid']}) | collected={existing} | max={max_reviews}")
+    console.print()
 
     # Backfill: reset games that were "done" under old threshold
     reset_count = _reset_undercollected(conn, version, max_reviews)
