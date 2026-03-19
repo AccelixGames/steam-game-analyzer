@@ -101,16 +101,17 @@ def test_valid_reviews_view_exists(db_conn):
 
 def _insert_review(conn, recommendation_id, appid, review_text,
                    playtime_at_review=100, voted_up=1,
-                   weighted_vote_score=0.5, votes_up=1):
+                   weighted_vote_score=0.5, votes_up=1,
+                   language=None):
     """테스트용 리뷰 삽입 헬퍼."""
     conn.execute("INSERT OR IGNORE INTO games (appid, name) VALUES (?, ?)",
                  (appid, f"Game{appid}"))
     conn.execute(
         """INSERT INTO reviews
-           (recommendation_id, appid, review_text, playtime_at_review,
+           (recommendation_id, appid, review_text, language, playtime_at_review,
             voted_up, weighted_vote_score, votes_up)
-           VALUES (?, ?, ?, ?, ?, ?, ?)""",
-        (recommendation_id, appid, review_text, playtime_at_review,
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+        (recommendation_id, appid, review_text, language, playtime_at_review,
          voted_up, weighted_vote_score, votes_up),
     )
     conn.commit()
@@ -197,3 +198,35 @@ def test_valid_reviews_survives_reinit(db_path):
     }
     assert "valid_reviews" in views
     conn2.close()
+
+
+def test_valid_reviews_korean_50char_passes(db_conn):
+    """한국어 50자 리뷰 → 통과."""
+    text = "가" * 50
+    _insert_review(db_conn, "kr1", 1, text, language="koreana", playtime_at_review=10)
+    rows = db_conn.execute("SELECT * FROM valid_reviews WHERE appid=1").fetchall()
+    assert len(rows) == 1
+
+
+def test_valid_reviews_korean_49char_excluded(db_conn):
+    """한국어 49자 리뷰 → 제외 (playtime < 3000)."""
+    text = "가" * 49
+    _insert_review(db_conn, "kr2", 1, text, language="koreana", playtime_at_review=10)
+    rows = db_conn.execute("SELECT * FROM valid_reviews WHERE appid=1").fetchall()
+    assert len(rows) == 0
+
+
+def test_valid_reviews_english_100char_still_required(db_conn):
+    """영어 99자 리뷰 → 여전히 제외."""
+    text = "a" * 99
+    _insert_review(db_conn, "en1", 1, text, language="english", playtime_at_review=10)
+    rows = db_conn.execute("SELECT * FROM valid_reviews WHERE appid=1").fetchall()
+    assert len(rows) == 0
+
+
+def test_valid_reviews_korean_short_high_playtime(db_conn):
+    """한국어 30자 + 플레이타임 50h+ → 통과 (playtime 우선)."""
+    text = "가" * 30
+    _insert_review(db_conn, "kr3", 1, text, language="koreana", playtime_at_review=3000)
+    rows = db_conn.execute("SELECT * FROM valid_reviews WHERE appid=1").fetchall()
+    assert len(rows) == 1

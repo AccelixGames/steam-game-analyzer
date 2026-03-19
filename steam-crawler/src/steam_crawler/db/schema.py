@@ -260,7 +260,8 @@ CREATE INDEX IF NOT EXISTS idx_wdc_name ON game_wikidata_claims(name);
 
 VIEWS_SQL = """
 -- valid_reviews: 정성 분석용 필터링된 리뷰 View
--- 100자 이상 OR 플레이타임 50시간(3000분) 이상, ASCII art 제거, 게임별 중복 1건
+-- 100자 이상 (한국어: 50자) OR 플레이타임 50시간(3000분) 이상, ASCII art 제거, 게임별 중복 1건
+-- 주의: 부정 보강 후 reviews 테이블 COUNT로 전체 긍/부정 비율 계산 금지 → games.steam_positive/steam_negative 사용
 CREATE VIEW IF NOT EXISTS valid_reviews AS
 WITH filtered AS (
     SELECT *
@@ -271,7 +272,10 @@ WITH filtered AS (
       AND review_text NOT LIKE '%█%'
       AND review_text NOT LIKE '%▀%'
       AND (
-        length(review_text) >= 100
+        CASE
+          WHEN language = 'koreana' THEN length(review_text) >= 50
+          ELSE length(review_text) >= 100
+        END
         OR playtime_at_review >= 3000  -- 50시간 (분 단위)
       )
 ),
