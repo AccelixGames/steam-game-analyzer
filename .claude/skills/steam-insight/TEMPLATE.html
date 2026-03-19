@@ -18,6 +18,9 @@
   {{OWNERS}}             — 소유자 수 (예: 200~500만)
   {{PRICE}}              — 가격 (price ÷ 100, 예: $12.99)
   {{AVG_PLAYTIME}}       — 평균 플레이타임 (avg_playtime ÷ 60, 예: 29.3h)
+  {{NAME_KO}}            — 한국어 게임 이름 (games.name_ko, 없으면 빈 문자열)
+  {{TAGS}}               — 상위 태그 (쉼표 구분: "Action Roguelike,Rogue-lite,Hack and Slash")
+  {{GENRES}}             — 공식 장르 (쉼표 구분: "Action,Indie,RPG")
 
   [Step 01: 마케팅 포지셔닝]
   {{DESC_EN}}            — short_description_en (핵심 키워드 <strong> 처리)
@@ -65,6 +68,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{GAME_NAME}} — 기획 인사이트 보고서</title>
+<meta name="report:appid" content="{{APPID}}">
+<meta name="report:game_name" content="{{GAME_NAME}}">
+<meta name="report:name_ko" content="{{NAME_KO}}">
+<meta name="report:positive_rate" content="{{POSITIVE_RATE}}">
+<meta name="report:review_score" content="{{REVIEW_SCORE}}">
+<meta name="report:owners" content="{{OWNERS}}">
+<meta name="report:price" content="{{PRICE}}">
+<meta name="report:avg_playtime" content="{{AVG_PLAYTIME}}">
+<meta name="report:review_count" content="{{REVIEW_COUNT}}">
+<meta name="report:tags" content="{{TAGS}}">
+<meta name="report:genres" content="{{GENRES}}">
+<meta name="report:date" content="{{DATE}}">
+<meta name="report:modified" content="{{DATE}}">
+<meta name="report:header_image" content="{{HEADER_IMAGE}}">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
   :root {
