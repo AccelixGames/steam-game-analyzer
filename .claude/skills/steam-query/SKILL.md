@@ -67,6 +67,8 @@ ORDER BY g.positive DESC;
 
 ### 리뷰
 
+> **⚠ 편향 주의**: 부정 리뷰 보강 수집으로 `reviews` 테이블의 긍/부정 비율은 실제와 다를 수 있음. 전체 긍정률은 `games.steam_positive` / `games.steam_negative` 사용.
+
 **특정 게임 리뷰 (최신순)**
 ```sql
 SELECT recommendation_id, language, review_text, voted_up,

@@ -19,11 +19,12 @@ conn.row_factory = sqlite3.Row
 ## 유효 리뷰 View
 
 `valid_reviews` — 정성 분석용 필터링된 리뷰 View.
-- 100자 이상 OR 플레이타임 50시간 이상
+- 100자 이상 (한국어: 50자) OR 플레이타임 50시간 이상
 - ASCII art 제거, 게임별 중복 텍스트 1건만 유지 (weighted_vote_score 최고)
 - **정성 분석(리뷰 인용/분석)에만 사용. 정량 통계는 `reviews` 테이블 사용.**
 - playtime_at_review가 NULL이고 100자 미만인 리뷰는 제외됨
 - 필터링으로 일부 게임에서 결과가 LIMIT 미만일 수 있음
+- **⚠ 편향 주의**: 부정 리뷰 보강 수집으로 reviews 테이블의 긍/부정 비율은 실제와 다름. 전체 긍정률/부정률은 반드시 `games.steam_positive` / `games.steam_negative` 사용.
 
 ## 분석 프레임워크: 3자 비교 (Triangulation)
 
