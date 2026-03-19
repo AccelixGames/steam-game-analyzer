@@ -416,13 +416,28 @@
 
   /* ── Responsive ── */
   @media (max-width: 640px) {
-    .toolbar { flex-direction: column; }
-    .search-box { min-width: 100%; }
+    .toolbar { flex-wrap: wrap; }
+    .search-box { flex-basis: 100%; min-width: 0; }
     .site-header { padding: 32px 16px 16px; }
     .site-header h1 { font-size: 22px; }
-    .card-grid { padding: 0 12px; gap: 12px; }
+    .card-grid { padding: 0 12px; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
     .toolbar-wrap { padding: 10px 12px; }
     .active-filters { padding: 8px 12px 0; }
+
+    /* Filter buttons: equal width row */
+    .toolbar .dropdown { flex: 1; }
+    .toolbar .dropdown-btn { width: 100%; justify-content: center; }
+
+    /* Dropdown panels: fixed to viewport width */
+    .dropdown { position: static; }
+    .dropdown-panel { left: 0; right: 0; min-width: 0; max-width: none; position: absolute; }
+
+    /* Touch feedback */
+    .card:active { transform: scale(0.98); border-color: var(--accent-gold-dim); }
+    .dropdown-btn:active { background: var(--bg-accent); }
+
+    /* Card bottom row: smaller text */
+    .card-bottom-row { font-size: 11px; }
   }
 </style>
 </head>
