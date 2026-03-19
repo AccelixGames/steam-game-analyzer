@@ -22,6 +22,11 @@ venv/
 
 # Claude Code
 .claude/settings.local.json
+.claude/skills/steam-crawl-workspace/
+.superpowers/
+docs/superpowers/
+scripts/check-bash-safety.sh
+scripts/check_bash_secrets.py
 
 # OS
 .DS_Store

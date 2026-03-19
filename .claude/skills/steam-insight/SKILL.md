@@ -16,6 +16,15 @@ conn = sqlite3.connect("<project-root>/data/steam.db")
 conn.row_factory = sqlite3.Row
 ```
 
+## 유효 리뷰 View
+
+`valid_reviews` — 정성 분석용 필터링된 리뷰 View.
+- 100자 이상 OR 플레이타임 50시간 이상
+- ASCII art 제거, 게임별 중복 텍스트 1건만 유지 (weighted_vote_score 최고)
+- **정성 분석(리뷰 인용/분석)에만 사용. 정량 통계는 `reviews` 테이블 사용.**
+- playtime_at_review가 NULL이고 100자 미만인 리뷰는 제외됨
+- 필터링으로 일부 게임에서 결과가 LIMIT 미만일 수 있음
+
 ## 분석 프레임워크: 3자 비교 (Triangulation)
 
 게임 기획 분석은 세 가지 시선을 교차 검증하여 수행한다:
@@ -191,21 +200,22 @@ WHERE appid = ? ORDER BY vote_count DESC;
 
 **긍정 리뷰 — 기획이 성공한 지점**
 ```sql
--- 장문 긍정 리뷰 (깊이 있는 피드백)
+-- 장문 긍정 리뷰 (깊이 있는 피드백) — valid_reviews 사용
 SELECT language, review_text, playtime_at_review, votes_up
-FROM reviews WHERE appid = ? AND voted_up = 1 AND length(review_text) > 200
+FROM valid_reviews WHERE appid = ? AND voted_up = 1 AND length(review_text) > 200
 ORDER BY length(review_text) DESC LIMIT 10;
 
--- 가장 도움이 된 긍정 리뷰
+-- 가장 도움이 된 긍정 리뷰 — valid_reviews 사용
 SELECT language, review_text, playtime_at_review, votes_up, weighted_vote_score
-FROM reviews WHERE appid = ? AND voted_up = 1
+FROM valid_reviews WHERE appid = ? AND voted_up = 1
 ORDER BY weighted_vote_score DESC LIMIT 10;
 ```
 
 **부정 리뷰 — 기획의 약점**
 ```sql
+-- 부정 리뷰 — valid_reviews 사용
 SELECT language, review_text, playtime_at_review, votes_up, weighted_vote_score
-FROM reviews WHERE appid = ? AND voted_up = 0
+FROM valid_reviews WHERE appid = ? AND voted_up = 0
 ORDER BY weighted_vote_score DESC LIMIT 10;
 ```
 
