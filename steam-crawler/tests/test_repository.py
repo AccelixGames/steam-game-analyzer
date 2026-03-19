@@ -54,8 +54,10 @@ def test_insert_reviews_ignores_duplicates(db_conn):
 
     reviews = [Review(recommendation_id="r1", appid=730, review_text="Good")]
     insert_reviews_batch(db_conn, reviews, version=1)
-    inserted = insert_reviews_batch(db_conn, reviews, version=1)
-    assert inserted == 0
+    insert_reviews_batch(db_conn, reviews, version=1)
+    # ON CONFLICT DO UPDATE upserts (rowcount=1), but total rows should stay 1
+    count = db_conn.execute("SELECT count(*) FROM reviews WHERE appid=730").fetchone()[0]
+    assert count == 1
 
 
 def test_create_version(db_conn):
