@@ -207,33 +207,3 @@ def test_step3_crawl(db_conn):
         "SELECT * FROM changelog WHERE change_type='reviews_batch_added'"
     ).fetchall()
     assert len(changelog) == 1
-
-
-def test_step3_appids_targeting(db_conn):
-    """appids parameter targets specific games regardless of top_n ranking."""
-    from steam_crawler.api.steamspy import SteamSpyClient
-    from steam_crawler.api.steam_reviews import SteamReviewsClient
-    from steam_crawler.pipeline.step1_collect import run_step1
-    from steam_crawler.pipeline.step3_crawl import run_step3
-
-    version = _create_version(db_conn)
-    spy_client = SteamSpyClient()
-    rev_client = SteamReviewsClient()
-
-    # Insert both games (CS2=730 has higher positive, Dota2=570 is lower)
-    with patch.object(spy_client._client, "get", return_value=_mock_response(MOCK_TAG_RESPONSE)):
-        run_step1(db_conn, query_type="tag", query_value="FPS", limit=2, version=version,
-                  steamspy_client=spy_client)
-
-    # With top_n=1, only CS2 (730) would be targeted. But appids=[570]
-    # should override and target Dota 2 instead.
-    responses = [_mock_response(MOCK_REVIEWS_PAGE), _mock_response(MOCK_EMPTY_PAGE)]
-    with patch.object(rev_client._client, "get", side_effect=responses):
-        run_step3(db_conn, version=version, source_tag="tag:FPS", top_n=1, max_reviews=10,
-                  reviews_client=rev_client, appids=[570])
-
-    # Dota 2 (570) should have reviews, CS2 (730) should NOT
-    reviews_570 = db_conn.execute("SELECT * FROM reviews WHERE appid=570").fetchall()
-    reviews_730 = db_conn.execute("SELECT * FROM reviews WHERE appid=730").fetchall()
-    assert len(reviews_570) == 1, "appids=[570] should target Dota 2"
-    assert len(reviews_730) == 0, "CS2 should not be targeted when appids=[570]"

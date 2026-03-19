@@ -56,21 +56,14 @@ def run_step3(
     reviews_client: SteamReviewsClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
-    appids: list[int] | None = None,
 ) -> int:
     """Crawl review text for top N games.
 
-    If *appids* is given, only those games are targeted (ignoring top_n).
     Returns total number of reviews collected.
     """
     client = reviews_client or SteamReviewsClient()
     tracker = failure_tracker or FailureTracker()
-    all_games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)
-    if appids is not None:
-        target_set = set(appids)
-        games = [g for g in all_games if g["appid"] in target_set]
-    else:
-        games = all_games[:top_n]
+    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)[:top_n]
 
     # Backfill: reset games that were "done" under old threshold
     reset_count = _reset_undercollected(conn, version, max_reviews)

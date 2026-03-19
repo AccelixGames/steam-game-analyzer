@@ -1,5 +1,4 @@
 """Tests for Wikidata SPARQL client."""
-import pytest
 from unittest.mock import MagicMock, patch
 from steam_crawler.api.wikidata import WikidataClient
 
@@ -59,5 +58,5 @@ def test_fetch_by_appid_http_error():
     mock_resp = MagicMock()
     mock_resp.status_code = 500
     with patch.object(client, "get", return_value=mock_resp):
-        with pytest.raises(RuntimeError, match="HTTP 500"):
-            client.fetch_by_steam_appid(1145360)
+        result = client.fetch_by_steam_appid(1145360)
+    assert result is None
