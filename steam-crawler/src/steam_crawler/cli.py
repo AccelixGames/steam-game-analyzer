@@ -30,16 +30,32 @@ def main():
 @click.option("--step", default=None, type=click.IntRange(1, 3), help="Run specific step only")
 @click.option("--note", default=None, help="Note for this version")
 @click.option("--db", default=DEFAULT_DB, help="Database path")
-def collect(tag, genre, top100, limit, top_n, max_reviews, language, review_type, resume, step, note, db):
+@click.option("--appids", default=None, help="Comma-separated appids to target (e.g., 427520,526870). Must use with --step 3")
+def collect(tag, genre, top100, limit, top_n, max_reviews, language, review_type, resume, step, note, db, appids):
     """Collect game data and reviews from Steam."""
-    if not any([tag, genre, top100]):
-        raise click.UsageError("Specify one of: --tag, --genre, --top100")
+    parsed_appids = None
+    if appids:
+        parsed_appids = [int(a.strip()) for a in appids.split(",")]
+        if step is None:
+            step = 3  # appids mode defaults to step 3 only
+        if step != 3:
+            raise click.UsageError("--appids can only be used with --step 3")
+
+    if not any([tag, genre, top100]) and not appids:
+        raise click.UsageError("Specify one of: --tag, --genre, --top100, or --appids")
+
     if sum(bool(x) for x in [tag, genre, top100]) > 1:
         raise click.UsageError("Specify only one of: --tag, --genre, --top100")
 
+    # When using appids standalone, use "appids" as query_type
+    if appids and not any([tag, genre, top100]):
+        query_type = "appids"
+        query_value = ",".join(str(a) for a in parsed_appids)
+    else:
+        query_type = "tag" if tag else ("genre" if genre else "top100")
+        query_value = tag or genre
+
     conn = init_db(db)
-    query_type = "tag" if tag else ("genre" if genre else "top100")
-    query_value = tag or genre
 
     from steam_crawler.pipeline.runner import run_pipeline
     try:
@@ -48,6 +64,7 @@ def collect(tag, genre, top100, limit, top_n, max_reviews, language, review_type
             limit=limit, top_n=top_n, max_reviews=max_reviews,
             language=language, review_type=review_type,
             step=step, resume=resume, note=note,
+            appids=parsed_appids,
         )
     finally:
         conn.close()

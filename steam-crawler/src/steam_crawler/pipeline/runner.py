@@ -65,12 +65,13 @@ def run_pipeline(
     step: int | None = None,
     resume: bool = False,
     note: str | None = None,
+    appids: list[int] | None = None,
 ) -> None:
     """Run the full pipeline or a single step.
 
     Args:
         conn: Database connection.
-        query_type: One of "tag", "genre", "top100".
+        query_type: One of "tag", "genre", "top100", "appids".
         query_value: The tag/genre name (not needed for top100).
         limit: Max games to collect in step 1.
         top_n: Number of top games to crawl reviews for in step 3.
@@ -80,6 +81,7 @@ def run_pipeline(
         step: If set, only run this step (1, 2, or 3).
         resume: If True, resume the last interrupted version.
         note: Optional note for the version.
+        appids: If set, restrict step 3 to these specific app IDs.
     """
     tracker = FailureTracker()
 
@@ -282,6 +284,7 @@ def run_pipeline(
                 review_type=review_type,
                 reviews_client=rev_client,
                 lock_owner=lock_owner,
+                appids=appids,
             )
 
         update_version_status(
