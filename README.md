@@ -2,6 +2,8 @@
 
 Steam 게임 데이터를 수집·분석하는 CLI 도구. 11개 외부 소스에서 게임 정보, 리뷰, 가격, 플레이타임, 기술 스펙 등을 수집하고, MCP 서버를 통해 Claude에서 직접 분석할 수 있습니다.
 
+> **[게임 인사이트 리포트 보기](https://accelixgames.github.io/steam-game-analyzer/insights/)** — 수집된 데이터 기반 게임 기획 분석 보고서
+
 ## 주요 기능
 
 - **게임 탐색** — SteamSpy 태그/장르/Top100 기반 게임 목록 수집
