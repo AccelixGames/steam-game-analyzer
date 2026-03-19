@@ -229,3 +229,41 @@ def test_get_games_needing_enrichment_excludes_unmatchable(db_conn):
     db_conn.commit()
     games = get_games_needing_enrichment(db_conn, source="igdb")
     assert len(games) == 0
+
+
+def test_get_games_by_version_appids_filter(db_conn):
+    """get_games_by_version should return only specified appids when filter is given."""
+    from steam_crawler.db.repository import upsert_game, get_games_by_version
+    from steam_crawler.models.game import GameSummary
+
+    for appid, name, pos in [(100, "GameA", 500), (200, "GameB", 300), (300, "GameC", 100)]:
+        upsert_game(db_conn, GameSummary(appid=appid, name=name, positive=pos, negative=10), version=0)
+
+    result = get_games_by_version(db_conn, appids=[100, 300])
+    returned_ids = [g["appid"] for g in result]
+
+    assert returned_ids == [100, 300]  # sorted by positive DESC
+    assert len(result) == 2
+
+
+def test_get_games_by_version_appids_none_returns_all(db_conn):
+    """appids=None should return all games (backward compat)."""
+    from steam_crawler.db.repository import upsert_game, get_games_by_version
+    from steam_crawler.models.game import GameSummary
+
+    for appid, name, pos in [(100, "GameA", 500), (200, "GameB", 300)]:
+        upsert_game(db_conn, GameSummary(appid=appid, name=name, positive=pos, negative=10), version=0)
+
+    result = get_games_by_version(db_conn, appids=None)
+    assert len(result) == 2
+
+
+def test_get_games_by_version_empty_appids_returns_empty(db_conn):
+    """appids=[] should return empty list without SQL error."""
+    from steam_crawler.db.repository import upsert_game, get_games_by_version
+    from steam_crawler.models.game import GameSummary
+
+    upsert_game(db_conn, GameSummary(appid=100, name="GameA", positive=500, negative=10), version=0)
+
+    result = get_games_by_version(db_conn, appids=[])
+    assert result == []

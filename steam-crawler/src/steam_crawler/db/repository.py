@@ -187,41 +187,62 @@ def get_games_by_version(
     conn: sqlite3.Connection,
     source_tag: str | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> list[dict]:
     """Return games filtered by source_tag, sorted by positive desc.
 
     If lock_owner is provided, excludes games locked by a different owner
     (non-expired locks only).
+    If appids is provided, only returns games with those appids.
+    If appids is an empty list, returns [] immediately.
     """
+    if appids is not None and len(appids) == 0:
+        return []
+
+    # Build optional appids filter
+    appid_clause = ""
+    appid_params: list = []
+    if appids is not None:
+        placeholders = ",".join("?" * len(appids))
+        appid_clause = f" AND g.appid IN ({placeholders})"
+        appid_params = list(appids)
+
     now = datetime.now(timezone.utc).isoformat()
 
     if lock_owner is not None:
         if source_tag is not None:
             cursor = conn.execute(
-                """SELECT g.* FROM games g
+                f"""SELECT g.* FROM games g
                    LEFT JOIN crawl_locks cl
                      ON g.appid = cl.appid AND cl.expires_at >= ? AND cl.owner != ?
-                   WHERE g.source_tag = ? AND cl.appid IS NULL
+                   WHERE g.source_tag = ? AND cl.appid IS NULL{appid_clause}
                    ORDER BY g.positive DESC""",
-                (now, lock_owner, source_tag),
+                (now, lock_owner, source_tag, *appid_params),
             )
         else:
             cursor = conn.execute(
-                """SELECT g.* FROM games g
+                f"""SELECT g.* FROM games g
                    LEFT JOIN crawl_locks cl
                      ON g.appid = cl.appid AND cl.expires_at >= ? AND cl.owner != ?
-                   WHERE cl.appid IS NULL
+                   WHERE cl.appid IS NULL{appid_clause}
                    ORDER BY g.positive DESC""",
-                (now, lock_owner),
+                (now, lock_owner, *appid_params),
             )
     else:
         if source_tag is not None:
             cursor = conn.execute(
-                "SELECT * FROM games WHERE source_tag = ? ORDER BY positive DESC",
-                (source_tag,),
+                f"SELECT * FROM games WHERE source_tag = ?{appid_clause} ORDER BY positive DESC",
+                (source_tag, *appid_params),
             )
         else:
-            cursor = conn.execute("SELECT * FROM games ORDER BY positive DESC")
+            if appids is not None:
+                placeholders = ",".join("?" * len(appids))
+                cursor = conn.execute(
+                    f"SELECT * FROM games WHERE appid IN ({placeholders}) ORDER BY positive DESC",
+                    tuple(appids),
+                )
+            else:
+                cursor = conn.execute("SELECT * FROM games ORDER BY positive DESC")
 
     return [dict(row) for row in cursor.fetchall()]
 
