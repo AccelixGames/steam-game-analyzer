@@ -892,7 +892,31 @@
 </div>
 
 <footer class="footer">
-  Steam Game Insight Report · Generated {{DATE}} · Data: {{DATA_SOURCES}} · {{REVIEW_COUNT}} reviews analyzed
+  <p>Steam Game Insight Report · Generated {{DATE}} · Data: {{DATA_SOURCES}} · {{REVIEW_COUNT}} reviews analyzed</p>
+  {{AGENT_METRICS}}
+  <!--
+    에이전트 분석 상세. 서브에이전트 병렬 분석 사용 시 아래 형식으로 채운다.
+    Fallback 모드면 이 블록 자체를 "Fallback 모드: 유효 리뷰 N건" 한 줄로 대체.
+
+    예시:
+    <details style="margin-top:.8rem;font-size:.78rem;color:var(--text-faint)">
+      <summary>에이전트 분석 상세 (7개 에이전트, 총 ~142K 토큰, 89초)</summary>
+      <table style="width:100%;margin-top:.5rem;font-size:.75rem;border-collapse:collapse">
+        <tr style="border-bottom:1px solid var(--border)">
+          <th>에이전트</th><th>모델</th><th>구역</th><th>리뷰수</th>
+          <th>입력≈</th><th>출력≈</th><th>시간</th><th>핵심 발견</th>
+        </tr>
+        <tr>
+          <td>Main-Deep</td><td>opus</td><td>TOP 100</td><td>100</td>
+          <td>32K</td><td>4K</td><td>45s</td><td>기획성공 5, 약점 4, 인용후보 10</td>
+        </tr>
+        <tr>
+          <td>EN-Positive</td><td>sonnet</td><td>english·긍정</td><td>200</td>
+          <td>18K</td><td>3K</td><td>22s</td><td>패턴 4, 특이점 1</td>
+        </tr>
+      </table>
+    </details>
+  -->
 </footer>
 
 </body>
