@@ -258,6 +258,41 @@ CREATE INDEX IF NOT EXISTS idx_wdc_type ON game_wikidata_claims(claim_type);
 CREATE INDEX IF NOT EXISTS idx_wdc_name ON game_wikidata_claims(name);
 """
 
+VIEWS_SQL = """
+-- valid_reviews: 정성 분석용 필터링된 리뷰 View
+-- 100자 이상 OR 플레이타임 50시간(3000분) 이상, ASCII art 제거, 게임별 중복 1건
+CREATE VIEW IF NOT EXISTS valid_reviews AS
+WITH filtered AS (
+    SELECT *
+    FROM reviews
+    WHERE review_text IS NOT NULL
+      AND trim(review_text) != ''
+      AND review_text NOT LIKE '%⣿%'
+      AND review_text NOT LIKE '%█%'
+      AND review_text NOT LIKE '%▀%'
+      AND (
+        length(review_text) >= 100
+        OR playtime_at_review >= 3000  -- 50시간 (분 단위)
+      )
+),
+deduped AS (
+    SELECT *,
+        ROW_NUMBER() OVER (
+            PARTITION BY appid, review_text
+            ORDER BY weighted_vote_score DESC, votes_up DESC
+        ) AS rn
+    FROM filtered
+)
+SELECT recommendation_id, appid, language, review_text,
+       voted_up, playtime_forever, playtime_at_review,
+       early_access, steam_purchase, received_for_free,
+       dev_response, timestamp_created, votes_up, votes_funny,
+       weighted_vote_score, comment_count, author_steamid,
+       author_num_reviews, author_playtime_forever,
+       collected_ver, collected_at
+FROM deduped WHERE rn = 1;
+"""
+
 
 def init_db(db_path: str) -> sqlite3.Connection:
     """Initialize the database with schema. Returns connection."""
@@ -269,6 +304,7 @@ def init_db(db_path: str) -> sqlite3.Connection:
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
     conn.executescript(SCHEMA_SQL)
+    conn.executescript(VIEWS_SQL)
     _migrate(conn)
     return conn
 
@@ -332,4 +368,7 @@ def _migrate(conn: sqlite3.Connection) -> None:
     # Indexes on migrated columns
     conn.execute("CREATE INDEX IF NOT EXISTS idx_games_opencritic_id ON games(opencritic_id)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_games_hltb_id ON games(hltb_id)")
+    # View 재생성 (정의 변경 시 기존 View 교체)
+    conn.execute("DROP VIEW IF EXISTS valid_reviews")
+    conn.executescript(VIEWS_SQL)
     conn.commit()

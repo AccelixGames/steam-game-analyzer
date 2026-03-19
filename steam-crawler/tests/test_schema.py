@@ -88,3 +88,12 @@ def test_keyword_catalog_table_exists(db_conn):
     db_conn.commit()
     row = db_conn.execute("SELECT * FROM game_keywords WHERE appid=730").fetchone()
     assert row["keyword_id"] == 1
+
+
+def test_valid_reviews_view_exists(db_conn):
+    """valid_reviews View is created by init_db."""
+    cursor = db_conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='view'"
+    )
+    views = {row[0] for row in cursor.fetchall()}
+    assert "valid_reviews" in views
