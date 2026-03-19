@@ -95,5 +95,5 @@ def test_valid_reviews_view_exists(db_conn):
     cursor = db_conn.execute(
         "SELECT name FROM sqlite_master WHERE type='view'"
     )
-    views = {row[0] for row in cursor.fetchall()}
+    views = {row["name"] for row in cursor.fetchall()}
     assert "valid_reviews" in views
