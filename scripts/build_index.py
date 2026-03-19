@@ -227,7 +227,7 @@ def build_reports_json(
     Args:
         insights_dir: Directory containing *.html report files.
         force: When True, re-parse all files regardless of cache.
-        db_path: Unused for now; reserved for future DB-backed enrichment.
+        db_path: Path to SQLite DB for enriching fallback-parsed reports.
 
     Returns:
         List of metadata dicts, one per unique appid (or slug if no appid).
@@ -260,6 +260,58 @@ def build_reports_json(
             entry = parse_report_html(content, slug)
             entry["_file_hash"] = h
             parsed.append((html_path.stat().st_mtime, entry))
+
+    # Enrich entries with missing tags/genres/header_image from DB
+    if db_path is not None and Path(db_path).exists():
+        try:
+            conn = sqlite3.connect(str(db_path))
+            for _, entry in parsed:
+                appid = entry.get("appid")
+                if appid is None:
+                    continue
+                # Fill tags from DB if empty
+                if not entry.get("tags"):
+                    rows = conn.execute(
+                        "SELECT tag_name FROM game_tags WHERE appid = ? ORDER BY vote_count DESC LIMIT 5",
+                        (appid,),
+                    ).fetchall()
+                    if rows:
+                        entry["tags"] = [r[0] for r in rows]
+                # Fill genres from DB if empty
+                if not entry.get("genres"):
+                    rows = conn.execute(
+                        "SELECT genre_name FROM game_genres WHERE appid = ?",
+                        (appid,),
+                    ).fetchall()
+                    if rows:
+                        entry["genres"] = [r[0] for r in rows]
+                # Fill header_image from DB if missing
+                if not entry.get("header_image"):
+                    row = conn.execute(
+                        "SELECT header_image FROM games WHERE appid = ?",
+                        (appid,),
+                    ).fetchone()
+                    if row and row[0]:
+                        entry["header_image"] = row[0]
+                # Fill name_ko from DB if missing
+                if not entry.get("name_ko"):
+                    row = conn.execute(
+                        "SELECT name_ko FROM games WHERE appid = ?",
+                        (appid,),
+                    ).fetchone()
+                    if row and row[0] and row[0].strip():
+                        entry["name_ko"] = row[0].strip()
+                # Fill review_count from DB if missing
+                if entry.get("review_count") is None:
+                    row = conn.execute(
+                        "SELECT count(*) FROM reviews WHERE appid = ?",
+                        (appid,),
+                    ).fetchone()
+                    if row and row[0]:
+                        entry["review_count"] = row[0]
+            conn.close()
+        except Exception:
+            pass  # DB errors are non-fatal
 
     # Deduplicate by appid — keep the entry from the newest file
     # Files without an appid are kept as-is (keyed by slug)
