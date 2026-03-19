@@ -35,15 +35,17 @@ class WikidataClient(BaseClient):
         """Fetch all design-relevant claims for a Steam game by AppID.
 
         Returns dict with wikidata_id and claims list, or None if not found.
+        Raises on HTTP errors so callers can log them properly.
         """
         prop_values = " ".join(f"wdt:{pid}" for pid in DESIGN_PROPERTIES)
 
         query = f'''
-        SELECT ?game ?prop ?val ?valLabel WHERE {{
+        SELECT ?game ?gameLabelKo ?prop ?val ?valLabel WHERE {{
           ?game wdt:P1733 "{appid}" .
           ?game ?prop ?val .
           VALUES ?prop {{ {prop_values} }}
           ?property wikibase:directClaim ?prop .
+          OPTIONAL {{ ?game rdfs:label ?gameLabelKo . FILTER(LANG(?gameLabelKo) = "ko") }}
           SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en" }}
         }}
         '''
@@ -55,7 +57,9 @@ class WikidataClient(BaseClient):
         )
 
         if response.status_code != 200:
-            return None
+            raise RuntimeError(
+                f"Wikidata SPARQL HTTP {response.status_code} for appid={appid}"
+            )
 
         data = response.json()
         bindings = data.get("results", {}).get("bindings", [])
@@ -65,6 +69,7 @@ class WikidataClient(BaseClient):
 
         game_uri = bindings[0].get("game", {}).get("value", "")
         wikidata_id = game_uri.split("/")[-1] if game_uri else None
+        name_ko = bindings[0].get("gameLabelKo", {}).get("value") or None
 
         claims = []
         for row in bindings:
@@ -85,5 +90,6 @@ class WikidataClient(BaseClient):
 
         return {
             "wikidata_id": wikidata_id,
+            "name_ko": name_ko,
             "claims": claims,
         }
