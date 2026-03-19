@@ -118,10 +118,12 @@ update_game_review_stats(conn, APPID,
     review_score=summary.review_score_desc)
 rev.close()
 
-# Step 3: 리뷰 본문 (페이지 단위 점진적 저장, 기본 100건 — 사용자 요청 시 조절)
+# Step 3: Review crawl (SPECIFIC GAMES ONLY — always pass appids)
 from steam_crawler.pipeline.step3_crawl import run_step3
-TARGET = 100  # 사용자가 수량을 지정하면 그 값 사용
-run_step3(conn, version=0, max_reviews=TARGET, lock_owner="skill")
+TARGET = 100  # user-specified count
+APPIDS = [427520]  # user-specified appids — MUST match user's request
+
+run_step3(conn, version=0, appids=APPIDS, max_reviews=TARGET, lock_owner="skill")
 
 # 크롤링 완료 후 반드시 잠금 해제
 release_crawl_lock(conn, APPID)
@@ -153,6 +155,24 @@ steam-crawler versions    # 수집 이력
 steam-crawler status      # 현재 상태
 steam-crawler diff 1 2    # 버전 간 변경사항
 ```
+
+## Preflight Verification
+
+After calling `run_step3()` or any pipeline function, **always check the output log** before the crawl proceeds:
+
+1. Look for the `[Preflight]` line in the output
+2. Verify the listed games match exactly what the user requested
+3. Verify the game count matches expectations
+4. If the preflight shows unexpected games, STOP immediately and investigate
+
+Example expected output:
+```
+[Preflight] Step 3: 2 game(s) targeted
+  - Factorio (appid=427520) | collected=10001 | max=200000
+  - Satisfactory (appid=526870) | collected=10000 | max=200000
+```
+
+If output shows games the user did NOT request, abort and report the mismatch to the user.
 
 ## Presenting Results
 
