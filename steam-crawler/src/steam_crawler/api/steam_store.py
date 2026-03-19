@@ -41,6 +41,7 @@ def _strip_html(html: str | None) -> str | None:
 @dataclass
 class StoreDetails:
     appid: int
+    name_ko: str | None = None
     short_description_en: str | None = None
     short_description_ko: str | None = None
     detailed_description_en: str | None = None
@@ -73,8 +74,14 @@ class StoreDetails:
                 url_full=mp4.get("max") or mp4.get("480") or webm.get("max"),
             ))
 
+        # Extract Korean name only if it differs from English
+        name_en = data_en.get("name")
+        name_ko_raw = data_ko.get("name") if data_ko else None
+        name_ko = name_ko_raw if (name_ko_raw and name_ko_raw != name_en) else None
+
         return cls(
             appid=appid,
+            name_ko=name_ko,
             short_description_en=data_en.get("short_description"),
             short_description_ko=data_ko.get("short_description") if data_ko else None,
             detailed_description_en=_strip_html(data_en.get("detailed_description")),

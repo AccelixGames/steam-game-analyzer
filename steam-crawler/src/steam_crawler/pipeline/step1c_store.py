@@ -46,6 +46,7 @@ def run_step1c(
                     detailed_description_en=details.detailed_description_en,
                     detailed_description_ko=details.detailed_description_ko,
                     header_image=details.header_image,
+                    name_ko=details.name_ko,
                 )
 
                 for media in details.media:

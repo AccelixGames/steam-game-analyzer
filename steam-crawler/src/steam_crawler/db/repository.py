@@ -326,11 +326,12 @@ def update_game_store_details(
     detailed_description_en: str | None = None,
     detailed_description_ko: str | None = None,
     header_image: str | None = None,
+    name_ko: str | None = None,
 ) -> None:
     """Update store page details on the games table."""
     conn.execute(
-        "UPDATE games SET short_description_en=?, short_description_ko=?, detailed_description_en=?, detailed_description_ko=?, header_image=?, updated_at=? WHERE appid=?",
-        (short_description_en, short_description_ko, detailed_description_en, detailed_description_ko, header_image, _now(), appid),
+        "UPDATE games SET name_ko=?, short_description_en=?, short_description_ko=?, detailed_description_en=?, detailed_description_ko=?, header_image=?, updated_at=? WHERE appid=?",
+        (name_ko, short_description_en, short_description_ko, detailed_description_en, detailed_description_ko, header_image, _now(), appid),
     )
     conn.commit()
 

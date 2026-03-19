@@ -7,6 +7,7 @@ SCHEMA_SQL = """
 CREATE TABLE IF NOT EXISTS games (
     appid          INTEGER PRIMARY KEY,
     name           TEXT NOT NULL,
+    name_ko        TEXT,
     positive       INTEGER,
     negative       INTEGER,
     owners         TEXT,
@@ -276,6 +277,7 @@ def _migrate(conn: sqlite3.Connection) -> None:
     """Add columns that may be missing in older databases."""
     existing = {row[1] for row in conn.execute("PRAGMA table_info(games)").fetchall()}
     migrations = [
+        ("name_ko", "TEXT"),
         ("detailed_description_en", "TEXT"),
         ("detailed_description_ko", "TEXT"),
         # RAWG retention proxy
