@@ -198,26 +198,166 @@ WHERE appid = ? ORDER BY vote_count DESC;
 
 ### 3-B. 리뷰 분석 (실제 경험의 증거)
 
-**긍정 리뷰 — 기획이 성공한 지점**
-```sql
--- 장문 긍정 리뷰 (깊이 있는 피드백) — valid_reviews 사용
-SELECT language, review_text, playtime_at_review, votes_up
-FROM valid_reviews WHERE appid = ? AND voted_up = 1 AND length(review_text) > 200
-ORDER BY length(review_text) DESC LIMIT 10;
+#### Fallback 판정
 
--- 가장 도움이 된 긍정 리뷰 — valid_reviews 사용
-SELECT language, review_text, playtime_at_review, votes_up, weighted_vote_score
-FROM valid_reviews WHERE appid = ? AND voted_up = 1
-ORDER BY weighted_vote_score DESC LIMIT 10;
+먼저 유효 리뷰 수를 확인한다:
+```sql
+SELECT count(*) as valid_count FROM valid_reviews WHERE appid = ?;
 ```
 
-**부정 리뷰 — 기획의 약점**
+- **500건 이하**: 서브에이전트 없이 메인이 직접 TOP 100건 분석 (아래 "Fallback 모드" 참조)
+- **500건 초과**: 서브에이전트 병렬 분석 실행
+
+> Fallback 시 사용자에게 안내: "이 게임의 유효 리뷰는 N건입니다. 더 풍부한 분석을 위해 `/steam-crawl`로 리뷰를 추가 수집하세요."
+
+#### 파티션 결정
+
+상위 3개 언어 결정 (N = 실제 언어 수, 1~3):
 ```sql
--- 부정 리뷰 — valid_reviews 사용
-SELECT language, review_text, playtime_at_review, votes_up, weighted_vote_score
-FROM valid_reviews WHERE appid = ? AND voted_up = 0
-ORDER BY weighted_vote_score DESC LIMIT 10;
+SELECT language, count(*) as cnt
+FROM valid_reviews WHERE appid = ?
+GROUP BY language ORDER BY cnt DESC LIMIT 3;
 ```
+
+#### 서브에이전트 병렬 디스패치
+
+1~2단계와 3-A를 먼저 완료한 후, 게임 컨텍스트를 요약한다:
+
+**게임 컨텍스트 (모든 서브에이전트에게 전달):**
+```
+- 게임명: {{name}}
+- 장르: {{genres}}
+- 태그 TOP 10: {{tags with vote counts}}
+- 마케팅 한 줄 피치: {{short_description}}
+- 핵심 메커니즘: {{2단계에서 파악한 코어루프 2~3문장}}
+```
+
+다음 서브에이전트를 **단일 메시지에서 동시에** Agent 도구로 디스패치한다 (총 1 + N×2개, 최대 7개):
+
+**① Opus 서브에이전트 (TOP 100 심층 분석)**
+- model: opus
+- 쿼리:
+```sql
+SELECT recommendation_id, language, review_text, voted_up,
+       playtime_at_review, votes_up, weighted_vote_score, playtime_forever
+FROM valid_reviews WHERE appid = ?
+ORDER BY weighted_vote_score DESC LIMIT 100;
+```
+- 프롬프트:
+```
+당신은 게임 기획 분석가입니다. 아래는 {{게임명}}의 유저 리뷰 중
+커뮤니티가 가장 도움이 된다고 평가한 상위 100건입니다.
+
+{{게임 컨텍스트}}
+
+## 임무
+각 리뷰를 읽고 **게임 기획 관점**에서 분석하세요.
+단순 감상이 아닌, 기획의 성공/실패를 증거하는 리뷰를 찾아내세요.
+
+## 출력 형식
+
+### 기획 성공 포인트 (최대 5개)
+각 포인트:
+- **패턴명**: 한 줄 요약
+- **증거 리뷰**: 원문 인용 (언어 · 플레이타임 · helpful수)
+- **비영어면 번역 포함**
+- **기획적 의미**: 왜 기획의 성공인가 (2~3문장)
+
+### 기획 약점 (최대 5개)
+(같은 형식)
+
+### 흥미로운 발견 (최대 3개)
+- 기획 성공/실패로 분류 어렵지만 주목할 패턴
+
+### 보고서 인용 추천 리뷰 (최대 10개)
+- recommendation_id, 원문(발췌), 인용 이유 1줄
+
+### 코어 루프 증거 (최대 3개)
+- 리뷰에서 발견된 실제 플레이 루프 묘사 (유저가 반복적으로 하는 행동 패턴)
+- 각각: 원문 발췌 + "이 리뷰가 드러내는 루프 구조" 1~2문장
+- 2단계 메타데이터 기반 루프와 일치하면 확인, 불일치하면 보정 근거
+
+## 리뷰 데이터
+{{100건의 리뷰}}
+```
+
+**② Sonnet 서브에이전트 ×(N×2) (언어별 긍/부정 패턴 분석)**
+- model: sonnet
+- 파티션별 쿼리:
+```sql
+SELECT recommendation_id, review_text, playtime_at_review,
+       votes_up, weighted_vote_score, playtime_forever
+FROM valid_reviews
+WHERE appid = ? AND language = ? AND voted_up = ?
+ORDER BY weighted_vote_score DESC LIMIT 200;
+```
+- 프롬프트:
+```
+당신은 게임 리뷰 분석가입니다. 아래는 {{게임명}}의
+{{언어}} {{긍정/부정}} 리뷰 상위 200건입니다.
+
+{{게임 컨텍스트}}
+
+## 임무
+200건의 리뷰에서 **반복되는 패턴**을 찾아내세요.
+개별 리뷰 분석이 아닌, 여러 리뷰에 걸쳐 나타나는 공통 주제를 추출하세요.
+
+## 출력 형식
+
+### 핵심 패턴 (3~5개, 빈도순)
+각 패턴:
+- **패턴명**: 한 줄 요약
+- **빈도**: 대략 몇 건에서 언급 (예: "약 40/200건")
+- **대표 인용**: 패턴을 가장 잘 보여주는 리뷰 1건 (원문 발췌)
+- **비영어면 번역 포함**
+- **기획 시사점**: 이 패턴이 게임 설계에 대해 말해주는 것 (1~2문장)
+
+### 이 언어/감정 고유의 특이점 (0~2개)
+- 이 구역에서만 두드러지는 발견
+
+### 코어 루프 증거 (0~2개)
+- 유저가 묘사하는 반복 행동 패턴
+- 원문 발췌 + 루프 구조 해석 1문장
+
+### 요약 통계
+- 가장 자주 언급된 게임 시스템/피처 TOP 3
+- 감정 강도: 강한 표현 비율 체감
+```
+
+#### 결과 통합 규칙
+
+7개 서브에이전트 결과가 반환되면 다음 규칙으로 통합:
+
+**패턴 병합:**
+1. 여러 파티션에서 같은 시스템/피처를 언급하면 하나로 병합
+2. 병합 시 빈도 합산, 대표 인용은 가장 구체적인 것 1~2개 채택
+3. 보고서에 반영되는 고유 패턴은 최대 10개
+
+**충돌 해결:**
+- 긍정/부정 파티션에서 같은 시스템에 상반된 평가 → "양면적 요소"로 기록
+- 언어별 상반된 반응 → "문화권별 차이"로 기록
+
+**코어 루프 보강:**
+1. Opus 최대 3개 + Sonnet 파티션별 최대 2개 = 최대 15개 루프 증거 수집
+2. 2단계 메타데이터 루프 vs 리뷰 루프 증거 교차 검증
+   - 일치 → 루프 다이어그램에 "유저 증언 확인" 표기 + 리뷰 인용
+   - 불일치 → 다이어그램 추가/수정
+   - 마케팅만 존재 → 삼각검증 "실행 실패" 후보
+
+**최종 반영량:**
+- 기획 성공/약점: Opus 분석이 뼈대, Sonnet 빈도가 보강
+- 보고서 인용: Opus 추천 10개 우선, Sonnet 대표 인용으로 언어/관점 보충 → 최종 15~20개
+- 삼각검증: Opus 기획 판정 + Sonnet 빈도 데이터로 신뢰도 표기
+
+#### Fallback 모드 (≤ 500건)
+
+서브에이전트 없이 메인 Opus가 직접 분석:
+1. `valid_reviews` TOP 100건 추출 (Opus용 쿼리와 동일)
+2. 메인이 직접 기획 성공/약점/인용 후보 판단
+3. 언어별/감정별 패턴은 정량 SQL 통계로 대체
+4. 보고서 Footer에 "Fallback 모드" 명시
+
+#### 정량 통계 (기존 유지 — 변경 없음)
 
 **플레이타임별 긍정률 — 리텐션 곡선**
 ```sql
