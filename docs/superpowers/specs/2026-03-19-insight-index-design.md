@@ -74,30 +74,41 @@
 
 ### 증분 빌드
 
+각 엔트리에 `_file_hash` (파일 내용의 MD5)를 내부 필드로 저장. Git clone이나 CI에서도 안정적으로 동작한다.
+
 ```
-1. reports.json이 이미 존재하면 로드 → {slug: mtime} 맵 생성
+1. reports.json이 이미 존재하면 로드 → {slug: _file_hash} 맵 생성
 2. docs/insights/*.html 스캔 (index.html 제외)
 3. 각 파일:
    - slug가 기존 맵에 없음 → 새 보고서, 파싱
-   - 파일 mtime > 기존 modified → 갱신됨, 재파싱
+   - 파일 내용 hash ≠ 기존 _file_hash → 갱신됨, 재파싱
    - 그 외 → 스킵 (기존 데이터 유지)
 4. 기존 맵에 있지만 파일 없음 → 삭제된 보고서, 엔트리 제거
 5. 변경사항이 있을 때만 reports.json 재작성
 6. --force 플래그로 전체 재빌드 가능
 ```
 
+`_file_hash`는 index.html에서 사용하지 않는 내부 필드이며, reports.json에만 저장된다.
+
 ### 파싱 전략
 
 1. **`<meta name="report:*">` 우선** (html.parser)
-2. **Fallback 파싱** (기존 보고서 호환):
+2. **부분 meta 태그 처리**: meta 태그가 하나라도 있으면 meta 우선 파싱, 빈 필드만 fallback으로 보충. meta 태그가 전혀 없으면 전체 fallback.
+3. **Fallback 파싱** (기존 보고서 호환):
    - `<title>` → 게임명
    - `.hero-stat .num` + `.label` → 긍정률, 소유자, 가격, 플레이타임
    - `.hero-bg` background URL → header_image
    - Steam 링크에서 appid 추출 → DB에서 태그/장르/name_ko 보충
+4. **중복 appid 처리**: 같은 appid의 파일이 여러 개이면 파일 mtime이 최신인 것만 사용.
 
 ### synonyms.json
 
-한영 동의어 매핑. 빌드 스크립트에 하드코딩 (~50쌍).
+두 계층으로 구성:
+
+1. **하드코딩 기본 맵** (~50쌍): 태그/장르 한영 매핑. 빌드 스크립트에 내장.
+2. **DB 자동 병합** (선택적): DB가 존재하면 `games.name_ko`에서 게임명 한영 매핑을 추출하여 기본 맵에 병합.
+
+DB가 없으면 하드코딩 맵만으로 synonyms.json을 생성한다.
 
 ```json
 {
@@ -113,12 +124,10 @@
 }
 ```
 
-- 게임명 한영 매핑: DB `name_ko`가 있으면 자동 포함, 없으면 수동 추가
-- synonyms.json은 하드코딩이므로 매번 덮어쓰기
-
 ### 의존성
 
-Python 표준 라이브러리만 (`html.parser`, `json`, `glob`, `os`)
+- Python 표준 라이브러리 (`html.parser`, `json`, `glob`, `os`, `hashlib`)
+- SQLite (`sqlite3`) — **선택적**, fallback 파싱 시 태그/장르/name_ko 보충 및 synonyms 자동 병합에 사용. DB가 없어도 동작하되 해당 필드가 비어있을 수 있음.
 
 ---
 
@@ -185,11 +194,13 @@ Python 표준 라이브러리만 (`html.parser`, `json`, `glob`, `os`)
 - hover: border `--accent-gold` 트랜지션
 - 클릭: `<a href="./{slug}.html" target="_blank">` **별개 탭**으로 열림
 - 이미지: `loading="lazy"` 네이티브 레이지로드
+- 이미지 로드 실패: `onerror` 핸들러로 `--bg-card` 배경 + 게임명 텍스트 placeholder 표시
 
 ### 빈 상태
 
 - 검색/필터 결과 0개: "일치하는 보고서가 없습니다" + 필터 초기화 버튼
 - reports.json 로드 실패: "보고서 데이터를 불러올 수 없습니다"
+- Fuse.js CDN 로드 실패: `String.includes()` 기반 단순 검색으로 fallback
 
 ---
 
@@ -222,7 +233,7 @@ Python 표준 라이브러리만 (`html.parser`, `json`, `glob`, `os`)
 ### 기술 스택
 
 - Vanilla JS, 외부 프레임워크 없음
-- Fuse.js CDN (유일한 외부 의존성)
+- Fuse.js CDN (유일한 외부 의존성) + `Fuse.createIndex()` 사전 인덱싱으로 1000+에서도 즉시 응답
 - GitHub Pages 정적 배포 호환
 - 상대 경로 기반 (`./reports.json`, `./{slug}.html`)
 
@@ -233,7 +244,7 @@ Python 표준 라이브러리만 (`html.parser`, `json`, `glob`, `os`)
 ```
 docs/insights/
 ├── index.html          ← NEW: 보고서 라이브러리 인덱스
-├── reports.json        ← NEW: 빌드 스크립트 출력 (gitignore 또는 커밋)
+├── reports.json        ← NEW: 빌드 스크립트 출력 (git 커밋, CI 빌드 없이 배포)
 ├── synonyms.json       ← NEW: 한영 동의어 맵
 ├── hades.html          ← 기존 보고서 (meta 태그 추가)
 ├── stardew-valley.html
