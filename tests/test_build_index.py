@@ -43,3 +43,71 @@ def test_parse_meta_tags():
     assert result["review_count"] == 123456
     assert result["slug"] == "hades"
     assert result["name_ko"] is None  # empty string → None
+
+
+SAMPLE_HTML_NO_META = """<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Hades — 기획 인사이트 보고서</title>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-top-bar">
+    <a href="https://store.steampowered.com/app/1145360/">Steam</a>
+  </div>
+  <h1>Hades</h1>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="num gold">98.3%</span>
+      <span class="label">긍정률 (Overwhelmingly Positive)</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">5~10M</span>
+      <span class="label">소유자 수</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num green">$24.99</span>
+      <span class="label">가격</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">34.5h</span>
+      <span class="label">평균 플레이타임</span>
+    </div>
+  </div>
+</header>
+</body>
+</html>"""
+
+
+def test_fallback_parse_no_meta():
+    from build_index import parse_report_html
+    result = parse_report_html(SAMPLE_HTML_NO_META, "hades")
+    assert result["name"] == "Hades"
+    assert result["appid"] == 1145360
+    assert result["positive_rate"] == 98.3
+    assert result["owners"] == "5~10M"
+    assert result["price"] == "$24.99"
+    assert result["avg_playtime"] == "34.5h"
+
+
+def test_partial_meta_uses_fallback():
+    """Meta 태그가 일부만 있으면, 빈 필드를 fallback으로 보충."""
+    partial = """<!DOCTYPE html>
+<html><head>
+<title>TestGame — 기획 인사이트 보고서</title>
+<meta name="report:appid" content="999">
+<meta name="report:game_name" content="TestGame">
+</head><body>
+<div class="hero-stats">
+  <div class="hero-stat">
+    <span class="num gold">85.0%</span>
+    <span class="label">긍정률 (Very Positive)</span>
+  </div>
+</div>
+</body></html>"""
+    from build_index import parse_report_html
+    result = parse_report_html(partial, "testgame")
+    assert result["appid"] == 999
+    assert result["name"] == "TestGame"
+    assert result["positive_rate"] == 85.0
