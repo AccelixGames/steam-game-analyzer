@@ -331,6 +331,25 @@ FROM games WHERE appid = ?;
 - `{{PLACEHOLDER}}`를 실제 데이터로 치환
 - `/frontend-design` 스킬을 함께 호출하여 디자인 품질 확보
 
+### 인덱스 메타데이터 (필수)
+
+모든 보고서는 `<head>` 내부에 `<meta name="report:*">` 태그를 포함해야 한다.
+TEMPLATE.html에 정의된 meta 태그 블록을 반드시 채운다.
+
+- `{{TAGS}}`: `game_tags` 상위 5개 태그를 쉼표로 구분 (예: "Action Roguelike,Rogue-lite,Hack and Slash")
+- `{{GENRES}}`: `game_genres` 전체를 쉼표로 구분 (예: "Action,Indie,RPG")
+- `{{NAME_KO}}`: `games.name_ko` 값. NULL이면 빈 문자열.
+
+```sql
+-- 태그 상위 5개
+SELECT tag_name FROM game_tags WHERE appid = ? ORDER BY vote_count DESC LIMIT 5;
+-- 장르 전체
+SELECT genre_name FROM game_genres WHERE appid = ?;
+-- 한국어 이름
+SELECT name_ko FROM games WHERE appid = ?;
+```
+
+
 ### 파일 경로 규칙
 - 게임 이름을 kebab-case로 변환: "TCG Card Shop Simulator" → `tcg-card-shop-simulator.html`
 - 저장 위치: `<project-root>/docs/insights/`
@@ -470,3 +489,14 @@ SELECT count(*) FROM reviews WHERE appid = ?;
 - 리뷰가 적은 경우(<50개) 통계적 신뢰도가 낮다고 명시
 - 플레이타임은 분 단위 저장 → 시간 변환 (÷60)
 - 가격은 센트 단위 저장 → 달러 변환 (÷100)
+---
+
+## 보고서 생성 후 작업
+
+보고서 HTML을 `docs/insights/`에 생성하거나 갱신한 후, 반드시 다음을 실행한다:
+
+```bash
+python scripts/build_index.py
+```
+
+이 스크립트는 `docs/insights/reports.json`과 `synonyms.json`을 갱신하여 보고서 라이브러리 인덱스를 최신 상태로 유지한다.
