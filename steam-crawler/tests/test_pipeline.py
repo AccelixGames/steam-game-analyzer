@@ -207,3 +207,215 @@ def test_step3_crawl(db_conn):
         "SELECT * FROM changelog WHERE change_type='reviews_batch_added'"
     ).fetchall()
     assert len(changelog) == 1
+
+
+# ── Negative supplement tests ──────────────────────────────────────────
+
+NEG_REVIEW_PAGE = {
+    "success": 1,
+    "reviews": [
+        {
+            "recommendationid": f"supp_neg_{i}", "language": "english",
+            "review": f"Bad game {i}", "voted_up": False,
+            "steam_purchase": True, "received_for_free": False,
+            "written_during_early_access": False,
+            "timestamp_created": 1700000000 + i, "votes_up": 1, "votes_funny": 0,
+            "weighted_vote_score": "0.5", "comment_count": 0,
+            "author": {"steamid": f"supp_{i}", "num_reviews": 1,
+                       "playtime_forever": 100, "playtime_at_review": 50},
+        }
+        for i in range(80)
+    ],
+    "cursor": "nextcursor==",
+}
+
+
+def _setup_game_for_supplement(db_conn, appid=730, steam_positive=9000, steam_negative=1000,
+                                num_positive=900, num_negative=50):
+    """부정 보강 테스트용 게임+리뷰 셋업."""
+    db_conn.execute("INSERT OR IGNORE INTO games (appid, name, steam_positive, steam_negative) VALUES (?, ?, ?, ?)",
+                    (appid, f"Game{appid}", steam_positive, steam_negative))
+    for i in range(num_positive):
+        db_conn.execute(
+            "INSERT OR IGNORE INTO reviews (recommendation_id, appid, review_text, voted_up) VALUES (?, ?, ?, ?)",
+            (f"pos_{i}", appid, f"positive review {i}", 1))
+    for i in range(num_negative):
+        db_conn.execute(
+            "INSERT OR IGNORE INTO reviews (recommendation_id, appid, review_text, voted_up) VALUES (?, ?, ?, ?)",
+            (f"neg_{i}", appid, f"negative review {i}", 0))
+    db_conn.commit()
+
+
+def test_count_reviews_by_sentiment(db_conn):
+    from steam_crawler.pipeline.step3_crawl import _count_reviews_by_sentiment
+
+    _setup_game_for_supplement(db_conn, num_positive=10, num_negative=5)
+    pos, neg = _count_reviews_by_sentiment(db_conn, 730)
+    assert pos == 10
+    assert neg == 5
+
+
+def test_negative_supplement_runs_when_insufficient(db_conn):
+    from steam_crawler.pipeline.step3_crawl import _supplement_negative_reviews
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
+    from steam_crawler.api.resilience import FailureTracker
+
+    version = _create_version(db_conn)
+    _setup_game_for_supplement(db_conn, num_positive=900, num_negative=50)
+    # Create collection status row
+    db_conn.execute(
+        "INSERT OR IGNORE INTO game_collection_status (appid, version) VALUES (?, ?)",
+        (730, version))
+    db_conn.commit()
+
+    client = SteamReviewsClient()
+    tracker = FailureTracker()
+    empty_page = {"success": 1, "reviews": [], "cursor": "nextcursor=="}
+    responses = [_mock_response(NEG_REVIEW_PAGE), _mock_response(empty_page)]
+    with patch.object(client._client, "get", side_effect=responses) as mock_get:
+        added = _supplement_negative_reviews(db_conn, 730, version, "all", client, tracker)
+
+    assert added > 0
+    # Verify API was called with review_type=negative
+    call_args = mock_get.call_args_list[0]
+    params = call_args[1].get("params", call_args[0][1] if len(call_args[0]) > 1 else {})
+    assert params.get("review_type") == "negative"
+
+
+def test_negative_supplement_skips_when_sufficient(db_conn):
+    from steam_crawler.pipeline.step3_crawl import _supplement_negative_reviews
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
+    from steam_crawler.api.resilience import FailureTracker
+
+    version = _create_version(db_conn)
+    _setup_game_for_supplement(db_conn, steam_positive=9000, steam_negative=1000,
+                                num_positive=500, num_negative=250)
+    db_conn.execute(
+        "INSERT OR IGNORE INTO game_collection_status (appid, version) VALUES (?, ?)",
+        (730, version))
+    db_conn.commit()
+
+    client = SteamReviewsClient()
+    tracker = FailureTracker()
+    with patch.object(client._client, "get") as mock_get:
+        added = _supplement_negative_reviews(db_conn, 730, version, "all", client, tracker)
+
+    assert added == 0
+    mock_get.assert_not_called()
+
+
+def test_negative_supplement_skips_low_official_negative(db_conn):
+    from steam_crawler.pipeline.step3_crawl import _supplement_negative_reviews
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
+    from steam_crawler.api.resilience import FailureTracker
+
+    version = _create_version(db_conn)
+    _setup_game_for_supplement(db_conn, steam_positive=9000, steam_negative=5,
+                                num_positive=100, num_negative=2)
+    db_conn.execute(
+        "INSERT OR IGNORE INTO game_collection_status (appid, version) VALUES (?, ?)",
+        (730, version))
+    db_conn.commit()
+
+    client = SteamReviewsClient()
+    tracker = FailureTracker()
+    with patch.object(client._client, "get") as mock_get:
+        added = _supplement_negative_reviews(db_conn, 730, version, "all", client, tracker)
+
+    assert added == 0
+    mock_get.assert_not_called()
+
+
+def test_negative_supplement_skips_zero_positive(db_conn):
+    from steam_crawler.pipeline.step3_crawl import _supplement_negative_reviews
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
+    from steam_crawler.api.resilience import FailureTracker
+
+    version = _create_version(db_conn)
+    _setup_game_for_supplement(db_conn, steam_positive=0, steam_negative=100,
+                                num_positive=0, num_negative=10)
+    db_conn.execute(
+        "INSERT OR IGNORE INTO game_collection_status (appid, version) VALUES (?, ?)",
+        (730, version))
+    db_conn.commit()
+
+    client = SteamReviewsClient()
+    tracker = FailureTracker()
+    with patch.object(client._client, "get") as mock_get:
+        added = _supplement_negative_reviews(db_conn, 730, version, "all", client, tracker)
+
+    assert added == 0
+    mock_get.assert_not_called()
+
+
+def test_negative_supplement_updates_review_types_done(db_conn):
+    import json
+    from steam_crawler.pipeline.step3_crawl import _supplement_negative_reviews
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
+    from steam_crawler.api.resilience import FailureTracker
+
+    version = _create_version(db_conn)
+    _setup_game_for_supplement(db_conn, num_positive=900, num_negative=50)
+    db_conn.execute(
+        "INSERT OR IGNORE INTO game_collection_status (appid, version) VALUES (?, ?)",
+        (730, version))
+    db_conn.commit()
+
+    client = SteamReviewsClient()
+    tracker = FailureTracker()
+    empty_page = {"success": 1, "reviews": [], "cursor": "nextcursor=="}
+    responses = [_mock_response(NEG_REVIEW_PAGE), _mock_response(empty_page)]
+    with patch.object(client._client, "get", side_effect=responses):
+        _supplement_negative_reviews(db_conn, 730, version, "all", client, tracker)
+
+    status = db_conn.execute(
+        "SELECT review_types_done FROM game_collection_status WHERE appid=730 AND version=?",
+        (version,),
+    ).fetchone()
+    done_list = json.loads(status["review_types_done"])
+    assert "negative_supplement" in done_list
+
+
+def test_negative_supplement_skips_on_rerun(db_conn):
+    import json
+    from steam_crawler.pipeline.step3_crawl import _supplement_negative_reviews
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
+    from steam_crawler.api.resilience import FailureTracker
+
+    version = _create_version(db_conn)
+    _setup_game_for_supplement(db_conn, num_positive=900, num_negative=50)
+    db_conn.execute(
+        "INSERT OR IGNORE INTO game_collection_status (appid, version, review_types_done) VALUES (?, ?, ?)",
+        (730, version, json.dumps(["negative_supplement"])))
+    db_conn.commit()
+
+    client = SteamReviewsClient()
+    tracker = FailureTracker()
+    with patch.object(client._client, "get") as mock_get:
+        added = _supplement_negative_reviews(db_conn, 730, version, "all", client, tracker)
+
+    assert added == 0
+    mock_get.assert_not_called()
+
+
+def test_negative_supplement_logs_failure(db_conn):
+    from steam_crawler.pipeline.step3_crawl import _supplement_negative_reviews
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
+    from steam_crawler.api.resilience import FailureTracker
+
+    version = _create_version(db_conn)
+    _setup_game_for_supplement(db_conn, num_positive=900, num_negative=50)
+    db_conn.execute(
+        "INSERT OR IGNORE INTO game_collection_status (appid, version) VALUES (?, ?)",
+        (730, version))
+    db_conn.commit()
+
+    client = SteamReviewsClient()
+    tracker = FailureTracker()
+    with patch.object(client._client, "get", side_effect=ConnectionError("timeout")):
+        _supplement_negative_reviews(db_conn, 730, version, "all", client, tracker)
+
+    failures = db_conn.execute(
+        "SELECT * FROM failure_logs WHERE api_name='steam_reviews_negative_supplement'"
+    ).fetchall()
+    assert len(failures) >= 1
