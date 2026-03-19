@@ -111,3 +111,92 @@ def test_partial_meta_uses_fallback():
     assert result["appid"] == 999
     assert result["name"] == "TestGame"
     assert result["positive_rate"] == 85.0
+
+
+def test_incremental_build_skips_unchanged(tmp_path):
+    from build_index import build_reports_json
+    insights_dir = tmp_path / "insights"
+    insights_dir.mkdir()
+    (insights_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    result1 = build_reports_json(insights_dir, force=False, db_path=None)
+    assert len(result1) == 1
+    (insights_dir / "reports.json").write_text(json.dumps(result1), encoding="utf-8")
+    result2 = build_reports_json(insights_dir, force=False, db_path=None)
+    assert result2[0]["_file_hash"] == result1[0]["_file_hash"]
+
+
+def test_incremental_build_detects_change(tmp_path):
+    from build_index import build_reports_json
+    insights_dir = tmp_path / "insights"
+    insights_dir.mkdir()
+    (insights_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    result1 = build_reports_json(insights_dir, force=False, db_path=None)
+    (insights_dir / "reports.json").write_text(json.dumps(result1), encoding="utf-8")
+    modified = SAMPLE_HTML_WITH_META.replace("98.3%", "99.0%")
+    (insights_dir / "hades.html").write_text(modified, encoding="utf-8")
+    result2 = build_reports_json(insights_dir, force=False, db_path=None)
+    assert result2[0]["positive_rate"] == 99.0
+    assert result2[0]["_file_hash"] != result1[0]["_file_hash"]
+
+
+def test_deleted_report_removed(tmp_path):
+    from build_index import build_reports_json
+    insights_dir = tmp_path / "insights"
+    insights_dir.mkdir()
+    (insights_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    result1 = build_reports_json(insights_dir, force=False, db_path=None)
+    (insights_dir / "reports.json").write_text(json.dumps(result1), encoding="utf-8")
+    (insights_dir / "hades.html").unlink()
+    result2 = build_reports_json(insights_dir, force=False, db_path=None)
+    assert len(result2) == 0
+
+
+def test_force_rebuild_reparses_unchanged(tmp_path):
+    from build_index import build_reports_json
+    insights_dir = tmp_path / "insights"
+    insights_dir.mkdir()
+    (insights_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    result1 = build_reports_json(insights_dir, force=False, db_path=None)
+    (insights_dir / "reports.json").write_text(json.dumps(result1), encoding="utf-8")
+    result2 = build_reports_json(insights_dir, force=True, db_path=None)
+    assert len(result2) == 1
+    assert result2[0]["name"] == "Hades"
+
+
+def test_duplicate_appid_keeps_newest(tmp_path):
+    import time
+    from build_index import build_reports_json
+    insights_dir = tmp_path / "insights"
+    insights_dir.mkdir()
+    (insights_dir / "hades-old.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    time.sleep(0.1)
+    newer = SAMPLE_HTML_WITH_META.replace("98.3%", "99.5%")
+    (insights_dir / "hades-new.html").write_text(newer, encoding="utf-8")
+    result = build_reports_json(insights_dir, force=True, db_path=None)
+    appid_entries = [r for r in result if r["appid"] == 1145360]
+    assert len(appid_entries) == 1
+    assert appid_entries[0]["positive_rate"] == 99.5
+
+
+def test_build_synonyms_hardcoded_only():
+    from build_index import build_synonyms_json
+    synonyms = build_synonyms_json(db_path=None)
+    assert "로그라이크" in synonyms
+    assert "Roguelike" in synonyms["로그라이크"]
+    assert "생존" in synonyms
+    assert len(synonyms) >= 30
+
+
+def test_build_synonyms_with_db(tmp_path):
+    import sqlite3
+    from build_index import build_synonyms_json
+    db_path = tmp_path / "test.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("CREATE TABLE games (appid INTEGER, name TEXT, name_ko TEXT)")
+    conn.execute("INSERT INTO games VALUES (1, 'Palworld', 'Palworld / 팰월드')")
+    conn.execute("INSERT INTO games VALUES (2, 'Hades', NULL)")
+    conn.commit()
+    conn.close()
+    synonyms = build_synonyms_json(db_path=db_path)
+    assert "팰월드" in synonyms
+    assert "Palworld" in synonyms["팰월드"]

@@ -4,9 +4,18 @@ Pipeline: docs/insights/*.html → reports.json → index page
 """
 from __future__ import annotations
 
+import argparse
+import hashlib
+import json
 import re
+import sqlite3
 from html.parser import HTMLParser
+from pathlib import Path
 from typing import Optional
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+INSIGHTS_DIR = PROJECT_ROOT / "docs" / "insights"
+DB_PATH = PROJECT_ROOT / "data" / "steam.db"
 
 
 class ReportMetaParser(HTMLParser):
@@ -200,3 +209,214 @@ def parse_report_html(html_content: str, slug: str) -> dict:
         "modified": _str_or_none(meta.get("modified", "")),
         "header_image": _str_or_none(meta.get("header_image", "")),
     }
+
+
+def file_hash(path: Path) -> str:
+    """Return MD5 hex digest of the file's contents."""
+    return hashlib.md5(path.read_bytes()).hexdigest()
+
+
+def build_reports_json(
+    insights_dir: Path, force: bool, db_path: Optional[Path]
+) -> list[dict]:
+    """Parse insight HTML reports and return a list of metadata dicts.
+
+    Supports incremental builds: unchanged files are reused from the existing
+    reports.json. Deduplicates by appid, keeping the entry from the newest file.
+
+    Args:
+        insights_dir: Directory containing *.html report files.
+        force: When True, re-parse all files regardless of cache.
+        db_path: Unused for now; reserved for future DB-backed enrichment.
+
+    Returns:
+        List of metadata dicts, one per unique appid (or slug if no appid).
+    """
+    # Load existing cache keyed by slug
+    cache: dict[str, dict] = {}
+    reports_json = insights_dir / "reports.json"
+    if not force and reports_json.exists():
+        try:
+            existing = json.loads(reports_json.read_text(encoding="utf-8"))
+            for entry in existing:
+                cache[entry["slug"]] = entry
+        except (json.JSONDecodeError, KeyError):
+            cache = {}
+
+    # Collect all HTML files (exclude index.html)
+    html_files = [
+        p for p in insights_dir.glob("*.html") if p.name != "index.html"
+    ]
+
+    # Parse each file, using cache when possible
+    parsed: list[tuple[float, dict]] = []  # (mtime, entry)
+    for html_path in html_files:
+        slug = html_path.stem
+        h = file_hash(html_path)
+        if not force and slug in cache and cache[slug].get("_file_hash") == h:
+            parsed.append((html_path.stat().st_mtime, cache[slug]))
+        else:
+            content = html_path.read_text(encoding="utf-8")
+            entry = parse_report_html(content, slug)
+            entry["_file_hash"] = h
+            parsed.append((html_path.stat().st_mtime, entry))
+
+    # Deduplicate by appid — keep the entry from the newest file
+    # Files without an appid are kept as-is (keyed by slug)
+    appid_best: dict[int, tuple[float, dict]] = {}
+    no_appid: list[dict] = []
+    for mtime, entry in parsed:
+        appid = entry.get("appid")
+        if appid is None:
+            no_appid.append(entry)
+        else:
+            if appid not in appid_best or mtime > appid_best[appid][0]:
+                appid_best[appid] = (mtime, entry)
+
+    result = [e for _, e in appid_best.values()] + no_appid
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Hardcoded Korean → English synonym map (~50 entries)
+# ---------------------------------------------------------------------------
+_HARDCODED_SYNONYMS: dict[str, list[str]] = {
+    "생존": ["Survival"],
+    "로그라이크": ["Roguelike", "Rogue-lite", "Action Roguelike"],
+    "로그라이트": ["Rogue-lite", "Roguelike"],
+    "경영": ["Management", "Simulation"],
+    "시뮬레이션": ["Simulation"],
+    "농사": ["Farming Sim", "Agriculture"],
+    "액션": ["Action", "Hack and Slash"],
+    "인디": ["Indie"],
+    "오픈월드": ["Open World"],
+    "멀티": ["Multiplayer", "Co-op"],
+    "협동": ["Co-op", "Multiplayer"],
+    "싱글": ["Singleplayer"],
+    "전략": ["Strategy"],
+    "퍼즐": ["Puzzle"],
+    "공포": ["Horror"],
+    "어드벤처": ["Adventure"],
+    "플랫포머": ["Platformer"],
+    "샌드박스": ["Sandbox"],
+    "크래프팅": ["Crafting"],
+    "건설": ["Building", "Base Building"],
+    "카드": ["Card Game", "TCG"],
+    "턴제": ["Turn-Based"],
+    "실시간": ["Real-Time"],
+    "소울라이크": ["Souls-like"],
+    "메트로배니아": ["Metroidvania"],
+    "타워디펜스": ["Tower Defense"],
+    "슈팅": ["Shooter", "FPS", "TPS"],
+    "격투": ["Fighting"],
+    "레이싱": ["Racing"],
+    "스포츠": ["Sports"],
+    "음악": ["Rhythm", "Music"],
+    "비주얼노벨": ["Visual Novel"],
+    "연애": ["Dating Sim", "Romance"],
+    "요리": ["Cooking"],
+    "낚시": ["Fishing"],
+    "탐험": ["Exploration"],
+    "스텔스": ["Stealth"],
+    "좀비": ["Zombies"],
+    "우주": ["Space"],
+    "중세": ["Medieval"],
+    "판타지": ["Fantasy"],
+    "SF": ["Sci-fi"],
+    "디펜스": ["Tower Defense", "Defense"],
+    "로봇": ["Robots", "Mechs"],
+    "해적": ["Pirates"],
+    "뱀파이어": ["Vampire"],
+    "마법": ["Magic"],
+}
+
+_KOREAN_RE = re.compile(r"[\uac00-\ud7a3]")
+
+
+def build_synonyms_json(db_path: Optional[Path]) -> dict[str, list[str]]:
+    """Build a Korean → English synonym map.
+
+    Starts with hardcoded entries, then enriches from the games DB when
+    available (queries name_ko column for Korean name variants).
+
+    Args:
+        db_path: Path to the SQLite DB, or None to use only hardcoded entries.
+
+    Returns:
+        Dict mapping Korean term → list of English equivalents.
+    """
+    synonyms: dict[str, list[str]] = {
+        k: list(v) for k, v in _HARDCODED_SYNONYMS.items()
+    }
+
+    if db_path is not None and Path(db_path).exists():
+        try:
+            conn = sqlite3.connect(str(db_path))
+            rows = conn.execute(
+                "SELECT name, name_ko FROM games WHERE name_ko IS NOT NULL AND name_ko != ''"
+            ).fetchall()
+            conn.close()
+            for name_en, name_ko_raw in rows:
+                if not name_en or not name_ko_raw:
+                    continue
+                # Split by "/" and find parts that contain Korean characters
+                parts = [p.strip() for p in name_ko_raw.split("/")]
+                for part in parts:
+                    if _KOREAN_RE.search(part) and part not in synonyms:
+                        synonyms[part] = [name_en]
+        except Exception:
+            pass  # DB errors are non-fatal
+
+    return synonyms
+
+
+def main() -> None:
+    """CLI entry point for building reports.json and synonyms.json."""
+    parser = argparse.ArgumentParser(
+        description="Build reports.json and synonyms.json from insight HTML files."
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-parse all HTML files, ignoring the cache.",
+    )
+    parser.add_argument(
+        "--insights-dir",
+        type=Path,
+        default=INSIGHTS_DIR,
+        help=f"Directory containing insight HTML files (default: {INSIGHTS_DIR})",
+    )
+    parser.add_argument(
+        "--db-path",
+        type=Path,
+        default=None,
+        help="Path to SQLite DB for synonym enrichment (default: auto-detect).",
+    )
+    args = parser.parse_args()
+
+    insights_dir: Path = args.insights_dir
+    db_path: Optional[Path] = args.db_path
+    if db_path is None and DB_PATH.exists():
+        db_path = DB_PATH
+
+    # Build reports.json
+    reports = build_reports_json(insights_dir, force=args.force, db_path=db_path)
+    reports_path = insights_dir / "reports.json"
+    new_content = json.dumps(reports, ensure_ascii=False, indent=2)
+    old_content = reports_path.read_text(encoding="utf-8") if reports_path.exists() else ""
+    if new_content != old_content:
+        reports_path.write_text(new_content, encoding="utf-8")
+        print(f"reports.json updated: {len(reports)} reports")
+    else:
+        print(f"reports.json unchanged: {len(reports)} reports")
+
+    # Build synonyms.json
+    synonyms = build_synonyms_json(db_path=db_path)
+    synonyms_path = insights_dir / "synonyms.json"
+    synonyms_content = json.dumps(synonyms, ensure_ascii=False, indent=2)
+    synonyms_path.write_text(synonyms_content, encoding="utf-8")
+    print(f"synonyms.json written: {len(synonyms)} entries")
+
+
+if __name__ == "__main__":
+    main()
