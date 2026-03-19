@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import MagicMock, patch
 
 
 MOCK_TAG_RESPONSE = {
@@ -88,20 +89,31 @@ MOCK_REVIEWS_PAGE = {
 MOCK_EMPTY_PAGE = {"success": 1, "reviews": [], "cursor": "nextcursor=="}
 
 
+def _mock_response(json_data, status_code=200):
+    resp = MagicMock()
+    resp.status_code = status_code
+    resp.json.return_value = json_data
+    resp.raise_for_status = MagicMock()
+    return resp
+
+
 def _create_version(db_conn):
     """Helper to create a data_versions entry for FK constraints."""
     from steam_crawler.db.repository import create_version
     return create_version(db_conn, "tag", "FPS")
 
 
-def test_step1_collect(httpx_mock, db_conn):
+def test_step1_collect(db_conn):
+    from steam_crawler.api.steamspy import SteamSpyClient
     from steam_crawler.pipeline.step1_collect import run_step1
 
     version = _create_version(db_conn)
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
-    result = run_step1(
-        db_conn, query_type="tag", query_value="FPS", limit=2, version=version
-    )
+    client = SteamSpyClient()
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_TAG_RESPONSE)):
+        result = run_step1(
+            db_conn, query_type="tag", query_value="FPS", limit=2, version=version,
+            steamspy_client=client,
+        )
     assert result == 2
     games = db_conn.execute(
         "SELECT * FROM games ORDER BY positive DESC"
@@ -114,15 +126,21 @@ def test_step1_collect(httpx_mock, db_conn):
     assert len(changelog) == 2
 
 
-def test_step1b_enrich(httpx_mock, db_conn):
+def test_step1b_enrich(db_conn):
+    from steam_crawler.api.steamspy import SteamSpyClient
     from steam_crawler.pipeline.step1_collect import run_step1
     from steam_crawler.pipeline.step1b_enrich import run_step1b
 
     version = _create_version(db_conn)
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
-    run_step1(db_conn, query_type="tag", query_value="FPS", limit=1, version=version)
-    httpx_mock.add_response(json=MOCK_APPDETAILS_730)
-    run_step1b(db_conn, version=version, source_tag="tag:FPS")
+    client = SteamSpyClient()
+
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_TAG_RESPONSE)):
+        run_step1(db_conn, query_type="tag", query_value="FPS", limit=1, version=version,
+                  steamspy_client=client)
+
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_APPDETAILS_730)):
+        run_step1b(db_conn, version=version, source_tag="tag:FPS", steamspy_client=client)
+
     tags = db_conn.execute(
         "SELECT tag_name, vote_count FROM game_tags WHERE appid=730 ORDER BY vote_count DESC"
     ).fetchall()
@@ -138,15 +156,23 @@ def test_step1b_enrich(httpx_mock, db_conn):
     assert "Free To Play" in genre_names
 
 
-def test_step2_scan(httpx_mock, db_conn):
+def test_step2_scan(db_conn):
+    from steam_crawler.api.steamspy import SteamSpyClient
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
     from steam_crawler.pipeline.step1_collect import run_step1
     from steam_crawler.pipeline.step2_scan import run_step2
 
     version = _create_version(db_conn)
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
-    run_step1(db_conn, query_type="tag", query_value="FPS", limit=1, version=version)
-    httpx_mock.add_response(json=MOCK_SUMMARY_RESPONSE)
-    run_step2(db_conn, version=version, source_tag="tag:FPS")
+    spy_client = SteamSpyClient()
+    rev_client = SteamReviewsClient()
+
+    with patch.object(spy_client._client, "get", return_value=_mock_response(MOCK_TAG_RESPONSE)):
+        run_step1(db_conn, query_type="tag", query_value="FPS", limit=1, version=version,
+                  steamspy_client=spy_client)
+
+    with patch.object(rev_client._client, "get", return_value=_mock_response(MOCK_SUMMARY_RESPONSE)):
+        run_step2(db_conn, version=version, source_tag="tag:FPS", reviews_client=rev_client)
+
     row = db_conn.execute(
         "SELECT steam_positive, review_score FROM games WHERE appid=730"
     ).fetchone()
@@ -154,16 +180,25 @@ def test_step2_scan(httpx_mock, db_conn):
     assert row["review_score"] == "Overwhelmingly Positive"
 
 
-def test_step3_crawl(httpx_mock, db_conn):
+def test_step3_crawl(db_conn):
+    from steam_crawler.api.steamspy import SteamSpyClient
+    from steam_crawler.api.steam_reviews import SteamReviewsClient
     from steam_crawler.pipeline.step1_collect import run_step1
     from steam_crawler.pipeline.step3_crawl import run_step3
 
     version = _create_version(db_conn)
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
-    run_step1(db_conn, query_type="tag", query_value="FPS", limit=1, version=version)
-    httpx_mock.add_response(json=MOCK_REVIEWS_PAGE)
-    httpx_mock.add_response(json=MOCK_EMPTY_PAGE)
-    run_step3(db_conn, version=version, source_tag="tag:FPS", top_n=1, max_reviews=10)
+    spy_client = SteamSpyClient()
+    rev_client = SteamReviewsClient()
+
+    with patch.object(spy_client._client, "get", return_value=_mock_response(MOCK_TAG_RESPONSE)):
+        run_step1(db_conn, query_type="tag", query_value="FPS", limit=1, version=version,
+                  steamspy_client=spy_client)
+
+    responses = [_mock_response(MOCK_REVIEWS_PAGE), _mock_response(MOCK_EMPTY_PAGE)]
+    with patch.object(rev_client._client, "get", side_effect=responses):
+        run_step3(db_conn, version=version, source_tag="tag:FPS", top_n=1, max_reviews=10,
+                  reviews_client=rev_client)
+
     reviews = db_conn.execute(
         "SELECT * FROM reviews WHERE appid=730"
     ).fetchall()

@@ -20,16 +20,122 @@ DB: `data/steam.db` (프로젝트 루트 기준)
 
 ## How It Works
 
-두 가지 실행 방식이 있다. 상황에 맞게 선택한다.
+두 가지 수집 시나리오가 있다. **어느 경우든 전체 파이프라인을 실행한다.**
 
-### 방식 1: CLI (간단한 수집)
+### 수집 파이프라인 단계
 
-태그/장르 기반 대량 수집에 적합하다.
+| 단계 | API | 수집 내용 | DB 함수 |
+|------|-----|----------|---------|
+| **1. SteamSpy** | SteamSpyClient | 게임 기본 정보 (이름, 리뷰수, 소유자, 가격) | `upsert_game()` |
+| **1b. 태그/장르** | SteamSpyClient | 태그 (투표수 포함), 장르 | `upsert_game_tags()`, `upsert_game_genres()` |
+| **1c. Store** | SteamStoreClient | 짧은/전체 설명(한/영), 헤더 이미지, 스크린샷, 영상 | `update_game_store_details()`, `upsert_game_media()` |
+| **1d. IGDB** | IGDBClient | 요약, 스토리라인, 테마, 키워드, 평점 | `update_game_igdb_details()`, `upsert_game_themes()`, `upsert_game_keywords()` |
+| **1e. RAWG** | RAWGClient | 설명, 평점, 메타크리틱 점수 | `update_game_rawg_details()` |
+| **2. 리뷰 요약** | SteamReviewsClient | 긍정/부정 수, 평가 등급 | `update_game_review_stats()` |
+| **3. 리뷰 본문** | SteamReviewsClient | 리뷰 텍스트, 투표수, 플레이타임 등 | `insert_reviews_batch()` |
+
+> **중요**: 1d(IGDB)는 TWITCH_CLIENT_ID/SECRET, 1e(RAWG)는 RAWG_API_KEY 환경변수가 필요하다. 없으면 해당 단계를 건너뛰고 사용자에게 안내한다.
+
+### 시나리오 A: 특정 게임 수집 (이름 또는 appid)
+
+사용자가 게임 이름을 말한 경우 전체 파이프라인을 Python으로 실행한다.
+
+```python
+import sys, os
+sys.path.insert(0, "<project-root>/steam-crawler/src")
+
+from dotenv import load_dotenv
+load_dotenv()
+
+from steam_crawler.db.schema import init_db
+from steam_crawler.api.steamspy import SteamSpyClient
+from steam_crawler.api.steam_reviews import SteamReviewsClient
+from steam_crawler.api.steam_store import SteamStoreClient
+from steam_crawler.db.repository import (
+    upsert_game, upsert_game_tags, upsert_game_genres,
+    update_game_store_details, upsert_game_media,
+    update_game_review_stats,
+    acquire_crawl_lock, release_crawl_lock,
+)
+
+conn = init_db("<project-root>/data/steam.db")
+
+# Crawl lock: 동일 게임 중복 크롤링 방지 (5분 자동 만료)
+if not acquire_crawl_lock(conn, APPID, owner="skill"):
+    print(f"AppID {APPID} is already being crawled by another process. Skipping.")
+    conn.close()
+    # → 사용자에게 안내하고 종료
+
+# Step 1: SteamSpy 기본 정보
+spy = SteamSpyClient()
+game = spy.fetch_app_details(APPID)
+spy.close()
+upsert_game(conn, game, version=0)
+
+# Step 1b: 태그/장르 저장
+if game.tags:
+    upsert_game_tags(conn, APPID, game.tags)
+if game.genres:    # genres가 있는 경우
+    upsert_game_genres(conn, APPID, game.genres)
+
+# Step 1c: Steam Store 상세
+store = SteamStoreClient()
+details = store.fetch_app_details(APPID)
+if details:
+    update_game_store_details(conn, APPID,
+        short_description_en=details.short_description_en,
+        short_description_ko=details.short_description_ko,
+        detailed_description_en=details.detailed_description_en,
+        detailed_description_ko=details.detailed_description_ko,
+        header_image=details.header_image)
+    for media in details.media:
+        upsert_game_media(conn, APPID, media.media_type, media.media_id,
+            media.name, media.url_thumbnail, media.url_full)
+store.close()
+
+# Step 1d: IGDB (환경변수 필요: TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET)
+twitch_id = os.environ.get("TWITCH_CLIENT_ID")
+twitch_secret = os.environ.get("TWITCH_CLIENT_SECRET")
+if twitch_id and twitch_secret:
+    from steam_crawler.api.igdb import IGDBClient
+    from steam_crawler.pipeline.step1d_igdb import run_step1d
+    run_step1d(conn, version=0, client_id=twitch_id, client_secret=twitch_secret, lock_owner="skill")
+# → 환경변수가 없으면 건너뛰고 사용자에게 안내
+
+# Step 1e: RAWG (환경변수 필요: RAWG_API_KEY)
+rawg_key = os.environ.get("RAWG_API_KEY")
+if rawg_key:
+    from steam_crawler.pipeline.step1e_rawg import run_step1e
+    run_step1e(conn, version=0, api_key=rawg_key, lock_owner="skill")
+# → 환경변수가 없으면 건너뛰고 사용자에게 안내
+
+# Step 2: 리뷰 요약
+rev = SteamReviewsClient()
+summary = rev.fetch_summary(APPID)
+update_game_review_stats(conn, APPID,
+    steam_positive=summary.total_positive,
+    steam_negative=summary.total_negative,
+    review_score=summary.review_score_desc)
+rev.close()
+
+# Step 3: 리뷰 본문 (페이지 단위 점진적 저장, 기본 100건 — 사용자 요청 시 조절)
+from steam_crawler.pipeline.step3_crawl import run_step3
+TARGET = 100  # 사용자가 수량을 지정하면 그 값 사용
+run_step3(conn, version=0, max_reviews=TARGET, lock_owner="skill")
+
+# 크롤링 완료 후 반드시 잠금 해제
+release_crawl_lock(conn, APPID)
+conn.close()
+```
+
+### 시나리오 B: 태그/장르 기반 대량 수집 (CLI)
 
 ```bash
 cd <project-root>/steam-crawler
 steam-crawler collect --tag "Roguelike" --limit 10 --top-n 3 --max-reviews 50
 ```
+
+CLI는 전체 파이프라인(Step 1→1b→1c→1d→1e→2→3)을 자동으로 실행한다.
 
 주요 옵션:
 - `--tag TEXT` / `--genre TEXT` / `--top100` — 수집 대상 (하나 필수)
@@ -48,63 +154,18 @@ steam-crawler status      # 현재 상태
 steam-crawler diff 1 2    # 버전 간 변경사항
 ```
 
-### 방식 2: Python 직접 호출 (세밀한 제어)
-
-특정 게임 하나만 조회하거나, 결과를 바로 가공해서 보여줄 때 사용한다.
-
-```python
-import sys
-sys.path.insert(0, "<project-root>/steam-crawler/src")
-
-from steam_crawler.db.schema import init_db
-from steam_crawler.api.steamspy import SteamSpyClient
-from steam_crawler.api.steam_reviews import SteamReviewsClient
-from steam_crawler.db.repository import upsert_game, insert_reviews_batch, update_game_review_stats
-```
-
-#### 특정 게임 조회 (appid로)
-
-```python
-spy = SteamSpyClient()
-game = spy.fetch_app_details(APPID)
-spy.close()
-# game.name, game.positive, game.negative, game.owners, game.tags, game.price, game.avg_playtime
-```
-
-#### 리뷰 요약 조회
-
-```python
-rev = SteamReviewsClient()
-summary = rev.fetch_summary(APPID)
-# summary.total_positive, summary.total_negative, summary.review_score_desc
-```
-
-#### 리뷰 본문 수집
-
-```python
-reviews, cursor, has_more = rev.fetch_reviews_page(APPID, cursor="*", language="all")
-# reviews[i].review_text, .voted_up, .playtime_at_review, .language, .author_steamid
-rev.close()
-```
-
-#### DB에 저장
-
-```python
-conn = init_db("<project-root>/data/steam.db")
-upsert_game(conn, game, version=0)
-insert_reviews_batch(conn, reviews, version=0)
-conn.close()
-```
-
 ## Presenting Results
 
 크롤링 결과를 사용자에게 보여줄 때는 다음을 포함한다:
 
 1. **게임 정보**: 이름, 리뷰 수(긍정/부정), 평가, 소유자 수, 가격, 평균 플레이타임
 2. **태그**: 상위 5~10개 태그 (투표 수 포함)
-3. **리뷰 샘플**: 3~5개 리뷰 (긍정/부정 혼합, 텍스트 앞 100자 + 언어 + 플레이타임)
-4. **DB 저장 여부**: 저장했으면 건수 알려주기
-5. **태그 기반 수집 시**: SteamSpy 데이터 품질 경고 — 결과 게임이 실제로 해당 태그와 관련 있는지 확인 필요
+3. **Store 상세**: 한글 설명 (있으면), 장르
+4. **외부 소스**: IGDB 요약/평점, RAWG 메타크리틱 (수집된 경우)
+5. **리뷰 샘플**: 3~5개 리뷰 (긍정/부정 혼합, 텍스트 앞 100자 + 언어 + 플레이타임)
+6. **수집 요약 테이블**: 각 단계별 수집 건수 (예: 태그 19개, 스크린샷 5개, 리뷰 100건)
+7. **건너뛴 단계**: 환경변수 미설정 등으로 건너뛴 단계가 있으면 안내
+8. **태그 기반 수집 시**: SteamSpy 데이터 품질 경고 — 결과 게임이 실제로 해당 태그와 관련 있는지 확인 필요
 
 ## Finding Game AppIDs
 
@@ -125,9 +186,19 @@ SteamSpy의 tag/genre 엔드포인트는 **관련 없는 게임을 반환할 수
 ## Rate Limits
 
 - SteamSpy: 1 req/sec
-- Steam Reviews: ~1 req/1.5sec
+- Steam Reviews: ~1 req/1.5sec, 페이지당 ~93건 (num_per_page=100 기준)
 - AdaptiveRateLimiter가 자동으로 조절하므로 별도 설정 불필요
-- 대량 수집(100+ 게임) 시 시간이 오래 걸릴 수 있음을 사용자에게 안내
+
+### 예상 소요 시간 (리뷰 수집, 실측 기준)
+
+| 리뷰 수 | 페이지 수 | 예상 시간 |
+|---------|----------|----------|
+| 1,000 | ~11 | ~16초 |
+| 5,000 | ~54 | ~1.5분 |
+| 10,000 | ~107 | ~2.7분 |
+| 30,000 | ~323 | ~8분 |
+
+- 대량 수집(5,000+) 시 백그라운드 실행을 권장
 
 ## Error Handling
 

@@ -1,4 +1,4 @@
-import pytest
+from unittest.mock import MagicMock, patch
 
 
 MOCK_TOKEN = {"access_token": "tok", "expires_in": 5000, "token_type": "bearer"}
@@ -29,18 +29,30 @@ def _setup_game(db_conn):
     return version
 
 
-def test_step1d_enriches_game(httpx_mock, db_conn):
+def _make_igdb_client():
+    """Create an IGDBClient with pre-set auth token."""
+    from steam_crawler.api.igdb import IGDBClient
+    client = IGDBClient("cid", "csec")
+    client._token = "tok"
+    client._token_expires_at = float("inf")
+    return client
+
+
+def test_step1d_enriches_game(db_conn):
     from steam_crawler.pipeline.step1d_igdb import run_step1d
 
     version = _setup_game(db_conn)
-    httpx_mock.add_response(json=MOCK_TOKEN)
-    httpx_mock.add_response(json=MOCK_EXTERNAL_GAMES)  # external_games
-    httpx_mock.add_response(json=MOCK_IGDB_GAME)       # fetch_game_details
+    client = _make_igdb_client()
 
-    count = run_step1d(
-        db_conn, version=version, source_tag="tag:FPS",
-        client_id="cid", client_secret="csec",
-    )
+    responses = [
+        _mock_response(MOCK_EXTERNAL_GAMES),  # external_games
+        _mock_response(MOCK_IGDB_GAME),        # fetch_game_details
+    ]
+    with patch.object(client._http, "post", side_effect=responses):
+        count = run_step1d(
+            db_conn, version=version, source_tag="tag:FPS",
+            igdb_client=client,
+        )
     assert count == 1
 
     row = db_conn.execute("SELECT * FROM games WHERE appid=730").fetchone()
@@ -74,44 +86,50 @@ def test_step1d_skips_already_enriched(db_conn):
     assert count == 0
 
 
-def test_step1d_name_fallback(httpx_mock, db_conn):
+def test_step1d_name_fallback(db_conn):
     from steam_crawler.pipeline.step1d_igdb import run_step1d
 
     version = _setup_game(db_conn)
-    httpx_mock.add_response(json=MOCK_TOKEN)
-    httpx_mock.add_response(json=[])  # steam_id search empty
-    httpx_mock.add_response(json=[   # name search
-        {"id": 1942, "name": "CS2", "summary": "Found by name",
-         "themes": [], "keywords": []},
-    ])
-    httpx_mock.add_response(json=[   # fetch_game_details
-        {"id": 1942, "name": "CS2", "summary": "Found by name",
-         "aggregated_rating": 85.0, "themes": [], "keywords": []},
-    ])
+    client = _make_igdb_client()
 
-    count = run_step1d(
-        db_conn, version=version, source_tag="tag:FPS",
-        client_id="cid", client_secret="csec",
-    )
+    responses = [
+        _mock_response([]),  # steam_id search empty
+        _mock_response([     # name search
+            {"id": 1942, "name": "CS2", "summary": "Found by name",
+             "themes": [], "keywords": []},
+        ]),
+        _mock_response([     # fetch_game_details
+            {"id": 1942, "name": "CS2", "summary": "Found by name",
+             "aggregated_rating": 85.0, "themes": [], "keywords": []},
+        ]),
+    ]
+    with patch.object(client._http, "post", side_effect=responses):
+        count = run_step1d(
+            db_conn, version=version, source_tag="tag:FPS",
+            igdb_client=client,
+        )
     assert count == 1
     row = db_conn.execute("SELECT igdb_summary FROM games WHERE appid=730").fetchone()
     assert row["igdb_summary"] == "Found by name"
 
 
-def test_step1d_match_failed_marks_unmatchable(httpx_mock, db_conn):
+def test_step1d_match_failed_marks_unmatchable(db_conn):
     from steam_crawler.pipeline.step1d_igdb import run_step1d
 
     version = _setup_game(db_conn)
-    httpx_mock.add_response(json=MOCK_TOKEN)
-    httpx_mock.add_response(json=[])  # steam_id search empty
-    httpx_mock.add_response(json=[    # name search returns unrelated
-        {"id": 999, "name": "Completely Different Game"},
-    ])
+    client = _make_igdb_client()
 
-    count = run_step1d(
-        db_conn, version=version, source_tag="tag:FPS",
-        client_id="cid", client_secret="csec",
-    )
+    responses = [
+        _mock_response([]),   # steam_id search empty
+        _mock_response([      # name search returns unrelated
+            {"id": 999, "name": "Completely Different Game"},
+        ]),
+    ]
+    with patch.object(client._http, "post", side_effect=responses):
+        count = run_step1d(
+            db_conn, version=version, source_tag="tag:FPS",
+            igdb_client=client,
+        )
     assert count == 0
     row = db_conn.execute("SELECT igdb_id FROM games WHERE appid=730").fetchone()
     assert row["igdb_id"] == -1
@@ -131,3 +149,11 @@ def test_step1d_skips_when_no_credentials(db_conn):
         client_id=None, client_secret=None,
     )
     assert count == 0
+
+
+def _mock_response(json_data, status_code=200):
+    resp = MagicMock()
+    resp.status_code = status_code
+    resp.json.return_value = json_data
+    resp.raise_for_status = MagicMock()
+    return resp

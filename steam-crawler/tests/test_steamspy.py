@@ -1,6 +1,5 @@
 import json
-import pytest
-import httpx
+from unittest.mock import MagicMock, patch
 
 
 MOCK_TAG_RESPONSE = {
@@ -31,36 +30,44 @@ MOCK_APPDETAILS_RESPONSE = {
 }
 
 
-def test_fetch_games_by_tag(httpx_mock):
+def _mock_response(json_data, status_code=200):
+    resp = MagicMock()
+    resp.status_code = status_code
+    resp.json.return_value = json_data
+    resp.raise_for_status = MagicMock()
+    return resp
+
+
+def test_fetch_games_by_tag():
     from steam_crawler.api.steamspy import SteamSpyClient
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
     client = SteamSpyClient()
-    games = client.fetch_by_tag("FPS")
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_TAG_RESPONSE)):
+        games = client.fetch_by_tag("FPS")
     assert len(games) == 2
     assert games[0].positive >= games[1].positive
     assert games[0].source_tag == "tag:FPS"
 
 
-def test_fetch_games_by_tag_with_limit(httpx_mock):
+def test_fetch_games_by_tag_with_limit():
     from steam_crawler.api.steamspy import SteamSpyClient
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
     client = SteamSpyClient()
-    games = client.fetch_by_tag("FPS", limit=1)
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_TAG_RESPONSE)):
+        games = client.fetch_by_tag("FPS", limit=1)
     assert len(games) == 1
     assert games[0].appid == 730
 
 
-def test_fetch_app_details(httpx_mock):
+def test_fetch_app_details():
     from steam_crawler.api.steamspy import SteamSpyClient
-    httpx_mock.add_response(json=MOCK_APPDETAILS_RESPONSE)
     client = SteamSpyClient()
-    game = client.fetch_app_details(730)
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_APPDETAILS_RESPONSE)):
+        game = client.fetch_app_details(730)
     assert game.tags == {"FPS": 90000, "Shooter": 65000, "Multiplayer": 55000}
 
 
-def test_fetch_by_genre(httpx_mock):
+def test_fetch_by_genre():
     from steam_crawler.api.steamspy import SteamSpyClient
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
     client = SteamSpyClient()
-    games = client.fetch_by_genre("Racing")
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_TAG_RESPONSE)):
+        games = client.fetch_by_genre("Racing")
     assert len(games) == 2

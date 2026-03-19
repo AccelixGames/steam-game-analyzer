@@ -20,7 +20,7 @@ class SteamReviewsClient:
     def fetch_summary(self, appid: int) -> ReviewSummary:
         response = self._client.get(
             f"{REVIEWS_BASE}/{appid}",
-            params={"json": "1", "cursor": "*", "filter": "recent",
+            params={"json": "1", "cursor": "*", "filter": "all",
                     "purchase_type": "all", "num_per_page": "0"},
         )
         response.raise_for_status()

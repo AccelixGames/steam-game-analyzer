@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hades — 기획 인사이트 보고서</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0c0e14;
+    --bg-card: #141620;
+    --bg-card-hover: #191c28;
+    --bg-accent: #1a1d2a;
+    --border: #252838;
+    --border-strong: #363a50;
+    --text: #e8e8f0;
+    --text-dim: #9a9ab4;
+    --text-faint: #686880;
+    --accent-gold: #f0c040;
+    --accent-gold-dim: #b89830;
+    --accent-green: #3ed88a;
+    --accent-red: #f05868;
+    --accent-blue: #4c94f0;
+    --accent-purple: #a46cf0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 1.8;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 3rem 3rem;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 20%, rgba(240,192,64,0.08), transparent),
+      radial-gradient(ellipse 60% 50% at 70% 80%, rgba(160,96,240,0.06), transparent),
+      linear-gradient(180deg, transparent 40%, var(--bg-deep));
+    z-index: 1;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/header.jpg?t=1758127023') center/cover no-repeat;
+    filter: brightness(0.3) saturate(0.6);
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-top-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .steam-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .45rem 1.2rem;
+    background: rgba(27,40,56,0.8);
+    border: 1px solid rgba(102,192,244,0.3);
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #66c0f4;
+    text-decoration: none;
+    letter-spacing: .03em;
+    backdrop-filter: blur(10px);
+    transition: all .2s;
+  }
+  .steam-link:hover {
+    background: rgba(27,40,56,0.95);
+    border-color: #66c0f4;
+    color: #fff;
+  }
+  .steam-link svg { width: 16px; height: 16px; fill: currentColor; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem 1rem;
+    background: rgba(240,192,64,0.15);
+    border: 1px solid rgba(240,192,64,0.3);
+    border-radius: 100px;
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--accent-gold);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    max-width: 600px;
+    line-height: 1.8;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .hero-stat { display: flex; flex-direction: column; }
+  .hero-stat .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .hero-stat .num.gold { color: var(--accent-gold); }
+  .hero-stat .num.green { color: var(--accent-green); }
+  .hero-stat .label { font-size: .75rem; color: var(--text-dim); margin-top: .2rem; }
+
+  /* ── Layout ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  section {
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-of-type { border-bottom: none; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    background: rgba(240,192,64,0.1);
+    border: 1px solid rgba(240,192,64,0.2);
+    padding: .3rem .7rem;
+    border-radius: 4px;
+    letter-spacing: .08em;
+  }
+  .section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .card-label {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--accent-gold-dim);
+    margin-bottom: 1rem;
+    padding-bottom: .6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .8rem; }
+
+  /* ── Core Loop ── */
+  .loop-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 2.5rem 1rem;
+    background: var(--bg-accent);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .loop-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    min-width: 120px;
+    text-align: center;
+    transition: all .2s;
+  }
+  .loop-node:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+  .loop-icon { font-size: 1.8rem; }
+  .loop-label { font-size: .8rem; font-weight: 700; }
+  .loop-sub { font-size: .65rem; color: var(--text-dim); }
+  .loop-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-gold-dim);
+    font-size: 1.2rem;
+  }
+
+  /* ── Tags ── */
+  .tag-grid { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.5rem; }
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .4rem 1rem;
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    transition: all .2s;
+  }
+  .tag-pill:hover { border-color: var(--accent-gold); }
+  .tag-pill .vote {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .65rem;
+    color: var(--text-faint);
+  }
+  .tag-pill.pillar-genre { border-left: 3px solid var(--accent-blue); }
+  .tag-pill.pillar-mood { border-left: 3px solid var(--accent-purple); }
+  .tag-pill.pillar-platform { border-left: 3px solid var(--accent-green); }
+
+  /* ── Triangulation ── */
+  .tri-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .tri-table th {
+    background: var(--bg-accent);
+    padding: 1rem 1.2rem;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-dim);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .tri-table td {
+    padding: .9rem 1.2rem;
+    font-size: .85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: top;
+  }
+  .tri-table tr:last-child td { border-bottom: none; }
+  .tri-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .2rem .6rem;
+    border-radius: 4px;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+  }
+  .verdict.success { background: rgba(64,208,128,0.12); color: var(--accent-green); }
+  .verdict.weakness { background: rgba(240,80,96,0.12); color: var(--accent-red); }
+  .verdict.hidden { background: rgba(160,96,240,0.12); color: var(--accent-purple); }
+  .verdict.marketing { background: rgba(240,192,64,0.12); color: var(--accent-gold); }
+
+  /* ── Bar Charts ── */
+  .bar-chart { margin: 1.5rem 0; }
+  .bar-row { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; }
+  .bar-label {
+    font-size: .82rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+    min-width: 90px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bar-track {
+    flex: 1;
+    height: 32px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: .8rem;
+    font-size: .75rem;
+    font-weight: 700;
+    color: #fff;
+    min-width: fit-content;
+    transition: width .8s cubic-bezier(.22,1,.36,1);
+  }
+  .bar-fill.green { background: var(--accent-green); }
+  .bar-fill.gold { background: var(--accent-gold); color: #1a1d2a; }
+  .bar-fill.red { background: var(--accent-red); }
+  .bar-fill.blue { background: var(--accent-blue); }
+  .bar-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    color: var(--text-dim);
+    min-width: 70px;
+  }
+
+  /* ── Quotes ── */
+  .quote-block {
+    position: relative;
+    padding: 1.5rem 1.8rem 1.5rem 2rem;
+    margin: 1.2rem 0;
+    background: var(--bg-accent);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-gold);
+  }
+  .quote-block.negative { border-left-color: var(--accent-red); }
+  .quote-text {
+    font-size: .9rem;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.9;
+  }
+  .quote-meta {
+    margin-top: .8rem;
+    font-size: .75rem;
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .quote-translation {
+    margin-top: .6rem;
+    font-size: .84rem;
+    color: var(--text-dim);
+    font-style: normal;
+    padding: .6rem .8rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 4px;
+    border-left: 2px solid rgba(255,255,255,0.08);
+  }
+
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .sys-card {
+    padding: 1rem;
+    background: var(--bg-accent);
+    border-radius: 8px;
+  }
+  .sys-card strong { color: var(--accent-gold); }
+  .sys-card.alt strong { color: var(--accent-purple); }
+  .sys-card p { font-size: .8rem; color: var(--text-dim); margin-top: .3rem; }
+
+  /* ── Biz Stats ── */
+  .biz-stat {
+    text-align: center;
+  }
+  .biz-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .biz-num.gold { color: var(--accent-gold); }
+  .biz-num.green { color: var(--accent-green); }
+  .biz-num.purple { color: var(--accent-purple); }
+  .biz-calc {
+    font-size: .75rem;
+    color: var(--text-faint);
+    margin-top: .3rem;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .hero { padding: 2rem 1.5rem; }
+  }
+
+  /* ── Conclusion ── */
+  .conclusion { text-align: center; padding: 5rem 2rem; position: relative; }
+  .conclusion::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(240,192,64,0.06), transparent 70%);
+  }
+  .conclusion-text {
+    position: relative;
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #fff;
+  }
+  .conclusion-text strong { color: var(--accent-gold); }
+  .conclusion-text em { color: var(--text-dim); font-style: italic; }
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: .72rem;
+    color: var(--text-faint);
+    border-top: 1px solid var(--border);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .6s ease-out both; }
+  .fade-up:nth-child(2) { animation-delay: .1s; }
+  .fade-up:nth-child(3) { animation-delay: .2s; }
+  .fade-up:nth-child(4) { animation-delay: .3s; }
+</style>
+</head>
+<body>
+
+<!-- ━━━ HERO ━━━ -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content fade-up">
+    <div class="hero-top-bar">
+      <a class="steam-link" href="https://store.steampowered.com/app/1145360/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 256 259"><path d="M128 0C57.3 0 0 52.6 0 117.5c0 28.5 11.3 54.7 29.8 75.2L0 259l66.3-29.5c18.6 9.8 39.9 15.4 62.7 15.4C198.7 245 256 192.4 256 127.5S198.7 0 128 0z"/></svg>
+        Steam Store
+      </a>
+      <div class="hero-badge">Steam Game Insight Report</div>
+    </div>
+    <h1>Hades</h1>
+    <p class="hero-subtitle">죽음을 서사 엔진으로 전환한 로그라이크. 실패할수록 이야기가 풍성해지는 구조가 70%(<1h)에서 98.1%(100h+)로 상승하는 긍정률 곡선의 비밀이다.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num gold">98.3%</span>
+        <span class="label">긍정률 (Overwhelmingly Positive)</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">5~10M</span>
+        <span class="label">소유자 수</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num green">$24.99</span>
+        <span class="label">가격</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">34.5h</span>
+        <span class="label">평균 플레이타임</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ━━━ STEP 01: 마케팅 포지셔닝 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 01</span>
+    <h2 class="section-title">마케팅 포지셔닝 — 개발사의 의도</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card fade-up">
+      <div class="card-label">English Description</div>
+      <p><strong>Defy</strong> the god of the dead as you <strong>hack and slash</strong> out of the Underworld in this <strong>rogue-like dungeon crawler</strong> from the creators of <strong>Bastion, Transistor, and Pyre</strong>.</p>
+    </div>
+    <div class="card fade-up">
+      <div class="card-label">한국어 설명</div>
+      <p><strong>Bastion, Transistor, Pyre</strong>의 제작사에서 선보이는 이 <strong>로그라이크 던전 탐색형</strong> 게임에서 <strong>핵 앤 슬래시</strong>로 지하 세계를 탈출하고 <strong>죽음의 신</strong>에게 도전하세요.</p>
+    </div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label">마케팅 키워드 분석</div>
+    <div class="card-title">두 가지 전략: "반항의 서사" (EN) vs "권위의 보증" (KO)</div>
+    <p style="color:var(--text-dim)">
+      영문 피치는 <strong>"Defy"</strong>로 시작한다 — 플레이어에게 <em>반항자의 정체성</em>을 부여하는 첫 단어.
+      반면 한국어 피치는 <strong>"Bastion, Transistor, Pyre의 제작사"</strong>로 시작하여, Supergiant Games라는 <em>스튜디오 브랜드</em>를 앞세운다.
+      동일한 게임을 시장별로 다른 소구점으로 판매하는 정교한 현지화 전략이다.
+    </p>
+    <p style="color:var(--text-dim);margin-top:1rem">
+      주목할 점: 한 줄 피치에 <strong>스토리, NPC 관계, 사운드트랙</strong>이 전혀 언급되지 않는다.
+      "rogue-like dungeon crawler"와 "hack and slash"만으로 장르를 정의했지만,
+      실제 유저들이 가장 높이 평가한 것은 Story Rich(669표)와 Great Soundtrack(696표)이다.
+      마케팅이 의도적으로 숨긴 것들이 게임의 진짜 무기가 된 케이스다.
+    </p>
+  </div>
+
+  <!-- 1-B: RAWG 전체 피치 -->
+  <div style="font-size:.7rem;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.1em;margin:2rem 0 .8rem" class="fade-up">1-B. 전체 피치 (RAWG Description)</div>
+  <div class="card fade-up">
+    <div class="card-label">피처 우선순위 — 소개 순서가 곧 개발사의 기획 의도</div>
+    <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.8rem">
+      <div style="display:flex;align-items:flex-start;gap:1rem">
+        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-gold);color:var(--bg-deep);border-radius:50%;font-size:.75rem;font-weight:900">1</span>
+        <div>
+          <strong>BATTLE OUT OF HELL</strong> <span style="color:var(--text-dim);font-size:.82rem">— 전투 시스템, 지하세계 탈출</span>
+          <div style="font-size:.78rem;color:var(--accent-green);margin-top:.2rem">첫 번째 = 핵심 약속. "전투로 탈출하라"가 게임의 존재 이유</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:1rem">
+        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-gold);color:var(--bg-deep);border-radius:50%;font-size:.75rem;font-weight:900">2</span>
+        <div>
+          <strong>UNLEASH THE FURY OF OLYMPUS</strong> <span style="color:var(--text-dim);font-size:.82rem">— 올림포스 신들의 축복, 빌드 다양성</span>
+          <div style="font-size:.78rem;color:var(--accent-gold);margin-top:.2rem">두 번째 = 리플레이 가치의 원천. 매 런마다 다른 빌드 조합</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:1rem">
+        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-blue);color:#fff;border-radius:50%;font-size:.75rem;font-weight:900">3</span>
+        <div>
+          <strong>BEFRIEND GODS, GHOSTS AND MONSTERS</strong> <span style="color:var(--text-dim);font-size:.82rem">— NPC 관계, 로맨스, 선물 시스템</span>
+          <div style="font-size:.78rem;color:var(--accent-purple);margin-top:.2rem">short description에서 완전 누락 — 하지만 LGBTQ+(93표) 태그가 증명하는 숨은 핵심</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:1rem">
+        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-blue);color:#fff;border-radius:50%;font-size:.75rem;font-weight:900">4</span>
+        <div>
+          <strong>BUILT FOR REPLAYABILITY</strong> <span style="color:var(--text-dim);font-size:.82rem">— Mirror of Night, Heat 시스템, 메타 진행</span>
+          <div style="font-size:.78rem;color:var(--text-faint);margin-top:.2rem">Replay Value(565표) 태그가 이 약속의 이행을 증명</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:1rem">
+        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-blue);color:#fff;border-radius:50%;font-size:.75rem;font-weight:900">5</span>
+        <div>
+          <strong>NOTHING IS IMPOSSIBLE</strong> <span style="color:var(--text-dim);font-size:.82rem">— God Mode, 접근성 옵션</span>
+          <div style="font-size:.78rem;color:var(--accent-red);margin-top:.2rem">중국 유저 "坐牢模拟器" 리뷰가 보여주듯, 이 약속은 부분적으로만 이행됨</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:1rem">
+        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-blue);color:#fff;border-radius:50%;font-size:.75rem;font-weight:900">6</span>
+        <div>
+          <strong>SIGNATURE SUPERGIANT STYLE</strong> <span style="color:var(--text-dim);font-size:.82rem">— 아트, 음악, 보이스 연기</span>
+          <div style="font-size:.78rem;color:var(--accent-green);margin-top:.2rem">Great Soundtrack(696표) + Hand-drawn(297표) — 유저가 직접 태그로 인정한 품질</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Short vs RAWG 갭 분석 -->
+  <div class="card fade-up">
+    <div class="card-label">Short vs RAWG Pitch 갭 분석</div>
+    <div class="card-title">한 줄 피치가 숨긴 것들</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+      <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
+        <strong style="color:var(--accent-gold);font-size:.8rem">Short에만 있는 것</strong>
+        <ul style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem;padding-left:1rem;line-height:1.9">
+          <li><strong>"Defy the god of the dead"</strong> — RAWG 피치에서는 아버지와의 갈등이 전면에 나오지 않음. 한 줄에서 "반항"이라는 감정을 선점하기 위한 선택</li>
+          <li><strong>스튜디오 레퍼런스</strong> — "creators of Bastion, Transistor, and Pyre"로 신뢰를 즉각 확보</li>
+        </ul>
+      </div>
+      <div style="padding:1rem;background:rgba(164,108,240,0.06);border:1px solid rgba(164,108,240,0.15);border-radius:8px">
+        <strong style="color:var(--accent-purple);font-size:.8rem">RAWG 피치에만 있는 것</strong>
+        <ul style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem;padding-left:1rem;line-height:1.9">
+          <li><strong>NPC 관계/로맨스</strong> — 게임의 감성적 핵심이지만 short desc에서 완전 누락</li>
+          <li><strong>메타 진행 (Mirror of Night)</strong> — 리플레이어빌리티의 핵심 시스템</li>
+          <li><strong>God Mode (접근성)</strong> — "Nothing is impossible"이라는 마케팅 약속</li>
+          <li><strong>아트/사운드트랙</strong> — 유저 태그 상위권이지만 short에서 언급 없음</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">
+      <strong style="color:var(--text)">핵심 인사이트:</strong>
+      Supergiant은 한 줄 피치에서 <strong>장르 정체성("rogue-like dungeon crawler")</strong>만 약속하고,
+      게임의 진짜 차별점(스토리, 관계, 음악)은 <em>플레이어가 직접 발견하도록</em> 남겨두었다.
+      이것은 "기대치 하회 방지" 전략이 아니라, <strong>"기대 이상의 놀라움"을 의도적으로 설계한 마케팅</strong>이다.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ STEP 02: 메커니즘 실체 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 02</span>
+    <h2 class="section-title">메커니즘 실체 — 실제 구현</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">Core Loop Diagram — 2중 루프 구조</div>
+
+    <!-- 외부 루프 (메타 진행) -->
+    <div style="border:1px dashed var(--accent-gold-dim);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
+      <div style="font-size:.7rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">외부 루프 — 메타 진행</div>
+
+      <!-- 내부 루프 (1회 런) -->
+      <div class="loop-diagram" style="margin-bottom:1rem;border-color:var(--accent-blue);position:relative">
+        <div style="position:absolute;top:.5rem;left:1rem;font-size:.65rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.08em">내부 루프 — 1회 런</div>
+        <div class="loop-node">
+          <div class="loop-icon">&#x2694;&#xFE0F;</div>
+          <div class="loop-label">전투 시작</div>
+          <div class="loop-sub">무기 선택</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#x26A1;</div>
+          <div class="loop-label">Boon 선택</div>
+          <div class="loop-sub">신의 축복 조합</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#x1F480;</div>
+          <div class="loop-label">사망 / 클리어</div>
+          <div class="loop-sub">보상 획득</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#x1F3E0;</div>
+          <div class="loop-label">하데스의 집</div>
+          <div class="loop-sub">NPC 대화 + 스토리</div>
+        </div>
+        <span class="loop-arrow" style="opacity:.4">&#x21A9;</span>
+      </div>
+
+      <!-- 외부 루프 노드 -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap">
+        <div class="loop-node">
+          <div class="loop-icon">&#x1FA9E;</div>
+          <div class="loop-label">Mirror of Night</div>
+          <div class="loop-sub">영구 업그레이드</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#x1F525;</div>
+          <div class="loop-label">Heat 시스템</div>
+          <div class="loop-sub">난이도 커스텀</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#x1F4AC;</div>
+          <div class="loop-label">관계 발전</div>
+          <div class="loop-sub">NPC 호감도 + 로맨스</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#x1F504;</div>
+          <div class="loop-label">내부 루프 복귀</div>
+          <div class="loop-sub">새 런 시작</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 핵심 텐션 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+      <div style="padding:1rem;background:rgba(64,208,128,0.06);border:1px solid rgba(64,208,128,0.15);border-radius:8px">
+        <strong style="color:var(--accent-green);font-size:.8rem">확정 보상</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">Mirror of Night 업그레이드, NPC 대화 진행, 스토리 해금 — 죽어도 잃지 않는 영구 진행</p>
+      </div>
+      <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
+        <strong style="color:var(--accent-gold);font-size:.8rem">가변 보상</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">Boon 조합의 시너지 발견, Duo Boon 등장 확률, 숨겨진 방/이벤트 — 매 런이 고유한 경험</p>
+      </div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">Hades의 핵심 설계는 <strong>"사망 = 벌"이 아니라 "사망 = 보상"</strong>으로 전환한 것이다. 죽을 때마다 새 대화가 열리고, NPC 관계가 깊어지며, 스토리가 진행된다. "Hades never felt like repeating the same thing, it felt like slowly understanding it" — 이 리뷰가 증명하듯, 반복이 축적으로 느껴지는 루프 설계가 98.3%의 긍정률을 만든 구조적 원인이다.</p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">IGDB / RAWG 기반 시스템 분석</div>
+    <div class="card-title">마케팅이 말하지 않은 시스템들</div>
+    <div class="grid-3" style="margin-top:1rem">
+      <div class="sys-card alt" style="border-color:rgba(164,108,240,0.3)">
+        <div style="font-size:.6rem;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">IGDB 키워드 — Steam 태그 부재</div>
+        <strong>"you can pet the dog"</strong>
+        <p>Cerberus를 쓰다듬을 수 있는 감성적 디테일. Steam 커뮤니티가 태그로 인식하지 못한 요소지만, IGDB에서는 핵심 키워드로 등록</p>
+      </div>
+      <div class="sys-card alt" style="border-color:rgba(164,108,240,0.3)">
+        <div style="font-size:.6rem;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">IGDB 키워드 — Steam 태그 부재</div>
+        <strong>"supernatural"</strong>
+        <p>그리스 신화를 단순 배경이 아닌 서사 구조로 활용. Steam의 Mythology(877표)와 겹치지만, IGDB는 "초자연적 존재와의 관계"라는 더 넓은 테마로 인식</p>
+      </div>
+      <div class="sys-card alt" style="border-color:rgba(164,108,240,0.3)">
+        <div style="font-size:.6rem;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">IGDB 키워드 — Steam 태그 부재</div>
+        <strong>"stylized"</strong>
+        <p>Hand-drawn(297표) 태그와 관련되지만, 제3자 평가에서는 아트 스타일 자체를 독립적 특성으로 인식. Metacritic 93점의 한 요인</p>
+      </div>
+      <div class="sys-card" style="border-color:rgba(62,216,138,0.3)">
+        <div style="font-size:.6rem;font-weight:700;color:var(--accent-green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">IGDB 확인 — 마케팅 미언급</div>
+        <strong>NPC 관계 시스템</strong>
+        <p>IGDB storyline이 확인: Zagreus의 어머니 탐색이 핵심 동기. short desc에 없지만, "forging relationships"가 RAWG 피치 3번에 명시</p>
+      </div>
+      <div class="sys-card" style="border-color:rgba(62,216,138,0.3)">
+        <div style="font-size:.6rem;font-weight:700;color:var(--accent-green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">플랫폼 확장</div>
+        <strong>Netflix 게임 포팅</strong>
+        <p>IGDB의 "netflix" 키워드 — 프리미엄 타이틀이 구독 서비스로 확장. 접근성 극대화 전략의 증거</p>
+      </div>
+      <div class="sys-card" style="border-color:rgba(240,192,64,0.3)">
+        <div style="font-size:.6rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">외부 인정</div>
+        <strong>7개 Game Awards 키워드</strong>
+        <p>TGA 2020에서 8개 부문 노미네이트, 2개 수상. IGDB가 이를 키워드로 등록 — 산업 인정이 데이터에 반영된 케이스</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━ STEP 03: 유저 경험 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 03</span>
+    <h2 class="section-title">유저 경험 — 실제 반응</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- 태그 -->
+  <div class="card fade-up">
+    <div class="card-label">태그 프로필 — 유저가 인식한 정체성</div>
+    <div class="tag-grid">
+      <span class="tag-pill pillar-genre">Action Roguelike <span class="vote">1330</span></span>
+      <span class="tag-pill pillar-genre">Rogue-lite <span class="vote">954</span></span>
+      <span class="tag-pill pillar-genre">Hack and Slash <span class="vote">936</span></span>
+      <span class="tag-pill pillar-platform">Indie <span class="vote">928</span></span>
+      <span class="tag-pill pillar-mood">Mythology <span class="vote">877</span></span>
+      <span class="tag-pill pillar-genre">Action <span class="vote">816</span></span>
+      <span class="tag-pill pillar-genre">Rogue-like <span class="vote">747</span></span>
+      <span class="tag-pill pillar-platform">Singleplayer <span class="vote">701</span></span>
+      <span class="tag-pill pillar-mood">Great Soundtrack <span class="vote">696</span></span>
+      <span class="tag-pill pillar-mood">Story Rich <span class="vote">669</span></span>
+      <span class="tag-pill pillar-genre">RPG <span class="vote">648</span></span>
+      <span class="tag-pill pillar-genre">Dungeon Crawler <span class="vote">638</span></span>
+      <span class="tag-pill pillar-genre">Replay Value <span class="vote">565</span></span>
+      <span class="tag-pill pillar-platform">Isometric <span class="vote">432</span></span>
+      <span class="tag-pill pillar-genre">Difficult <span class="vote">397</span></span>
+      <span class="tag-pill pillar-genre">Action RPG <span class="vote">305</span></span>
+      <span class="tag-pill pillar-mood">Hand-drawn <span class="vote">297</span></span>
+      <span class="tag-pill pillar-mood">Atmospheric <span class="vote">284</span></span>
+      <span class="tag-pill pillar-genre">Perma Death <span class="vote">102</span></span>
+      <span class="tag-pill pillar-mood">LGBTQ+ <span class="vote">93</span></span>
+    </div>
+    <p style="font-size:.78rem;color:var(--text-dim)">
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-blue);border-radius:2px;margin-right:4px"></span>장르/메커니즘 축 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-purple);border-radius:2px;margin-right:4px"></span>분위기/감성 축 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-green);border-radius:2px;margin-right:4px"></span>플랫폼/접근성 축
+    </p>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-top:1rem">
+      <strong style="color:var(--text)">Action Roguelike(1330)가 압도적 1위</strong> — 유저들은 이 게임의 정체성을 "액션 + 로그라이크"로 명확히 인식한다.
+      그러나 주목할 점은 <strong>감성 축 태그들의 총합</strong>이다: Mythology(877) + Great Soundtrack(696) + Story Rich(669) + Hand-drawn(297) + Atmospheric(284) + LGBTQ+(93) = <strong>2,916표</strong>.
+      장르 축 합산(Action Roguelike~Perma Death) = <strong>6,941표</strong>와 비교하면,
+      감성 축이 <strong>전체의 29.6%</strong>를 차지한다 — 전형적인 로그라이크에서는 볼 수 없는 비율이다.
+    </p>
+  </div>
+
+  <!-- 태그 수평 바 차트 -->
+  <div class="card fade-up">
+    <div class="card-label">태그 투표수 분포</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">Action Roguelike</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:100%">1330</div></div>
+        <span class="bar-value">1330</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Rogue-lite</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:71.7%">954</div></div>
+        <span class="bar-value">954</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Hack and Slash</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:70.4%">936</div></div>
+        <span class="bar-value">936</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Indie</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:69.8%">928</div></div>
+        <span class="bar-value">928</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Mythology</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:65.9%">877</div></div>
+        <span class="bar-value">877</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Action</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:61.4%">816</div></div>
+        <span class="bar-value">816</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Rogue-like</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:56.2%">747</div></div>
+        <span class="bar-value">747</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Singleplayer</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:52.7%">701</div></div>
+        <span class="bar-value">701</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Great Soundtrack</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:52.3%">696</div></div>
+        <span class="bar-value">696</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Story Rich</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:50.3%">669</div></div>
+        <span class="bar-value">669</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">RPG</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:48.7%">648</div></div>
+        <span class="bar-value">648</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Dungeon Crawler</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:48.0%">638</div></div>
+        <span class="bar-value">638</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Replay Value</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:42.5%">565</div></div>
+        <span class="bar-value">565</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Isometric</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:32.5%">432</div></div>
+        <span class="bar-value">432</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Difficult</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:29.8%">397</div></div>
+        <span class="bar-value">397</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Action RPG</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:22.9%">305</div></div>
+        <span class="bar-value">305</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Hand-drawn</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:22.3%">297</div></div>
+        <span class="bar-value">297</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Atmospheric</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:21.4%">284</div></div>
+        <span class="bar-value">284</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Perma Death</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:7.7%">102</div></div>
+        <span class="bar-value">102</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">LGBTQ+</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:7.0%">93</div></div>
+        <span class="bar-value">93</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기획 축 분류 테이블 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 축 분류 (Pillar Analysis)</div>
+    <table class="tri-table">
+      <thead>
+        <tr>
+          <th style="width:15%">기획 축</th>
+          <th>포함 태그</th>
+          <th style="width:12%">합산 투표</th>
+          <th style="width:10%">비중</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>로그라이크 전투</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Action Roguelike, Rogue-lite, Hack and Slash, Action, Rogue-like, Dungeon Crawler, Perma Death</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">5643</span></td>
+          <td><span class="verdict success">지배적</span></td>
+        </tr>
+        <tr>
+          <td><strong>서사/분위기</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Mythology, Story Rich, Atmospheric, LGBTQ+</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">1923</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>미적 품질</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Great Soundtrack, Hand-drawn</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">993</span></td>
+          <td><span class="verdict marketing">보조</span></td>
+        </tr>
+        <tr>
+          <td><strong>RPG/성장</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">RPG, Action RPG, Replay Value</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">1518</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>난이도</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Difficult</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">397</span></td>
+          <td><span class="verdict marketing">보조</span></td>
+        </tr>
+        <tr>
+          <td><strong>플랫폼/접근성</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Indie, Singleplayer, Isometric</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">2061</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 플레이타임별 긍정률 -->
+  <div class="card fade-up">
+    <div class="card-label">플레이타임별 긍정률 — 리텐션 곡선</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">&lt; 1h</span>
+        <div class="bar-track">
+          <div class="bar-fill red" style="width:70%">70.0%</div>
+        </div>
+        <span class="bar-value">190명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">1-10h</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:93.4%">93.4%</div>
+        </div>
+        <span class="bar-value">4,096명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">10-50h</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:95.6%">95.6%</div>
+        </div>
+        <span class="bar-value">6,775명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">50-100h</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:98.1%">98.1%</div>
+        </div>
+        <span class="bar-value">2,755명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">100h+</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:98.1%">98.1%</div>
+        </div>
+        <span class="bar-value">1,467명</span>
+      </div>
+    </div>
+    <p style="font-size:.85rem;color:var(--text-dim)">
+      <strong style="color:var(--text)">우상향 곡선이 모든 것을 말한다.</strong>
+      &lt;1h 구간의 70.0%는 "첫인상 실패"가 아니라, 로그라이크라는 장르 자체를 수용하지 못한 유저층의 이탈이다.
+      1시간의 벽을 넘은 뒤부터는 <strong>93.4% &rarr; 95.6% &rarr; 98.1%</strong>로 끝없이 상승한다.
+      이것은 Hades의 핵심 설계 — "죽을수록 보상받는 구조" — 가 시간이 갈수록 효과를 발휘한다는 직접적 증거다.
+      100시간 이상 플레이한 1,467명 중 98.1%가 긍정 — <strong>중독이 아니라 만족</strong>을 의미한다.
+    </p>
+  </div>
+
+  <!-- 언어별 분포 -->
+  <div class="card fade-up">
+    <div class="card-label">언어별 리뷰 분포 — 시장 도달</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">English</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:100%">6,852</div></div>
+        <span class="bar-value">44.8%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">schinese</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:33.7%">2,309</div></div>
+        <span class="bar-value">15.1%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">brazilian</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:20.4%">1,400</div></div>
+        <span class="bar-value">9.2%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">russian</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:18.2%">1,250</div></div>
+        <span class="bar-value">8.2%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">spanish</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:16.1%">1,103</div></div>
+        <span class="bar-value">7.2%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">french</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:6.2%">425</div></div>
+        <span class="bar-value">2.8%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">turkish</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:5.9%">404</div></div>
+        <span class="bar-value">2.6%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">koreana</span>
+        <div class="bar-track"><div class="bar-fill gold" style="width:4.4%">304</div></div>
+        <span class="bar-value">2.0%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">latam</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:4.1%">284</div></div>
+        <span class="bar-value">1.9%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">polish</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:2.9%">200</div></div>
+        <span class="bar-value">1.3%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기획 성공 포인트 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 성공 포인트</div>
+
+    <div class="card-title">A. 죽음의 서사화 — 실패가 곧 보상</div>
+    <div class="quote-block">
+      <div class="quote-text">"Im bad at video games. You unlock more story/content by losing. 10/10"</div>
+      <div class="quote-meta">english &middot; 142.7h &middot; 378 helpful</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"Hades never felt like repeating the same thing, it felt like slowly understanding it."</div>
+      <div class="quote-meta">english &middot; 101.1h &middot; 94 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      로그라이크 장르의 가장 큰 약점 — "왜 또 처음부터 해야 하지?" — 를 Hades는 서사적으로 해결했다.
+      죽으면 하데스의 집으로 돌아와 <strong>새로운 대화</strong>가 열리고, NPC와의 관계가 진전되며, 주인공의 동기가 명확해진다.
+      378명이 "도움이 됨"을 누른 최다 추천 리뷰가 "못해도 보상받는다"는 사실을 강조한다는 것 자체가,
+      이 설계가 Hades 성공의 <strong>1순위 구조적 원인</strong>임을 증명한다.
+    </p>
+
+    <div class="card-title">B. 로그라이크 + 스토리 리치의 결합</div>
+    <div class="quote-block">
+      <div class="quote-text">"once I stopped trying to force a win and started embracing the grind, it clicked"</div>
+      <div class="quote-meta">english &middot; 21.3h &middot; 58 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      Action Roguelike(1330표)와 Story Rich(669표) — 전통적으로 <strong>양립 불가능</strong>하다고 여겨지던 두 태그가 동시에 상위권이다.
+      로그라이크는 "반복"을 전제로 하고, 스토리 리치는 "일회성 서사 경험"을 전제로 한다.
+      Hades는 "죽음마다 새 대화"라는 메커니즘으로 이 모순을 해소했다.
+      이 리뷰어가 말하는 "it clicked" — 이 순간이 바로 로그라이크의 반복과 서사의 누적이 하나로 합쳐지는 기획적 전환점이다.
+    </p>
+
+    <div class="card-title">C. 사운드트랙이 만든 감성적 몰입</div>
+    <div class="quote-block">
+      <div class="quote-text">"This is probably one of the best action roguelike games. Lots of different weapons + lots of different blessings + heat levels = very high replay values."</div>
+      <div class="quote-meta">english &middot; 99.5h &middot; 130 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      Great Soundtrack가 <strong>696표로 4위 태그</strong>라는 사실이 이례적이다 — 일반적으로 사운드트랙 태그는 20위 밖에 머문다.
+      Darren Korb의 음악이 단순 배경이 아니라, 전투의 리듬과 감성적 몰입을 동시에 강화하는 <strong>게임플레이 요소</strong>로 기능한다.
+      이 리뷰어는 "weapons + blessings + heat levels"를 언급하지만, 실제로 이 조합이 "매번 다르게 느껴지는" 이유의 상당 부분은
+      동적으로 변화하는 사운드트랙에 기인한다.
+    </p>
+
+    <div class="card-title">D. NPC 관계 시스템 — 숨겨진 핵심</div>
+    <div class="quote-block">
+      <div class="quote-text">"NO SE LE PUEDE DAR A LA DUSA"</div>
+      <div class="quote-meta">spanish &middot; 28.8h &middot; 4 helpful</div>
+      <div class="quote-translation">Dusa와 로맨스할 수 없다는 유머러스한 불만 — NPC 관계가 유저에게 얼마나 중요한지를 역설적으로 증명</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      LGBTQ+(93표)라는 태그 자체가 로그라이크에서는 <strong>거의 불가능한 조합</strong>이다.
+      이것은 NPC 관계 시스템이 단순 서브 콘텐츠가 아니라, 유저 정체성의 일부로 기능하고 있음을 의미한다.
+      short description에 전혀 언급되지 않았지만, 유저들이 자발적으로 태그를 부여한 — <strong>마케팅 미언급 × 유저 인정</strong>의 전형적인 "Hidden Strength" 패턴이다.
+    </p>
+  </div>
+
+  <!-- 기획 약점 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 약점</div>
+
+    <div class="card-title">A. 콘텐츠 다양성 부족 — "같은 네 레벨"</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"after making run after run of the same four levels, it quickly lost its appeal"</div>
+      <div class="quote-meta">english &middot; 11.6h &middot; 14 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      Hades의 구조적 약점: <strong>4개 바이옴(타르타로스, 아스포델, 엘리시움, 스틱스)</strong>이 전부다.
+      로그라이크의 절차적 생성이 방 레이아웃을 바꾸지만, 시각적 테마는 고정되어 있다.
+      이 리뷰어가 11.6시간에 이탈한 것은, Boon 빌드의 다양성이 비주얼 다양성의 부재를 상쇄하지 못한 케이스다.
+      플레이타임 데이터가 이를 뒷받침한다: 1-10h 구간에서 6.6%가 부정인데, 그 상당수가 이 "시각적 반복"에 대한 불만이다.
+    </p>
+
+    <div class="card-title">B. 난이도 접근성 — "坐牢模拟器 (감옥 시뮬레이터)"</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"坐牢模拟器"</div>
+      <div class="quote-meta">schinese &middot; 46.8h &middot; 7 helpful</div>
+      <div class="quote-translation">"감옥 시뮬레이터" — 난이도가 너무 높아 갇힌 느낌이라는 표현. 특히 PC에서 조작 난이도 문제 지적</div>
+    </div>
+    <div class="quote-block negative">
+      <div class="quote-text">"I just could not get this game to be fun for me. I found the rogue-like mechanics to be just a little too punishing"</div>
+      <div class="quote-meta">english &middot; 3.3h &middot; 10 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      RAWG 피치의 5번 "NOTHING IS IMPOSSIBLE"과 God Mode가 존재하지만,
+      이 리뷰들은 God Mode를 발견하기 <em>전에</em> 이탈한 유저들이다.
+      Difficult(397표) 태그가 이 문제를 수치로 증명한다.
+      <strong>&lt;1h 구간의 30% 부정률</strong>은 "첫 런의 벽"이 존재함을 의미하며,
+      이것은 God Mode의 <strong>발견성(discoverability) 실패</strong>라는 UX 문제로 귀결된다.
+    </p>
+
+    <div class="card-title">C. 장르 기대 불일치 — 로그라이크 vs 로그라이트</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"This game is very much a roguelite and not a roguelike. I prefer games like FTL or Binding of Isaac"</div>
+      <div class="quote-meta">english &middot; 25.2h &middot; 7 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      태그 데이터가 이 혼란을 수치로 보여준다: <strong>Rogue-lite(954) vs Rogue-like(747)</strong> — 유저 스스로도 이 게임의 분류에 합의하지 못한다.
+      마케팅이 "rogue-like"로 소개했지만, 실제 메타 진행(Mirror of Night)은 전형적인 "rogue-lite" 설계다.
+      이 25.2시간 유저는 충분히 플레이한 뒤에도 장르 정체성에 불만을 제기한 케이스로,
+      <strong>마케팅의 장르 라벨링</strong>이 일부 하드코어 유저의 기대를 잘못 설정한 증거다.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ STEP 04: 삼각 검증 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 04</span>
+    <h2 class="section-title">삼각 검증 — Triangulation</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="fade-up" style="overflow-x:auto">
+    <table class="tri-table">
+      <thead>
+        <tr>
+          <th style="width:18%">기획 요소</th>
+          <th style="width:15%">마케팅</th>
+          <th style="width:15%">구현</th>
+          <th style="width:15%">유저 반응</th>
+          <th style="width:12%">판정</th>
+          <th>증거</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>로그라이크 전투</strong></td>
+          <td>&#9675; "hack and slash", "rogue-like dungeon crawler"</td>
+          <td>&#9675; 6종 무기, Boon 조합</td>
+          <td>&#9678; Action Roguelike 1330표</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅 약속과 유저 인식 완벽 일치. 1위 태그가 곧 1순위 약속</td>
+        </tr>
+        <tr>
+          <td><strong>그리스 신화 서사</strong></td>
+          <td>&#9651; "god of the dead"만 언급</td>
+          <td>&#9675; Zagreus 전체 스토리라인</td>
+          <td>&#9678; Mythology 877표, Story Rich 669표</td>
+          <td><span class="verdict hidden">숨은 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">short desc에서 서사를 최소화했지만, 유저는 Story Rich를 10위로 투표</td>
+        </tr>
+        <tr>
+          <td><strong>NPC 관계 시스템</strong></td>
+          <td>&#10005; short desc 미언급</td>
+          <td>&#9675; 로맨스, 선물, 호감도</td>
+          <td>&#9678; LGBTQ+ 93표, "Dusa" 리뷰</td>
+          <td><span class="verdict hidden">숨은 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅이 완전히 숨긴 시스템을 유저가 태그로 인정. Hidden Strength의 교과서적 사례</td>
+        </tr>
+        <tr>
+          <td><strong>메타 진행 (Mirror)</strong></td>
+          <td>&#10005; short desc 미언급</td>
+          <td>&#9675; Mirror of Night, Heat</td>
+          <td>&#9675;/&#9651; Replay Value 565표, 일부 purist 불만</td>
+          <td><span class="verdict success">기획 성공*</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">캐주얼 유저에게 동기 부여, 하드코어 로그라이크 팬 일부 불만 (rogue-lite 논쟁)</td>
+        </tr>
+        <tr>
+          <td><strong>Supergiant 브랜드</strong></td>
+          <td>&#9675; "creators of Bastion..."</td>
+          <td>&#9675; 품질 기준 유지</td>
+          <td>&#9675; Indie 928표, Metacritic 93</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">스튜디오 이름이 곧 품질 보증. 특히 KO 마케팅에서 첫 단어로 배치</td>
+        </tr>
+        <tr>
+          <td><strong>콘텐츠 다양성</strong></td>
+          <td>&#9651; 암시 ("dungeon crawler")</td>
+          <td>&#9651; 4개 바이옴 고정</td>
+          <td>&#10005; "same four levels" 부정 리뷰</td>
+          <td><span class="verdict weakness">실행 약점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">Boon 다양성이 비주얼 반복을 완전히 상쇄하지 못함. 1-10h 이탈의 주요 원인</td>
+        </tr>
+        <tr>
+          <td><strong>난이도 접근성</strong></td>
+          <td>&#9675; "Nothing is impossible"</td>
+          <td>&#9651; God Mode 존재하지만 발견성 낮음</td>
+          <td>&#9651;/&#10005; "坐牢模拟器", &lt;1h 30% 부정</td>
+          <td><span class="verdict weakness">부분 약점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">God Mode가 있지만, 이탈 유저 대부분이 발견 전에 떠남. UX 발견성 문제</td>
+        </tr>
+        <tr>
+          <td><strong>사운드트랙</strong></td>
+          <td>&#10005; short desc 미언급</td>
+          <td>&#9675; Darren Korb 작곡</td>
+          <td>&#9678; Great Soundtrack 696표 (4위)</td>
+          <td><span class="verdict hidden">숨은 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅 미언급이지만 유저 태그 4위. 사운드트랙이 게임플레이 경험의 핵심 요소</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ━━━ STEP 05: 비즈니스 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 05</span>
+    <h2 class="section-title">비즈니스 구조</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-3 fade-up">
+    <div class="card biz-stat">
+      <div class="card-label">추정 매출</div>
+      <div class="biz-num gold">$37M~$75M</div>
+      <div class="biz-calc">5~10M owners &times; $24.99 &times; 0.3 (Steam 30% 보정)</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="card-label">가격당 플레이타임</div>
+      <div class="biz-num green">1.38h/$</div>
+      <div class="biz-calc">34.5h &divide; $24.99</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="card-label">수익 모델</div>
+      <div class="biz-num purple">Premium</div>
+      <div class="biz-calc">프리미엄 &rarr; 속편(Hades II) &rarr; Netflix 확장</div>
+    </div>
+  </div>
+
+  <!-- RAWG 리텐션 분석 -->
+  <div class="card fade-up">
+    <div class="card-label">RAWG 리텐션 분석</div>
+    <div class="grid-2" style="margin-top:1rem">
+      <div style="padding:1rem;background:rgba(64,208,128,0.06);border:1px solid rgba(64,208,128,0.15);border-radius:8px">
+        <strong style="color:var(--accent-green);font-size:.8rem">Drop Rate: 7.4%</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">678/9,111 — 액션 게임 기준 매우 낮은 이탈률. 한번 시작하면 놓기 어려운 구조</p>
+      </div>
+      <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
+        <strong style="color:var(--accent-gold);font-size:.8rem">Clear Rate: 20.0%</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">1,441/7,221 — 로그라이크 특성상 대부분 "클리어"보다 "계속 플레이" 선택</p>
+      </div>
+      <div style="padding:1rem;background:rgba(164,108,240,0.06);border:1px solid rgba(164,108,240,0.15);border-radius:8px">
+        <strong style="color:var(--accent-purple);font-size:.8rem">Exceptional : Meh = 8.8 : 1</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">exceptional 60.5% vs meh 6.84% — 극단적으로 우수한 쪽으로 편향된 평가 분포</p>
+      </div>
+      <div style="padding:1rem;background:rgba(76,148,240,0.06);border:1px solid rgba(76,148,240,0.15);border-radius:8px">
+        <strong style="color:var(--accent-blue);font-size:.8rem">Steam 98.3% vs RAWG 60.5%</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">38%p 갭: 98.3%가 "추천"하지만 60.5%만 "최고"로 평가. 폭넓게 좋지만 모두의 인생작은 아닌 "Gateway Roguelike"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-title">수익 확장 가능성</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      <strong style="color:var(--text)">1. Hades II (속편)</strong> — 이미 Early Access 진행 중. IP 확장의 정석적 경로.<br>
+      <strong style="color:var(--text)">2. Netflix Games 포팅</strong> — IGDB "netflix" 키워드가 확인. 프리미엄 게임의 구독 서비스 확장으로 신규 유저층 확보.<br>
+      <strong style="color:var(--text)">3. Twitch 데이터 미수집</strong> — 스트리밍 시청 데이터는 본 분석에 포함되지 않았으나, Hades의 시각적/서사적 매력은 스트리밍 친화적 특성을 시사한다.<br>
+      <strong style="color:var(--text)">4. 사운드트랙 독립 판매</strong> — Great Soundtrack 696표가 증명하는 음악 IP의 가치. Darren Korb의 OST는 독립 상품으로도 가치가 있다.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ 결론 ━━━ -->
+<section class="conclusion">
+  <div class="conclusion-text fade-up">
+    Hades가 성공한 이유는,<br>
+    로그라이크의 근본적 약점 — <em>"죽으면 왜 다시 해야 하지?"</em> — 를<br>
+    <strong>죽음을 서사 엔진으로 전환</strong>하여 해결했기 때문이다.<br>
+    실패할수록 스토리가 풍성해지고, NPC 관계가 깊어지며,<br>
+    <em>반복이 축적으로 느껴지는</em> 루프를 설계했다.
+  </div>
+  <p style="position:relative;font-size:.82rem;color:var(--text-faint);max-width:700px;margin:1.5rem auto 0;text-align:center;line-height:1.8">
+    태그 데이터가 이를 증명한다: Action Roguelike(1330) + Story Rich(669) — 전통적으로 양립 불가능하던 두 축이 동시에 상위권을 차지한다.
+    플레이타임 곡선(70% &rarr; 98.1%)은 이 설계가 시간이 갈수록 효과를 발휘한다는 직접적 증거이며,
+    RAWG exceptional 60.5% vs Steam 98.3%의 38%p 갭은 Hades가 "모두에게 좋은 게임"이지 "모두의 인생작"은 아닌 — <strong>Gateway Roguelike</strong>임을 보여준다.
+  </p>
+</section>
+
+</div>
+
+<footer class="footer">
+  Steam Game Insight Report &middot; Generated 2026-03-19 &middot; Data: SteamSpy + Steam Reviews API + IGDB + RAWG &middot; 15,283 reviews analyzed
+</footer>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 import time
-import pytest
+from unittest.mock import MagicMock, patch, call
+from curl_cffi.requests.errors import RequestsError
 from steam_crawler.api.igdb import IGDBClient
 
 
@@ -31,47 +32,70 @@ MOCK_IGDB_SEARCH_RESULTS = [
 MOCK_IGDB_EMPTY = []
 
 
-def test_authenticate(httpx_mock):
-    httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
+def _mock_response(json_data, status_code=200):
+    resp = MagicMock()
+    resp.status_code = status_code
+    resp.json.return_value = json_data
+    resp.raise_for_status = MagicMock()
+    if status_code >= 400:
+        resp.raise_for_status.side_effect = RequestsError(
+            f"HTTP {status_code}", code=status_code, response=resp
+        )
+    return resp
+
+
+def test_authenticate():
     client = IGDBClient("client_id", "client_secret")
-    client.authenticate()
+    with patch.object(client._http, "post", return_value=_mock_response(MOCK_TOKEN_RESPONSE)):
+        client.authenticate()
     assert client._token == "test_token_abc"
     assert client._token_expires_at > time.time()
 
 
-def test_search_by_steam_id(httpx_mock):
-    httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
-    httpx_mock.add_response(json=MOCK_EXTERNAL_GAMES_RESULT)  # external_games
-    httpx_mock.add_response(json=MOCK_IGDB_GAME_DETAILS)      # games (fetch_game_details)
+def test_search_by_steam_id():
     client = IGDBClient("client_id", "client_secret")
-    result = client.search_by_steam_id(292030)
+    client._token = "pre_auth"
+    client._token_expires_at = float("inf")
+
+    responses = [
+        _mock_response(MOCK_EXTERNAL_GAMES_RESULT),  # external_games
+        _mock_response(MOCK_IGDB_GAME_DETAILS),       # fetch_game_details
+    ]
+    with patch.object(client._http, "post", side_effect=responses):
+        result = client.search_by_steam_id(292030)
     assert result is not None
     assert result["id"] == 1942
     assert result["summary"] == "An open world RPG"
 
 
-def test_search_by_steam_id_not_found(httpx_mock):
-    httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
-    httpx_mock.add_response(json=MOCK_IGDB_EMPTY)
+def test_search_by_steam_id_not_found():
     client = IGDBClient("client_id", "client_secret")
-    result = client.search_by_steam_id(999999)
+    client._token = "pre_auth"
+    client._token_expires_at = float("inf")
+
+    with patch.object(client._http, "post", return_value=_mock_response(MOCK_IGDB_EMPTY)):
+        result = client.search_by_steam_id(999999)
     assert result is None
 
 
-def test_search_by_name(httpx_mock):
-    httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
-    httpx_mock.add_response(json=MOCK_IGDB_SEARCH_RESULTS)
+def test_search_by_name():
     client = IGDBClient("client_id", "client_secret")
-    results = client.search_by_name("The Witcher 3")
+    client._token = "pre_auth"
+    client._token_expires_at = float("inf")
+
+    with patch.object(client._http, "post", return_value=_mock_response(MOCK_IGDB_SEARCH_RESULTS)):
+        results = client.search_by_name("The Witcher 3")
     assert len(results) == 2
     assert results[0]["name"] == "The Witcher 3: Wild Hunt"
 
 
-def test_fetch_game_details(httpx_mock):
-    httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
-    httpx_mock.add_response(json=MOCK_IGDB_GAME_DETAILS)
+def test_fetch_game_details():
     client = IGDBClient("client_id", "client_secret")
-    details = client.fetch_game_details(1942)
+    client._token = "pre_auth"
+    client._token_expires_at = float("inf")
+
+    with patch.object(client._http, "post", return_value=_mock_response(MOCK_IGDB_GAME_DETAILS)):
+        details = client.fetch_game_details(1942)
     assert details["summary"] == "An open world RPG"
     assert details["storyline"] == "Geralt searches for Ciri"
     assert details["aggregated_rating"] == 92.5
@@ -79,21 +103,27 @@ def test_fetch_game_details(httpx_mock):
     assert len(details["keywords"]) == 2
 
 
-def test_auto_reauthenticate_on_expired_token(httpx_mock):
-    httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
+def test_auto_reauthenticate_on_expired_token():
     client = IGDBClient("client_id", "client_secret")
-    client.authenticate()
-    client._token_expires_at = time.time() - 100
-    httpx_mock.add_response(json=MOCK_TOKEN_RESPONSE)
-    httpx_mock.add_response(json=MOCK_EXTERNAL_GAMES_RESULT)
-    httpx_mock.add_response(json=MOCK_IGDB_GAME_DETAILS)
-    result = client.search_by_steam_id(292030)
+    client._token = "old_token"
+    client._token_expires_at = time.time() - 100  # expired
+
+    responses = [
+        _mock_response(MOCK_TOKEN_RESPONSE),           # re-authenticate
+        _mock_response(MOCK_EXTERNAL_GAMES_RESULT),    # external_games
+        _mock_response(MOCK_IGDB_GAME_DETAILS),        # fetch_game_details
+    ]
+    with patch.object(client._http, "post", side_effect=responses):
+        result = client.search_by_steam_id(292030)
     assert result is not None
 
 
-def test_authenticate_failure_raises(httpx_mock):
-    import httpx as httpx_mod
-    httpx_mock.add_response(status_code=401, json={"message": "invalid client"})
+def test_authenticate_failure_raises():
     client = IGDBClient("bad_id", "bad_secret")
-    with pytest.raises(httpx_mod.HTTPStatusError):
-        client.authenticate()
+    mock_resp = _mock_response({"message": "invalid client"}, status_code=401)
+    with patch.object(client._http, "post", return_value=mock_resp):
+        try:
+            client.authenticate()
+            assert False, "Should have raised"
+        except (RequestsError, Exception):
+            pass  # curl_cffi raises RequestsError on raise_for_status

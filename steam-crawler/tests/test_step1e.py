@@ -1,4 +1,4 @@
-import pytest
+from unittest.mock import MagicMock, patch
 
 
 MOCK_RAWG_SEARCH = {
@@ -31,16 +31,34 @@ def _setup_game(db_conn):
     return version
 
 
-def test_step1e_enriches_game(httpx_mock, db_conn):
+def _mock_response(json_data, status_code=200):
+    resp = MagicMock()
+    resp.status_code = status_code
+    resp.json.return_value = json_data
+    resp.raise_for_status = MagicMock()
+    return resp
+
+
+def _make_rawg_client():
+    """Create a RAWGClient for testing."""
+    from steam_crawler.api.rawg import RAWGClient
+    return RAWGClient(api_key="test_key")
+
+
+def test_step1e_enriches_game(db_conn):
     from steam_crawler.pipeline.step1e_rawg import run_step1e
 
     version = _setup_game(db_conn)
-    httpx_mock.add_response(json=MOCK_RAWG_SEARCH)
-    httpx_mock.add_response(json=MOCK_RAWG_DETAILS)
+    client = _make_rawg_client()
 
-    count = run_step1e(
-        db_conn, version=version, source_tag="tag:FPS", api_key="test_key",
-    )
+    responses = [
+        _mock_response(MOCK_RAWG_SEARCH),
+        _mock_response(MOCK_RAWG_DETAILS),
+    ]
+    with patch.object(client._client, "get", side_effect=responses):
+        count = run_step1e(
+            db_conn, version=version, source_tag="tag:FPS", rawg_client=client,
+        )
     assert count == 1
 
     row = db_conn.execute("SELECT * FROM games WHERE appid=730").fetchone()
@@ -63,17 +81,20 @@ def test_step1e_skips_already_enriched(db_conn):
     assert count == 0
 
 
-def test_step1e_match_failed_marks_unmatchable(httpx_mock, db_conn):
+def test_step1e_match_failed_marks_unmatchable(db_conn):
     from steam_crawler.pipeline.step1e_rawg import run_step1e
 
     version = _setup_game(db_conn)
-    httpx_mock.add_response(json={"count": 1, "results": [
-        {"id": 999, "name": "Totally Different Game", "metacritic": None, "rating": 0},
-    ]})
+    client = _make_rawg_client()
 
-    count = run_step1e(
-        db_conn, version=version, source_tag="tag:FPS", api_key="test_key",
-    )
+    with patch.object(client._client, "get", return_value=_mock_response(
+        {"count": 1, "results": [
+            {"id": 999, "name": "Totally Different Game", "metacritic": None, "rating": 0},
+        ]}
+    )):
+        count = run_step1e(
+            db_conn, version=version, source_tag="tag:FPS", rawg_client=client,
+        )
     assert count == 0
     row = db_conn.execute("SELECT rawg_id FROM games WHERE appid=730").fetchone()
     assert row["rawg_id"] == -1
