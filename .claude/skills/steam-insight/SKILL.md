@@ -421,6 +421,47 @@ Footer
 
 ---
 
+## 메타데이터 요구사항 (필수)
+
+모든 보고서는 **생성일자**와 **데이터 소스**를 반드시 기록한다.
+
+### Footer 메타데이터
+- `{{DATE}}`: 보고서 생성일 (YYYY-MM-DD 형식)
+- `{{DATA_SOURCES}}`: 실제 쿼리하여 데이터가 존재한 소스만 나열 (NULL이 아닌 것)
+- `{{REVIEW_COUNT}}`: 분석에 사용된 리뷰 수
+
+### 데이터 소스 판정 기준
+
+보고서 생성 시 아래 쿼리로 실제 사용된 소스를 확인한다:
+
+```sql
+SELECT
+  1 as steamspy,  -- 항상 사용 (games 테이블)
+  CASE WHEN steam_positive IS NOT NULL THEN 1 ELSE 0 END as steam_reviews,
+  CASE WHEN igdb_id IS NOT NULL THEN 1 ELSE 0 END as igdb,
+  CASE WHEN rawg_id IS NOT NULL THEN 1 ELSE 0 END as rawg,
+  CASE WHEN hltb_main_story IS NOT NULL THEN 1 ELSE 0 END as hltb,
+  CASE WHEN cheapshark_deal_rating IS NOT NULL THEN 1 ELSE 0 END as cheapshark,
+  CASE WHEN pcgw_engine IS NOT NULL THEN 1 ELSE 0 END as pcgamingwiki,
+  CASE WHEN opencritic_score IS NOT NULL THEN 1 ELSE 0 END as opencritic,
+  CASE WHEN twitch_stream_count IS NOT NULL THEN 1 ELSE 0 END as twitch,
+  CASE WHEN wikidata_id IS NOT NULL AND wikidata_id != 'not_found' THEN 1 ELSE 0 END as wikidata
+FROM games WHERE appid = ?;
+```
+
+존재하는 소스만 `+`로 연결: `SteamSpy + Steam Reviews API + IGDB + RAWG`
+
+리뷰 수:
+```sql
+SELECT count(*) FROM reviews WHERE appid = ?;
+```
+
+### 날짜 알 수 없는 기존 보고서
+- 생성일을 확인할 수 없는 보고서는 **날짜를 삭제**하고 "날짜 미상"으로 표기
+- 데이터 소스를 확인할 수 없는 경우도 동일하게 삭제
+
+---
+
 ## 주의사항
 
 - 이 스킬은 **읽기 전용** — DB를 수정하지 않는다

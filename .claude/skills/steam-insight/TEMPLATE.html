@@ -56,6 +56,7 @@
 
   [Footer]
   {{DATE}}               — 생성일 (YYYY-MM-DD)
+  {{DATA_SOURCES}}       — 실제 사용된 데이터 소스 목록 (예: SteamSpy + Steam Reviews API + IGDB + RAWG)
   {{REVIEW_COUNT}}       — 분석된 리뷰 수
 -->
 <!DOCTYPE html>
@@ -874,7 +875,7 @@
 </div>
 
 <footer class="footer">
-  Steam Game Insight Report · Generated {{DATE}} · Data: SteamSpy + Steam Reviews API + IGDB + RAWG · {{REVIEW_COUNT}} reviews analyzed
+  Steam Game Insight Report · Generated {{DATE}} · Data: {{DATA_SOURCES}} · {{REVIEW_COUNT}} reviews analyzed
 </footer>
 
 </body>
