@@ -31,14 +31,32 @@ DB: `data/steam.db` (프로젝트 루트 기준)
 | **1c. Store** | SteamStoreClient | 짧은/전체 설명(한/영), 헤더 이미지, 스크린샷, 영상 | `update_game_store_details()`, `upsert_game_media()` |
 | **1d. IGDB** | IGDBClient | 요약, 스토리라인, 테마, 키워드, 평점 | `update_game_igdb_details()`, `upsert_game_themes()`, `upsert_game_keywords()` |
 | **1e. RAWG** | RAWGClient | 설명, 평점, 메타크리틱 점수 | `update_game_rawg_details()` |
+| **1f. Twitch** | TwitchClient | 스트리밍 데이터 | `update_game_twitch_details()` |
+| **1h. HLTB** | HLTBClient | 게임 클리어 시간 | `update_game_hltb_details()` |
+| **1i. CheapShark** | CheapSharkClient | 가격 비교/할인 정보 | `update_game_cheapshark_details()` |
+| **1j. OpenCritic** | OpenCriticClient | 평론가 리뷰 점수 | `update_game_opencritic_details()` |
+| **1k. PCGamingWiki** | PCGamingWikiClient | PC 기술 정보 (사양, 호환성) | `update_game_pcgamingwiki_details()` |
+| **1l. Wikidata** | WikidataClient | 구조화된 메타 정보 | `update_game_wikidata_details()` |
 | **2. 리뷰 요약** | SteamReviewsClient | 긍정/부정 수, 평가 등급 | `update_game_review_stats()` |
 | **3. 리뷰 본문** | SteamReviewsClient | 리뷰 텍스트, 투표수, 플레이타임 등 | `insert_reviews_batch()` |
 
-> **중요**: 1d(IGDB)는 TWITCH_CLIENT_ID/SECRET, 1e(RAWG)는 RAWG_API_KEY 환경변수가 필요하다. 없으면 해당 단계를 건너뛰고 사용자에게 안내한다.
+> **중요**: 1d(IGDB)/1f(Twitch)는 TWITCH_CLIENT_ID/SECRET, 1e(RAWG)는 RAWG_API_KEY, 1j(OpenCritic)는 RAPIDAPI_KEY 환경변수가 필요하다. 없으면 해당 단계를 건너뛰고 사용자에게 안내한다. 1h(HLTB), 1i(CheapShark), 1k(PCGamingWiki), 1l(Wikidata)는 인증 불필요.
 
 ### 시나리오 A: 특정 게임 수집 (이름 또는 appid)
 
-사용자가 게임 이름을 말한 경우 전체 파이프라인을 Python으로 실행한다.
+**방법 1: CLI (권장)** — 전체 파이프라인이 자동으로 실행된다.
+
+```bash
+cd <project-root>/steam-crawler
+steam-crawler collect --appids 526870 --max-reviews 100
+```
+
+복수 게임:
+```bash
+steam-crawler collect --appids 526870,427520 --max-reviews 100
+```
+
+**방법 2: Python 직접 호출** — 세밀한 제어가 필요할 때 사용.
 
 ```python
 import sys, os
@@ -109,6 +127,34 @@ if rawg_key:
     run_step1e(conn, version=0, api_key=rawg_key, lock_owner="skill")
 # → 환경변수가 없으면 건너뛰고 사용자에게 안내
 
+# Step 1f: Twitch (TWITCH_CLIENT_ID/SECRET 재사용)
+if twitch_id and twitch_secret:
+    from steam_crawler.pipeline.step1f_twitch import run_step1f
+    run_step1f(conn, version=0, client_id=twitch_id, client_secret=twitch_secret, lock_owner="skill")
+
+# Step 1h: HowLongToBeat (인증 불필요)
+from steam_crawler.pipeline.step1h_hltb import run_step1h
+run_step1h(conn, version=0, lock_owner="skill")
+
+# Step 1i: CheapShark (인증 불필요)
+from steam_crawler.pipeline.step1i_cheapshark import run_step1i
+run_step1i(conn, version=0, lock_owner="skill")
+
+# Step 1j: OpenCritic (RAPIDAPI_KEY 필요)
+rapidapi_key = os.environ.get("RAPIDAPI_KEY")
+if rapidapi_key:
+    from steam_crawler.pipeline.step1j_opencritic import run_step1j
+    run_step1j(conn, version=0, rapidapi_key=rapidapi_key, lock_owner="skill")
+# → 환경변수가 없으면 건너뛰고 사용자에게 안내
+
+# Step 1k: PCGamingWiki (인증 불필요)
+from steam_crawler.pipeline.step1k_pcgamingwiki import run_step1k
+run_step1k(conn, version=0, lock_owner="skill")
+
+# Step 1l: Wikidata (인증 불필요)
+from steam_crawler.pipeline.step1l_wikidata import run_step1l
+run_step1l(conn, version=0, lock_owner="skill")
+
 # Step 2: 리뷰 요약
 rev = SteamReviewsClient()
 summary = rev.fetch_summary(APPID)
@@ -137,10 +183,10 @@ cd <project-root>/steam-crawler
 steam-crawler collect --tag "Roguelike" --limit 10 --top-n 3 --max-reviews 50
 ```
 
-CLI는 전체 파이프라인(Step 1→1b→1c→1d→1e→2→3)을 자동으로 실행한다.
+CLI는 전체 파이프라인(Step 1→1b→1c→1d→1e→1f→1h→1i→1j→1k→1l→2→3)을 자동으로 실행한다.
 
 주요 옵션:
-- `--tag TEXT` / `--genre TEXT` / `--top100` — 수집 대상 (하나 필수)
+- `--tag TEXT` / `--genre TEXT` / `--top100` / `--appids INT,...` — 수집 대상 (하나 필수)
 - `--limit INT` — Step 1 최대 게임 수 (기본: 50)
 - `--top-n INT` — 리뷰 크롤링 대상 상위 게임 수 (기본: 10)
 - `--max-reviews INT` — 게임당 최대 리뷰 수 (기본: 500)
