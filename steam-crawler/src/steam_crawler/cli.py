@@ -30,16 +30,12 @@ def main():
 @click.option("--step", default=None, type=click.IntRange(1, 3), help="Run specific step only")
 @click.option("--note", default=None, help="Note for this version")
 @click.option("--db", default=DEFAULT_DB, help="Database path")
-@click.option("--appids", default=None, help="Comma-separated appids to target (e.g., 427520,526870). Must use with --step 3")
+@click.option("--appids", default=None, help="Comma-separated appids to target (e.g., 427520,526870). Runs full pipeline for these games.")
 def collect(tag, genre, top100, limit, top_n, max_reviews, language, review_type, resume, step, note, db, appids):
     """Collect game data and reviews from Steam."""
     parsed_appids = None
     if appids:
         parsed_appids = [int(a.strip()) for a in appids.split(",")]
-        if step is None:
-            step = 3  # appids mode defaults to step 3 only
-        if step != 3:
-            raise click.UsageError("--appids can only be used with --step 3")
 
     if not any([tag, genre, top100]) and not appids:
         raise click.UsageError("Specify one of: --tag, --genre, --top100, or --appids")
