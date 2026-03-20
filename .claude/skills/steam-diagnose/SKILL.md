@@ -257,34 +257,35 @@ resolution 값 예시:
 
 **에러 발생 시 반드시 아래 순서를 따른다. 순서를 건너뛰지 않는다.**
 
-### 순서: 기록 → 수정 → 해결
+### 순서: 기록 → 진행
 
-1. **즉시 기록** — 에러가 발생하면 수정을 시도하기 전에 `log_skill_error()`를 호출한다
-2. **수정 시도** — 기록 후 원인을 분석하고 수정한다
-3. **해결 처리** — 수정이 성공하면 `resolve_skill_error()`로 해결 마킹한다
+1. **즉시 기록** — 에러가 발생하면 `log_skill_error()`를 호출한다
+2. **작업 계속** — 에러를 우회하거나 재시도하며 본래 작업을 이어간다
 
-> **금지**: 에러 발생 → 바로 수정 → 기록 생략. 이렇게 하면 반복 패턴을 추적할 수 없다.
+> **금지**: 에러 발생 → 프로젝트 코드 수정 (자기 자신의 에러). 다음 `/steam-diagnose` 세션에서 처리한다.
+> **허용**: 에러를 우회하거나 재시도하여 작업을 이어가는 것은 OK.
 
-### Step 1: 기록
+### 기록 방법
 
 ```python
 import sys
 sys.path.insert(0, "<project-root>/steam-crawler/src")
 from steam_crawler.skill_error_logger import log_skill_error
 
-error_id = log_skill_error(
+log_skill_error(
     db_path="<project-root>/data/steam.db",
     skill_name="steam-diagnose",
     error_type="<type>",
     error_message="<full error message>",
     traceback="<traceback if available>",
     command="<code that caused error>",
-    context={"appid": 286160, "step": "2B-igdb-keywords"},
-    fix_applied=None  # 아직 수정 전이므로 None
+    context={"step": "diagnose-failure-analysis"},
 )
 ```
 
-### Step 2: 수정 후 해결 처리
+### 미해결 에러 해결 (이 스킬의 책임)
+
+steam-diagnose는 **다른 스킬이 남긴** 미해결 에러를 분석하고 코드를 수정하는 유일한 스킬이다.
 
 ```python
 from steam_crawler.skill_error_logger import resolve_skill_error
