@@ -208,8 +208,8 @@
     "positive_rate": 97.2,
     "review_score": "Overwhelmingly Positive",
     "owners": "2M~5M",
-    "price": "$12.99",
-    "avg_playtime": "29.3h",
+    "price": "$9.09",
+    "avg_playtime": "32.8h",
     "review_count": 32957,
     "tags": [
       "Simulation",
@@ -220,8 +220,8 @@
     ],
     "genres": [],
     "date": "2026-03-20",
-    "modified": "2026-03-20 01:50",
+    "modified": "2026-03-20 05:24",
     "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/b4f36532c943011a9f1600c2585ca7065ef5b1bb/header.jpg?t=1762475483",
-    "_file_hash": "a4eb43d597f106882e63da9759fe210a"
+    "_file_hash": "6de9c053c6980ae8d56d019cef53813b"
   }
 ]

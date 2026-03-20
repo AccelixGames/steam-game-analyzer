@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TCG Card Shop Simulator — 기획 인사이트 보고서</title>
+<meta name="report:appid" content="3070070">
+<meta name="report:game_name" content="TCG Card Shop Simulator">
+<meta name="report:name_ko" content="">
+<meta name="report:positive_rate" content="97.2%">
+<meta name="report:review_score" content="Overwhelmingly Positive">
+<meta name="report:owners" content="2,000,000 .. 5,000,000">
+<meta name="report:price" content="$9.09">
+<meta name="report:avg_playtime" content="32.8h">
+<meta name="report:review_count" content="32959">
+<meta name="report:tags" content="Simulation,Management,Economy,Singleplayer,Collectathon">
+<meta name="report:genres" content="">
+<meta name="report:date" content="2026-03-20">
+<meta name="report:modified" content="2026-03-20">
+<meta name="report:header_image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/b4f36532c943011a9f1600c2585ca7065ef5b1bb/header.jpg?t=1762475483">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -140,26 +154,16 @@
 
   /* ── Layout ── */
   .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-  section {
-    padding: 4rem 0;
-    border-bottom: 1px solid var(--border);
-  }
+  section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
   section:last-of-type { border-bottom: none; }
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
   .section-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: .7rem;
-    font-weight: 700;
+    font-size: .7rem; font-weight: 700;
     color: var(--accent-gold);
     background: rgba(240,192,64,0.1);
     border: 1px solid rgba(240,192,64,0.2);
-    padding: .3rem .7rem;
-    border-radius: 4px;
+    padding: .3rem .7rem; border-radius: 4px;
     letter-spacing: .08em;
   }
   .section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; }
@@ -175,114 +179,67 @@
     box-shadow: 0 2px 12px rgba(0,0,0,0.25);
   }
   .card-label {
-    font-size: .72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    color: var(--accent-gold-dim);
-    margin-bottom: 1rem;
-    padding-bottom: .6rem;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--accent-gold-dim);
+    margin-bottom: 1rem; padding-bottom: .6rem;
     border-bottom: 1px solid var(--border);
   }
   .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .8rem; }
 
   /* ── Core Loop ── */
   .loop-diagram {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: .5rem;
-    padding: 2.5rem 1rem;
-    background: var(--bg-accent);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    margin-bottom: 2rem;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: .5rem; padding: 2.5rem 1rem;
+    background: var(--bg-accent); border-radius: 12px;
+    border: 1px solid var(--border); margin-bottom: 2rem; position: relative;
   }
   .loop-node {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .4rem;
-    padding: 1.2rem 1.5rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    min-width: 120px;
-    text-align: center;
-    transition: all .2s;
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    padding: 1.2rem 1.5rem; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 10px;
+    min-width: 120px; text-align: center; transition: all .2s;
   }
   .loop-node:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
   .loop-icon { font-size: 1.8rem; }
   .loop-label { font-size: .8rem; font-weight: 700; }
   .loop-sub { font-size: .65rem; color: var(--text-dim); }
-  .loop-arrow {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--accent-gold-dim);
-    font-size: 1.2rem;
-  }
+  .loop-arrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold-dim); font-size: 1.2rem; }
 
   /* ── Tags ── */
   .tag-grid { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.5rem; }
   .tag-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: .4rem;
-    padding: .4rem 1rem;
-    border-radius: 100px;
-    font-size: .78rem;
-    font-weight: 500;
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    transition: all .2s;
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .4rem 1rem; border-radius: 100px;
+    font-size: .78rem; font-weight: 500;
+    border: 1px solid var(--border); background: var(--bg-card); transition: all .2s;
   }
   .tag-pill:hover { border-color: var(--accent-gold); }
-  .tag-pill .vote {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .65rem;
-    color: var(--text-faint);
-  }
+  .tag-pill .vote { font-family: 'JetBrains Mono', monospace; font-size: .65rem; color: var(--text-faint); }
   .tag-pill.pillar-genre { border-left: 3px solid var(--accent-blue); }
   .tag-pill.pillar-mood { border-left: 3px solid var(--accent-purple); }
   .tag-pill.pillar-platform { border-left: 3px solid var(--accent-green); }
 
   /* ── Triangulation ── */
   .tri-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--border);
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
   }
   .tri-table th {
-    background: var(--bg-accent);
-    padding: 1rem 1.2rem;
-    font-size: .72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--text-dim);
-    text-align: left;
+    background: var(--bg-accent); padding: 1rem 1.2rem;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--text-dim); text-align: left;
     border-bottom: 1px solid var(--border);
   }
   .tri-table td {
-    padding: .9rem 1.2rem;
-    font-size: .85rem;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    vertical-align: top;
+    padding: .9rem 1.2rem; font-size: .85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top;
   }
   .tri-table tr:last-child td { border-bottom: none; }
   .tri-table tr:hover td { background: rgba(255,255,255,0.02); }
   .verdict {
-    display: inline-flex;
-    align-items: center;
-    gap: .3rem;
-    padding: .2rem .6rem;
-    border-radius: 4px;
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: .03em;
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .2rem .6rem; border-radius: 4px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .03em;
   }
   .verdict.success { background: rgba(64,208,128,0.12); color: var(--accent-green); }
   .verdict.weakness { background: rgba(240,80,96,0.12); color: var(--accent-red); }
@@ -293,105 +250,55 @@
   .bar-chart { margin: 1.5rem 0; }
   .bar-row { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; }
   .bar-label {
-    font-size: .82rem;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text);
-    min-width: 90px;
-    text-align: right;
-    white-space: nowrap;
+    font-size: .82rem; font-family: 'JetBrains Mono', monospace;
+    color: var(--text); min-width: 90px; text-align: right; white-space: nowrap;
   }
   .bar-track {
-    flex: 1;
-    height: 32px;
-    background: rgba(255,255,255,0.04);
-    border-radius: 4px;
-    overflow: hidden;
+    flex: 1; height: 32px; background: rgba(255,255,255,0.04);
+    border-radius: 4px; overflow: hidden;
   }
   .bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    padding-left: .8rem;
-    font-size: .75rem;
-    font-weight: 700;
-    color: #fff;
-    min-width: fit-content;
-    transition: width .8s cubic-bezier(.22,1,.36,1);
+    height: 100%; border-radius: 4px; display: flex; align-items: center;
+    padding-left: .8rem; font-size: .75rem; font-weight: 700; color: #fff;
+    min-width: fit-content; transition: width .8s cubic-bezier(.22,1,.36,1);
   }
   .bar-fill.green { background: var(--accent-green); }
   .bar-fill.gold { background: var(--accent-gold); color: #1a1d2a; }
   .bar-fill.red { background: var(--accent-red); }
   .bar-fill.blue { background: var(--accent-blue); }
-  .bar-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .78rem;
-    color: var(--text-dim);
-    min-width: 70px;
-  }
+  .bar-value { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--text-dim); min-width: 70px; }
 
   /* ── Quotes ── */
   .quote-block {
-    position: relative;
-    padding: 1.5rem 1.8rem 1.5rem 2rem;
-    margin: 1.2rem 0;
-    background: var(--bg-accent);
-    border-radius: 8px;
+    position: relative; padding: 1.5rem 1.8rem 1.5rem 2rem;
+    margin: 1.2rem 0; background: var(--bg-accent); border-radius: 8px;
     border-left: 4px solid var(--accent-gold);
   }
   .quote-block.negative { border-left-color: var(--accent-red); }
-  .quote-text {
-    font-size: .9rem;
-    font-style: italic;
-    color: var(--text);
-    line-height: 1.9;
-  }
-  .quote-meta {
-    margin-top: .8rem;
-    font-size: .75rem;
-    color: var(--text-faint);
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .quote-text { font-size: .9rem; font-style: italic; color: var(--text); line-height: 1.9; }
+  .quote-meta { margin-top: .8rem; font-size: .75rem; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
   .quote-translation {
-    margin-top: .6rem;
-    font-size: .84rem;
-    color: var(--text-dim);
-    font-style: normal;
-    padding: .6rem .8rem;
-    background: rgba(255,255,255,0.02);
-    border-radius: 4px;
+    margin-top: .6rem; font-size: .84rem; color: var(--text-dim);
+    font-style: normal; padding: .6rem .8rem;
+    background: rgba(255,255,255,0.02); border-radius: 4px;
     border-left: 2px solid rgba(255,255,255,0.08);
   }
 
   /* ── Grids ── */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-  .sys-card {
-    padding: 1rem;
-    background: var(--bg-accent);
-    border-radius: 8px;
-  }
+  .sys-card { padding: 1rem; background: var(--bg-accent); border-radius: 8px; }
   .sys-card strong { color: var(--accent-gold); }
   .sys-card.alt strong { color: var(--accent-purple); }
   .sys-card p { font-size: .8rem; color: var(--text-dim); margin-top: .3rem; }
 
   /* ── Biz Stats ── */
-  .biz-stat {
-    text-align: center;
-  }
-  .biz-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 2rem;
-    font-weight: 700;
-  }
+  .biz-stat { text-align: center; }
+  .biz-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; }
   .biz-num.gold { color: var(--accent-gold); }
   .biz-num.green { color: var(--accent-green); }
   .biz-num.purple { color: var(--accent-purple); }
-  .biz-calc {
-    font-size: .75rem;
-    color: var(--text-faint);
-    margin-top: .3rem;
-  }
+  .biz-calc { font-size: .75rem; color: var(--text-faint); margin-top: .3rem; }
 
   @media (max-width: 768px) {
     .grid-2, .grid-3 { grid-template-columns: 1fr; }
@@ -402,28 +309,19 @@
   /* ── Conclusion ── */
   .conclusion { text-align: center; padding: 5rem 2rem; position: relative; }
   .conclusion::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: radial-gradient(ellipse at center, rgba(240,192,64,0.06), transparent 70%);
   }
   .conclusion-text {
-    position: relative;
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-    font-weight: 400;
-    line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto;
-    color: #fff;
+    position: relative; font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 400;
+    line-height: 1.6; max-width: 800px; margin: 0 auto; color: #fff;
   }
   .conclusion-text strong { color: var(--accent-gold); }
   .conclusion-text em { color: var(--text-dim); font-style: italic; }
   .footer {
-    text-align: center;
-    padding: 3rem 2rem;
-    font-size: .72rem;
-    color: var(--text-faint);
+    text-align: center; padding: 3rem 2rem;
+    font-size: .72rem; color: var(--text-faint);
     border-top: 1px solid var(--border);
   }
 
@@ -451,10 +349,7 @@
       <div class="hero-badge">Steam Game Insight Report</div>
     </div>
     <h1>TCG Card Shop Simulator</h1>
-    <p class="hero-subtitle">
-      "노동은 즐겁고, 도박은 즐겁다. 그러므로 이 게임은 최강이다."<br>
-      — 카드샵 경영 시뮬레이션의 기획 성공 요인을 3자 비교 프레임워크로 분석한다.
-    </p>
+    <p class="hero-subtitle">"맥도날드 한 끼 값으로 무한 가챠를" &mdash; 현실 TCG의 도파민 루프를 $9.09에 복제한 코지 경영 시뮬. 팩 개봉의 가변 보상과 매장 경영의 확정 보상이 교차하며, "판매 vs 수집"의 내적 갈등이 97.2%의 긍정률을 만들어냈다.</p>
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="num gold">97.2%</span>
@@ -465,11 +360,11 @@
         <span class="label">소유자 수</span>
       </div>
       <div class="hero-stat">
-        <span class="num green">$12.99</span>
+        <span class="num green">$9.09</span>
         <span class="label">가격</span>
       </div>
       <div class="hero-stat">
-        <span class="num">29.3h</span>
+        <span class="num">32.8h</span>
         <span class="label">평균 플레이타임</span>
       </div>
     </div>
@@ -482,101 +377,34 @@
 <section>
   <div class="section-header fade-up">
     <span class="section-num">STEP 01</span>
-    <h2 class="section-title">마케팅 포지셔닝 — 개발사의 의도</h2>
+    <h2 class="section-title">마케팅 포지셔닝 &mdash; 개발사의 의도</h2>
     <div class="section-line"></div>
   </div>
-
-  <!-- 1-A: 한 줄 피치 -->
-  <div style="font-size:.7rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem" class="fade-up">1-A. 한 줄 피치 (Short Description)</div>
   <div class="grid-2">
     <div class="card fade-up">
-      <div class="card-label">English</div>
-      <p>Open your own local game store. Stock shelves with the latest <strong>booster packs</strong>, or crack them and <strong>collect the cards</strong> for yourself. Set your own <strong>prices</strong>, hire <strong>staff</strong>, host <strong>events</strong>, and <strong>expand</strong> your card shop.</p>
+      <div class="card-label">English Description</div>
+      <p>Open your own local <strong>game store</strong>. Stock shelves with the latest <strong>booster packs</strong>, or crack them and <strong>collect the cards</strong> for yourself. Set your own prices, hire staff, host events, and <strong>expand your card shop</strong>.</p>
     </div>
     <div class="card fade-up">
-      <div class="card-label">한국어</div>
-      <p>나만의 카드 가게를 열어 보세요. 최신 <strong>부스터 팩</strong>을 구매하고, 개봉해서 <strong>카드를 모아</strong> 보세요. <strong>가격</strong>을 직접 정하고, <strong>직원</strong>을 고용하고, <strong>이벤트</strong>를 열고, 매장을 <strong>확장</strong>해 보세요.</p>
+      <div class="card-label">한국어 설명</div>
+      <p>나만의 <strong>카드 가게</strong>를 열어 보세요. 최신 <strong>부스터 팩</strong>을 구매하고, 개봉해서 <strong>카드를 모아</strong> 보세요. 가격을 직접 정하고, 직원을 고용하고, 이벤트를 열고, <strong>매장을 확장</strong>해 보세요.</p>
     </div>
   </div>
   <div class="card fade-up">
-    <div class="card-label">한 줄 피치 키워드 분석</div>
-    <div class="card-title">두 개의 약속: "경영자의 자유" + "수집가의 쾌감"</div>
-    <p style="color:var(--text-dim)">
-      모든 핵심 동사가 <strong>플레이어의 주체성</strong>을 강조한다 — "Open <em>your own</em>", "Set <em>your own</em> prices", "나만의".
-      동시에 "crack them and collect"이라는 표현으로 <strong>개봉의 도파민</strong>을 암시한다.
-      한국어 번역은 영문과 동일한 구조를 유지하며, "~해 보세요"라는 부드러운 권유형으로 캐주얼 접근성을 높인다.
+    <div class="card-label">마케팅 키워드 분석</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--accent-gold)">한 줄 피치 핵심 동사</strong>: "Open", "Stock", "crack", "collect", "expand" &mdash; 가게 운영과 카드 수집이 <strong>동등한 비중</strong>으로 배치. "crack them and collect" 구절이 핵심: 팩 개봉의 물리적 쾌감을 직접 호출한다. 한국어 번역에서 "crack"이 "개봉"으로 순화되어 <strong>파괴적 쾌감의 뉘앙스가 소멸</strong>된 점이 주목할 만하다.
     </p>
-  </div>
-
-  <!-- 1-B: 전체 피치 -->
-  <div style="font-size:.7rem;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.1em;margin:2rem 0 .8rem" class="fade-up">1-B. 전체 피치 (Detailed Description)</div>
-  <div class="card fade-up">
-    <div class="card-label">피처 우선순위 — 소개 순서가 곧 개발사의 기획 의도</div>
-    <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.8rem">
-      <div style="display:flex;align-items:flex-start;gap:1rem">
-        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-gold);color:var(--bg-deep);border-radius:50%;font-size:.75rem;font-weight:900">1</span>
-        <div>
-          <strong>Manage Your Shop</strong> <span style="color:var(--text-dim);font-size:.82rem">— 숍 디자인, 진열대 정리, 쇼핑 동선 최적화</span>
-          <div style="font-size:.78rem;color:var(--accent-green);margin-top:.2rem">첫 번째 = 가장 중요한 약속. "경영 시뮬레이션"이 핵심 정체성</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:1rem">
-        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-gold);color:var(--bg-deep);border-radius:50%;font-size:.75rem;font-weight:900">2</span>
-        <div>
-          <strong>Card Collection</strong> <span style="color:var(--text-dim);font-size:.82rem">— 부스터 팩 개봉, 희귀 카드 수집, 고가 판매 or 컬렉션 완성</span>
-          <div style="font-size:.78rem;color:var(--accent-gold);margin-top:.2rem">"판매 vs 수집" 딜레마를 두 번째로 배치 — 경영과 수집의 이중 구조 강조</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:1rem">
-        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-blue);color:#fff;border-radius:50%;font-size:.75rem;font-weight:900">3</span>
-        <div>
-          <strong>Host Game</strong> <span style="color:var(--text-dim);font-size:.82rem">— 카드 게임 포맷/수수료 설정, 위생 관리</span>
-          <div style="font-size:.78rem;color:var(--text-faint);margin-top:.2rem">short description에선 "host events"로만 언급 — 전체 피치에서 위생 메커니즘이 처음 등장</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:1rem">
-        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-blue);color:#fff;border-radius:50%;font-size:.75rem;font-weight:900">4</span>
-        <div>
-          <strong>Order Products</strong> <span style="color:var(--text-dim);font-size:.82rem">— 재고 관리, 트렌드 파악, 수요 대응</span>
-          <div style="font-size:.78rem;color:var(--text-faint);margin-top:.2rem">short description에서 완전 누락된 시스템 — "재고 관리"가 별도 피처로 존재</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:1rem">
-        <span style="min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--accent-blue);color:#fff;border-radius:50%;font-size:.75rem;font-weight:900">5</span>
-        <div>
-          <strong>Expand Your Business</strong> <span style="color:var(--text-dim);font-size:.82rem">— 매장 확장, 카드 세트 해금, 시설 업그레이드</span>
-          <div style="font-size:.78rem;color:var(--text-faint);margin-top:.2rem">마지막 = 장기 목표. "unlock new card sets"이 전체 피치에서 처음 등장하는 진행 시스템</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Short vs Detailed 갭 분석 -->
-  <div class="card fade-up">
-    <div class="card-label">Short vs Detailed 갭 분석</div>
-    <div class="card-title">한 줄 피치가 숨긴 것들</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
-      <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
-        <strong style="color:var(--accent-gold);font-size:.8rem">Short에만 있는 것</strong>
-        <ul style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem;padding-left:1rem;line-height:1.9">
-          <li><strong>"Set your own prices"</strong> — 전체 피치에선 가격 설정을 별도로 언급하지 않음. 한 줄에서 "자유도"를 강조하기 위한 마케팅 선택</li>
-          <li><strong>"hire staff"</strong> — 전체 피치에 직원 고용 언급 없음. 실제로는 핵심 시스템(자동화 전환점)이지만, 상세 설명은 "만져볼 수 있는" 피처에 집중</li>
-        </ul>
-      </div>
-      <div style="padding:1rem;background:rgba(164,108,240,0.06);border:1px solid rgba(164,108,240,0.15);border-radius:8px">
-        <strong style="color:var(--accent-purple);font-size:.8rem">Detailed에만 있는 것</strong>
-        <ul style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem;padding-left:1rem;line-height:1.9">
-          <li><strong>위생 관리</strong> — "keep your store clean and hygienic or they might leave!" 유머러스한 페널티 메커니즘</li>
-          <li><strong>재고/트렌드 관리</strong> — "Keep track of popular trends" 수요-공급 시뮬레이션의 존재</li>
-          <li><strong>카드 세트 해금</strong> — "unlock new card sets" 진행 시스템이자 컨텐츠 게이팅</li>
-        </ul>
-      </div>
-    </div>
-    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">
-      <strong style="color:var(--text)">톤 차이:</strong>
-      한 줄 피치는 <strong>감성 호소</strong>(<em>"Open your own"</em>, <em>"crack them"</em>) — 플레이어의 판타지를 자극.
-      전체 피치는 <strong>기능 나열</strong>(5개 섹션 × 동사+목적어) — 구체적으로 뭘 할 수 있는지 설명.
-      이 톤 전환은 정석적인 Steam 마케팅 구조: 한 줄로 "감정을 사고", 전체 설명으로 "이성을 설득".
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--accent-gold)">전체 피치 섹션 구조 (우선순위)</strong>:<br>
+      1. <strong>숍 관리</strong> (Manage Your Shop) &mdash; 진열대 정리, 고객 경험 최적화<br>
+      2. <strong>카드 수집</strong> (Card Collection) &mdash; "Find rare cards and sell them to make a fortune, <em>or keep them</em>" &rarr; 판매/수집 분기점을 의도적으로 제시<br>
+      3. <strong>게임 호스팅</strong> (Host Game) &mdash; 카드 게임 대회 개최. "keep your store clean" &rarr; 위생 시스템 힌트<br>
+      4. <strong>제품 주문</strong> (Order Products) &mdash; 트렌드 파악, 재고 관리<br>
+      5. <strong>사업 확장</strong> (Expand) &mdash; "reinvest", "unlock new card sets", "upgrade facilities"
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      <strong style="color:var(--accent-blue)">short vs detailed 갭</strong>: 한 줄 피치에서 "host events"만 짧게 언급한 <strong>게임 호스팅</strong> 시스템이 전체 설명에서 별도 섹션으로 확장된다. 또한 "keep your store clean and hygienic" &mdash; <strong>위생 시스템</strong>은 한 줄 피치에서 완전히 생략되었지만, 이것이 후에 "냄새나는 손님"이라는 게임의 비공식 마스코트를 탄생시킨 시스템이다.
     </p>
   </div>
 </section>
@@ -585,71 +413,71 @@
 <section>
   <div class="section-header fade-up">
     <span class="section-num">STEP 02</span>
-    <h2 class="section-title">메커니즘 실체 — 실제 구현</h2>
+    <h2 class="section-title">메커니즘 실체 &mdash; 실제 구현</h2>
     <div class="section-line"></div>
   </div>
-
   <div class="card fade-up">
-    <div class="card-label">Core Loop Diagram — 2중 루프 구조</div>
+    <div class="card-label">Core Loop Diagram &mdash; 2중 루프 구조</div>
 
     <!-- 외부 루프 (성장) -->
     <div style="border:1px dashed var(--accent-gold-dim);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
-      <div style="font-size:.7rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">외부 루프 — 성장</div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">외부 루프 &mdash; 사업 확장 &amp; 자동화</div>
 
       <!-- 내부 루프 (일일) -->
-      <div class="loop-diagram" style="margin-bottom:1rem;border-color:var(--accent-blue);position:relative">
-        <div style="position:absolute;top:.5rem;left:1rem;font-size:.65rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.08em">내부 루프 — 일일 운영</div>
+      <div class="loop-diagram" style="margin-bottom:1rem;border-color:var(--accent-blue)">
+        <div style="position:absolute;top:.5rem;left:1rem;font-size:.65rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.08em">내부 루프 &mdash; 일일 매장 운영</div>
         <div class="loop-node">
-          <div class="loop-icon">📦</div>
-          <div class="loop-label">부스터 입고</div>
-          <div class="loop-sub">자본 투자</div>
+          <div class="loop-icon">&#128230;</div>
+          <div class="loop-label">팩 주문</div>
+          <div class="loop-sub">부스터 박스 발주</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">🎰</div>
-          <div class="loop-label">개봉 / 판매</div>
-          <div class="loop-sub">도파민 or 수익</div>
+          <div class="loop-icon">&#127183;</div>
+          <div class="loop-label">개봉 &amp; 감정</div>
+          <div class="loop-sub">희귀도 판정 &middot; 가치 평가</div>
         </div>
-        <span class="loop-arrow">→</span>
-        <div class="loop-node">
-          <div class="loop-icon">💰</div>
-          <div class="loop-label">수익 확보</div>
-          <div class="loop-sub">가격 전략</div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node" style="border-color:var(--accent-gold)">
+          <div class="loop-icon">&#9878;</div>
+          <div class="loop-label">판매 or 수집</div>
+          <div class="loop-sub" style="color:var(--accent-gold)">핵심 의사결정 분기</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">👥</div>
+          <div class="loop-icon">&#128176;</div>
           <div class="loop-label">고객 응대</div>
-          <div class="loop-sub">이벤트·청결</div>
+          <div class="loop-sub">진열 &middot; 계산 &middot; 청소</div>
         </div>
-        <span class="loop-arrow" style="opacity:.4">↩</span>
+        <span class="loop-arrow" style="opacity:.4">&#8617;</span>
       </div>
 
       <!-- 외부 루프 노드 -->
       <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap">
         <div class="loop-node">
-          <div class="loop-icon">💵</div>
-          <div class="loop-label">수익 재투자</div>
-          <div class="loop-sub">일일 순이익 축적</div>
+          <div class="loop-icon">&#128178;</div>
+          <div class="loop-label">수익 축적</div>
+          <div class="loop-sub">팩 판매 + 싱글 고가 카드</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">🏗️</div>
+          <div class="loop-icon">&#127970;</div>
           <div class="loop-label">매장 확장</div>
-          <div class="loop-sub">공간·라이선스</div>
+          <div class="loop-sub">공간 &middot; 진열대 &middot; 장비</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">🤖</div>
-          <div class="loop-label">자동화</div>
-          <div class="loop-sub">직원 고용·배치</div>
+          <div class="loop-icon">&#128101;</div>
+          <div class="loop-label">직원 고용</div>
+          <div class="loop-sub">진열 &middot; 계산 자동화</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">🔄</div>
-          <div class="loop-label">내부 루프 복귀</div>
-          <div class="loop-sub">경영→수집 전환</div>
+          <div class="loop-icon">&#127183;</div>
+          <div class="loop-label">상위 팩 해금</div>
+          <div class="loop-sub">더 높은 가변 보상</div>
         </div>
+        <span class="loop-arrow" style="opacity:.4">&#8617; 내부 루프로</span>
       </div>
     </div>
 
@@ -657,49 +485,111 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
       <div style="padding:1rem;background:rgba(64,208,128,0.06);border:1px solid rgba(64,208,128,0.15);border-radius:8px">
         <strong style="color:var(--accent-green);font-size:.8rem">확정 보상</strong>
-        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">매출 성장, 매장 확장, 직원 고용 — 노동에 비례하는 선형적 보상</p>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">매출 수익, 매장 확장, 새 카드 세트 해금, 레벨업 &mdash; 예측 가능한 성장의 쾌감</p>
       </div>
       <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
         <strong style="color:var(--accent-gold);font-size:.8rem">가변 보상</strong>
-        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">팩 개봉 → 희귀 카드 등장 확률. "보상이 나올 수도 있는 상태에서 뇌가 가장 쾌락물질을 분비한다"</p>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">팩 개봉 시 희귀 카드 등장 확률, $1,000+ 카드의 예측 불가한 당첨 &mdash; "도박의 도파민"</p>
       </div>
     </div>
-    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">자동화가 핵심 전환점이다. 직원을 고용하면 경영의 반복 노동이 줄어들고, 플레이어의 역할이 "매장 운영자"에서 "카드 수집가"로 전환된다. 이 구조적 역할 전환이 100시간 이후에도 95.7%의 긍정률을 유지시키는 원인이다.</p>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">
+      <strong>유저 증언으로 확인된 핵심 역전</strong>: "Man f&uuml;hrt den Laden eigentlich nur, um die Sucht nach den Karten zu finanzieren" (가게는 사실 카드 중독 자금줄) &mdash; 자동화(직원 고용) 이후 플레이어 역할이 <strong>"경영자"에서 "수집가/도박사"로 전환</strong>된다. 매장 운영이 목적에서 수단으로 역전되며, 이 역전 자체가 게임의 감정적 핵심이다. 일본어 유저의 요약: "&#21172;&#20685;&#12399;&#27005;&#12375;&#12356;&#12290;&#12462;&#12515;&#12531;&#12502;&#12523;&#12399;&#27005;&#12375;&#12356;&#12290;&#12388;&#12414;&#12426;&#12371;&#12398;&#12466;&#12540;&#12512;&#12399;&#26368;&#24375;&#12384;" (노동은 재밌다. 도박은 재밌다. 즉 이 게임은 최강이다).
+    </p>
   </div>
 
+  <!-- 제3자 분석 카드 -->
   <div class="card fade-up">
-    <div class="card-label">전체 피치 × IGDB/RAWG 교차 검증</div>
-    <div class="card-title">개발사가 말한 것 vs 제3자가 확인한 것 vs 둘 다 빠뜨린 것</div>
+    <div class="card-label">IGDB / RAWG / Wikidata 기반 시스템 분석</div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">IGDB 분류 vs Steam 태그 교차</div>
+      <div class="grid-2" style="margin-top:.8rem">
+        <div class="sys-card">
+          <strong>IGDB Theme</strong>
+          <p>Business &mdash; 단일 테마. Steam의 Simulation(226)+Management(178)+Economy(152)에 대응하는 단순 분류</p>
+        </div>
+        <div class="sys-card alt">
+          <strong>IGDB Keywords (숨은 특성)</strong>
+          <p><strong>collectible card game, capitalism, store management, shop keeper, buy and sell, card collection, tcg</strong> &mdash; Steam 태그에 없는 키워드: <strong>capitalism, business simulation</strong>. 제3자가 이 게임을 "자본주의 시뮬레이션"으로 인식한다는 점이 주목. 유저의 "착취적 사업자" 자조 유머와 정확히 공명</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">Wikidata 온톨로지</div>
+      <div class="grid-3" style="margin-top:.8rem">
+        <div class="sys-card">
+          <strong>장르</strong>
+          <p>Management Simulation + Simulation &mdash; 3소스(Steam/IGDB/Wikidata) 교차 확인된 확실한 정체성</p>
+        </div>
+        <div class="sys-card alt">
+          <strong>게임 모드</strong>
+          <p>Single-player. 멀티플레이어 요청이 반복되지만 공식 분류는 싱글</p>
+        </div>
+        <div class="sys-card">
+          <strong>노미네이트</strong>
+          <p>Steam Award &mdash; <strong>"Sit Back and Relax"</strong> 부문 후보. 코지/릴랙싱 정체성의 공식 인정</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">RAWG 리텐션 프록시</div>
+      <div class="grid-3" style="margin-top:.8rem">
+        <div class="sys-card">
+          <strong>드롭률: 9.7%</strong>
+          <p>7 dropped / 72 added. 매우 낮은 이탈률 &mdash; 시작한 유저 대부분이 지속 플레이</p>
+        </div>
+        <div class="sys-card alt">
+          <strong>클리어률: 9.7%</strong>
+          <p>6 beaten / 62 active. 극도로 낮은 완주율 &mdash; "끝이 없는" 샌드박스형 설계의 증거. 경영 시뮬은 완주 개념이 약함</p>
+        </div>
+        <div class="sys-card">
+          <strong>평가 분포</strong>
+          <p>Recommended 40% + <strong>Meh 60%</strong>. Steam 97.2% 대비 냉정한 RAWG 평가. "재미있지만 적극 추천하긴 애매한" 게임이라는 이중성</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">HowLongToBeat 게임 길이</div>
+      <div class="grid-3" style="margin-top:.8rem">
+        <div class="sys-card">
+          <strong>메인: 30.7h</strong>
+          <p>핵심 콘텐츠 약 30시간. Steam 평균 32.8h과 거의 일치</p>
+        </div>
+        <div class="sys-card alt">
+          <strong>메인+엑스트라: 38.7h</strong>
+          <p>Main/Extra 비율 1.26x &mdash; 사이드 콘텐츠가 메인과 혼재. 루프 기반 게임의 특성</p>
+        </div>
+        <div class="sys-card">
+          <strong>컴플리셔니스트: 94.1h</strong>
+          <p>Main/Completionist 비율 <strong>1:3.07</strong> &mdash; 전체 카드 수집에 3배 시간. 수집 콘텐츠의 깊이(또는 그라인드)</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">PCGamingWiki 기술 스펙</div>
+      <div class="sys-card" style="margin-top:.8rem">
+        <strong>Engine: Unity</strong>
+        <p>1인 인디 개발에 최적화된 엔진. 울트라와이드/HDR/컨트롤러 지원 정보 없음 &mdash; 기술적 세심함보다 콘텐츠 우선 전략</p>
+      </div>
+    </div>
+
+    <div class="card-title">마케팅이 말하지 않은 시스템들</div>
     <div class="grid-3" style="margin-top:1rem">
-      <div class="sys-card" style="border-color:rgba(62,216,138,0.3)">
-        <div style="font-size:.6rem;font-weight:700;color:var(--accent-green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">피치 + 제3자 확인</div>
-        <strong>숍 경영 + 카드 수집</strong>
-        <p>전체 피치의 1, 2번 피처 모두 IGDB/RAWG에서 핵심 메커니즘으로 확인됨. 기획 의도가 실제로 구현된 증거</p>
+      <div class="sys-card">
+        <strong>"냄새나는 손님"</strong>
+        <p>마케팅 미언급이지만 문화권 초월 밈으로 확산. 10개 이상 언어에서 반복 등장. 카드샵 서브컬처의 아이콘적 경험을 게임화</p>
       </div>
-      <div class="sys-card" style="border-color:rgba(62,216,138,0.3)">
-        <div style="font-size:.6rem;font-weight:700;color:var(--accent-green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">피치 + 제3자 확인</div>
-        <strong>위생 관리 / 이벤트 호스팅</strong>
-        <p>전체 피치 3번 "Host Game"의 위생 메커니즘이 리뷰에서 가장 많이 언급된 유머 요소 ("냄새나는 고객")</p>
+      <div class="sys-card alt">
+        <strong>자본주의 시뮬레이터</strong>
+        <p>IGDB keywords에 "capitalism". 유저가 "고객 착취"를 자조적 유머로 즐기는 구조. Capitalism(113) 태그가 상위권</p>
       </div>
-      <div class="sys-card" style="border-color:rgba(62,216,138,0.3)">
-        <div style="font-size:.6rem;font-weight:700;color:var(--accent-green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">피치 + 제3자 확인</div>
-        <strong>재고/트렌드 관리</strong>
-        <p>전체 피치 4번 "Order Products" — 수요-공급 시뮬레이션이 실제 구현되어 있음을 RAWG 설명이 확인</p>
-      </div>
-      <div class="sys-card alt" style="border-color:rgba(164,108,240,0.3)">
-        <div style="font-size:.6rem;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">피치에 없음 — 숨은 시스템</div>
-        <strong>카드 그레이딩</strong>
-        <p>카드 상태 감정 시스템 — 전체 피치에도 없지만 실제로 구현됨. 리뷰에서 "마지막에 해야 할 작업"으로 언급</p>
-      </div>
-      <div class="sys-card alt" style="border-color:rgba(164,108,240,0.3)">
-        <div style="font-size:.6rem;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">피치에 없음 — 숨은 시스템</div>
-        <strong>모드 시스템</strong>
-        <p>포켓몬 카드 등 실제 IP 모드 지원 — short/detailed 모두에서 언급 없지만, 리뷰에서 "모드가 게임을 완성시킨다"고 평가</p>
-      </div>
-      <div class="sys-card alt" style="border-color:rgba(240,192,64,0.3)">
-        <div style="font-size:.6rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem">short에만 있음 — 과소 설명</div>
-        <strong>직원 고용 (자동화)</strong>
-        <p>한 줄 피치의 "hire staff"가 실제로는 경영→수집 역할 전환의 핵심 시스템. 전체 피치에서 누락된 건 의외</p>
+      <div class="sys-card">
+        <strong>모딩 에코시스템</strong>
+        <p>Nexus Mods 통한 포켓몬/유희왕 IP 모드 생태계. 마케팅 미언급이지만 리텐션의 핵심 동력 ("3/5 &rarr; 5/5")</p>
       </div>
     </div>
   </div>
@@ -709,13 +599,12 @@
 <section>
   <div class="section-header fade-up">
     <span class="section-num">STEP 03</span>
-    <h2 class="section-title">유저 경험 — 실제 반응</h2>
+    <h2 class="section-title">유저 경험 &mdash; 실제 반응</h2>
     <div class="section-line"></div>
   </div>
 
-  <!-- 태그 -->
   <div class="card fade-up">
-    <div class="card-label">태그 프로필 — 유저가 인식한 정체성</div>
+    <div class="card-label">태그 프로필 &mdash; 유저가 인식한 정체성</div>
     <div class="tag-grid">
       <span class="tag-pill pillar-genre">Simulation <span class="vote">226</span></span>
       <span class="tag-pill pillar-genre">Management <span class="vote">178</span></span>
@@ -724,326 +613,226 @@
       <span class="tag-pill pillar-genre">Collectathon <span class="vote">123</span></span>
       <span class="tag-pill pillar-genre">Capitalism <span class="vote">113</span></span>
       <span class="tag-pill pillar-genre">Trading Card Game <span class="vote">105</span></span>
+      <span class="tag-pill pillar-platform">Early Access <span class="vote">97</span></span>
       <span class="tag-pill pillar-genre">Card Game <span class="vote">96</span></span>
       <span class="tag-pill pillar-genre">Trading <span class="vote">91</span></span>
-      <span class="tag-pill pillar-platform">3D <span class="vote">79</span></span>
+      <span class="tag-pill pillar-mood">3D <span class="vote">79</span></span>
       <span class="tag-pill pillar-mood">Life Sim <span class="vote">79</span></span>
-      <span class="tag-pill pillar-genre">Immersive Sim <span class="vote">78</span></span>
+      <span class="tag-pill pillar-mood">Immersive Sim <span class="vote">78</span></span>
+      <span class="tag-pill pillar-mood">First-Person <span class="vote">75</span></span>
       <span class="tag-pill pillar-mood">Relaxing <span class="vote">75</span></span>
-      <span class="tag-pill pillar-platform">First-Person <span class="vote">75</span></span>
       <span class="tag-pill pillar-mood">Casual <span class="vote">47</span></span>
       <span class="tag-pill pillar-genre">Shop Keeper <span class="vote">45</span></span>
-      <span class="tag-pill pillar-genre">Job Simulator <span class="vote">8</span></span>
-      <span class="tag-pill pillar-platform">Early Access <span class="vote">18</span></span>
-      <span class="tag-pill pillar-platform">Co-op <span class="vote">6</span></span>
     </div>
     <p style="font-size:.78rem;color:var(--text-dim)">
-      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-blue);border-radius:2px;margin-right:4px"></span>장르/메커니즘 축 &nbsp;&nbsp;
-      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-purple);border-radius:2px;margin-right:4px"></span>분위기/감성 축 &nbsp;&nbsp;
-      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-green);border-radius:2px;margin-right:4px"></span>플랫폼/접근성 축
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-blue);border-radius:2px;margin-right:4px"></span>장르/메커니즘 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-purple);border-radius:2px;margin-right:4px"></span>분위기/감성 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-green);border-radius:2px;margin-right:4px"></span>플랫폼/접근성
     </p>
     <p style="font-size:.85rem;color:var(--text-dim);margin-top:1rem">
-      <strong style="color:var(--text)">투표 분포가 매우 균등</strong> (226~45) — 단일 정체성이 아닌 <strong>다축 설계</strong>가 동시에 작동하는 게임.
-      "경영(Management)" + "수집(Collectathon)" + "경제(Economy)"가 삼각 구조를 형성하며,
-      "Relaxing"과 "Casual" 태그가 진입 장벽 없는 접근성을 보증한다.
+      투표수 분포가 <strong>상위 편중</strong>. 1위(Simulation 226)와 마지막(Shop Keeper 45)의 격차가 5:1. Simulation(226)+Management(178)+Economy(152)의 <strong>경영 축이 지배적</strong>(556표)이지만, Collectathon(123)+Trading Card Game(105)+Card Game(96)의 <strong>수집/카드 축(324표)</strong>이 강력하게 공존한다. 이 이중 정체성이 게임의 핵심 설계.
     </p>
   </div>
 
-  <!-- 태그 수평 바 차트 -->
   <div class="card fade-up">
     <div class="card-label">태그 투표수 분포</div>
     <div class="bar-chart">
-      <div class="bar-row">
-        <span class="bar-label">Simulation</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:100%">226</div></div>
-        <span class="bar-value">226</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Management</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:78.8%">178</div></div>
-        <span class="bar-value">178</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Economy</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:67.3%">152</div></div>
-        <span class="bar-value">152</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Singleplayer</span>
-        <div class="bar-track"><div class="bar-fill green" style="width:55.3%">125</div></div>
-        <span class="bar-value">125</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Collectathon</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:54.4%">123</div></div>
-        <span class="bar-value">123</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Capitalism</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:50%">113</div></div>
-        <span class="bar-value">113</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">TCG</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:46.5%">105</div></div>
-        <span class="bar-value">105</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Card Game</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:42.5%">96</div></div>
-        <span class="bar-value">96</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Trading</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:40.3%">91</div></div>
-        <span class="bar-value">91</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">3D</span>
-        <div class="bar-track"><div class="bar-fill green" style="width:35%">79</div></div>
-        <span class="bar-value">79</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Life Sim</span>
-        <div class="bar-track"><div class="bar-fill gold" style="width:35%">79</div></div>
-        <span class="bar-value">79</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Immersive Sim</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:34.5%">78</div></div>
-        <span class="bar-value">78</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Relaxing</span>
-        <div class="bar-track"><div class="bar-fill gold" style="width:33.2%">75</div></div>
-        <span class="bar-value">75</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">First-Person</span>
-        <div class="bar-track"><div class="bar-fill green" style="width:33.2%">75</div></div>
-        <span class="bar-value">75</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Casual</span>
-        <div class="bar-track"><div class="bar-fill gold" style="width:20.8%">47</div></div>
-        <span class="bar-value">47</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Shop Keeper</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:19.9%">45</div></div>
-        <span class="bar-value">45</span>
-      </div>
+      <div class="bar-row"><span class="bar-label">Simulation</span><div class="bar-track"><div class="bar-fill blue" style="width:100%">226</div></div><span class="bar-value">226</span></div>
+      <div class="bar-row"><span class="bar-label">Management</span><div class="bar-track"><div class="bar-fill blue" style="width:78.8%">178</div></div><span class="bar-value">178</span></div>
+      <div class="bar-row"><span class="bar-label">Economy</span><div class="bar-track"><div class="bar-fill blue" style="width:67.3%">152</div></div><span class="bar-value">152</span></div>
+      <div class="bar-row"><span class="bar-label">Singleplayer</span><div class="bar-track"><div class="bar-fill green" style="width:55.3%">125</div></div><span class="bar-value">125</span></div>
+      <div class="bar-row"><span class="bar-label">Collectathon</span><div class="bar-track"><div class="bar-fill blue" style="width:54.4%">123</div></div><span class="bar-value">123</span></div>
+      <div class="bar-row"><span class="bar-label">Capitalism</span><div class="bar-track"><div class="bar-fill blue" style="width:50%">113</div></div><span class="bar-value">113</span></div>
+      <div class="bar-row"><span class="bar-label">TCG</span><div class="bar-track"><div class="bar-fill blue" style="width:46.5%">105</div></div><span class="bar-value">105</span></div>
+      <div class="bar-row"><span class="bar-label">Early Access</span><div class="bar-track"><div class="bar-fill green" style="width:42.9%">97</div></div><span class="bar-value">97</span></div>
+      <div class="bar-row"><span class="bar-label">Card Game</span><div class="bar-track"><div class="bar-fill blue" style="width:42.5%">96</div></div><span class="bar-value">96</span></div>
+      <div class="bar-row"><span class="bar-label">Trading</span><div class="bar-track"><div class="bar-fill blue" style="width:40.3%">91</div></div><span class="bar-value">91</span></div>
     </div>
   </div>
 
-  <!-- 기획 축 분류 테이블 -->
   <div class="card fade-up">
     <div class="card-label">기획 축 분류 (Pillar Analysis)</div>
     <table class="tri-table">
-      <thead>
-        <tr>
-          <th style="width:15%">기획 축</th>
-          <th>포함 태그</th>
-          <th style="width:12%">합산 투표</th>
-          <th style="width:10%">비중</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:15%">기획 축</th><th>포함 태그</th><th style="width:12%">합산 투표</th><th style="width:10%">비중</th></tr></thead>
       <tbody>
-        <tr>
-          <td><strong>경영/경제</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Simulation, Management, Economy, Capitalism, Shop Keeper, Job Simulator</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">722</span></td>
-          <td><span class="verdict success">지배적</span></td>
-        </tr>
-        <tr>
-          <td><strong>수집/카드</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Collectathon, Trading Card Game, Card Game, Trading</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">415</span></td>
-          <td><span class="verdict hidden">강력</span></td>
-        </tr>
-        <tr>
-          <td><strong>분위기/접근성</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Relaxing, Casual, Life Sim</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">201</span></td>
-          <td><span class="verdict marketing">보조</span></td>
-        </tr>
-        <tr>
-          <td><strong>시점/기술</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">3D, First-Person, Immersive Sim</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">232</span></td>
-          <td><span class="verdict marketing">기술적</span></td>
-        </tr>
-        <tr>
-          <td><strong>플랫폼</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Singleplayer, Early Access, Co-op</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">149</span></td>
-          <td>맥락</td>
-        </tr>
+        <tr><td><strong>경영/경제</strong></td><td style="font-size:.8rem;color:var(--text-dim)">Simulation, Management, Economy, Capitalism, Shop Keeper, Trading</td><td><span style="font-family:'JetBrains Mono';font-weight:700">805</span></td><td><span class="verdict success">지배적</span></td></tr>
+        <tr><td><strong>수집/카드</strong></td><td style="font-size:.8rem;color:var(--text-dim)">Collectathon, Trading Card Game, Card Game</td><td><span style="font-family:'JetBrains Mono';font-weight:700">324</span></td><td><span class="verdict hidden">강력</span></td></tr>
+        <tr><td><strong>분위기/접근성</strong></td><td style="font-size:.8rem;color:var(--text-dim)">Relaxing, Casual, Life Sim, Immersive Sim</td><td><span style="font-family:'JetBrains Mono';font-weight:700">279</span></td><td><span class="verdict marketing">보조</span></td></tr>
+        <tr><td><strong>시점/기술</strong></td><td style="font-size:.8rem;color:var(--text-dim)">3D, First-Person</td><td><span style="font-family:'JetBrains Mono';font-weight:700">154</span></td><td>맥락</td></tr>
+        <tr><td><strong>플랫폼</strong></td><td style="font-size:.8rem;color:var(--text-dim)">Singleplayer, Early Access</td><td><span style="font-family:'JetBrains Mono';font-weight:700">222</span></td><td>맥락</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- 플레이타임별 긍정률 -->
   <div class="card fade-up">
-    <div class="card-label">플레이타임별 긍정률 — 리텐션 곡선</div>
+    <div class="card-label">플레이타임별 긍정률 &mdash; 리텐션 곡선</div>
     <div class="bar-chart">
-      <div class="bar-row">
-        <span class="bar-label">&lt; 1h</span>
-        <div class="bar-track">
-          <div class="bar-fill red" style="width:50%">50.0%</div>
-        </div>
-        <span class="bar-value">6명</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">1-10h</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:96.4%">96.4%</div>
-        </div>
-        <span class="bar-value">196명</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">10-50h</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:95.1%">95.1%</div>
-        </div>
-        <span class="bar-value">345명</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">50-100h</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:93%">93.0%</div>
-        </div>
-        <span class="bar-value">114명</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">100h+</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:95.7%">95.7%</div>
-        </div>
-        <span class="bar-value">69명</span>
-      </div>
+      <div class="bar-row"><span class="bar-label">&lt; 1h</span><div class="bar-track"><div class="bar-fill red" style="width:73.2%">73.2%</div></div><span class="bar-value">340명</span></div>
+      <div class="bar-row"><span class="bar-label">1-10h</span><div class="bar-track"><div class="bar-fill green" style="width:96.5%">96.5%</div></div><span class="bar-value">10,455명</span></div>
+      <div class="bar-row"><span class="bar-label">10-50h</span><div class="bar-track"><div class="bar-fill green" style="width:97.1%">97.1%</div></div><span class="bar-value">16,591명</span></div>
+      <div class="bar-row"><span class="bar-label">50-100h</span><div class="bar-track"><div class="bar-fill green" style="width:96.3%">96.3%</div></div><span class="bar-value">3,773명</span></div>
+      <div class="bar-row"><span class="bar-label">100h+</span><div class="bar-track"><div class="bar-fill green" style="width:96.1%">96.1%</div></div><span class="bar-value">1,800명</span></div>
     </div>
     <p style="font-size:.85rem;color:var(--text-dim)">
-      <strong style="color:var(--accent-red)">1시간 미만에서 50% 이탈</strong> — 초반 튜토리얼/온보딩이 약한 구간.
-      그러나 <strong style="color:var(--accent-green)">1시간만 넘기면 93%+ 유지</strong>되며, 100시간 이상 유저도 95.7%로 후반 콘텐츠 고갈 없이 만족도를 유지한다.
+      <strong>1시간 미만 73.2%</strong>에서 <strong>1-10시간 96.5%</strong>로의 급등 &mdash; 첫 팩 개봉의 도파민 훅이 1시간 이내에 작동함을 증명. 10-50시간이 16,591명으로 <strong>최대 볼륨</strong>이며, 이 구간에서 97.1%로 정점. HLTB 메인(30.7h)과 정확히 겹치는 구간이다. 100시간 이상에서도 96.1%를 유지하지만, 부정 리뷰 분석에서 이 구간의 이탈자가 "중후반 콘텐츠 고갈"을 집중적으로 지적한다.
     </p>
   </div>
 
-  <!-- 언어별 분포 -->
   <div class="card fade-up">
-    <div class="card-label">언어별 리뷰 분포 — 시장 도달</div>
+    <div class="card-label">언어별 리뷰 분포 &mdash; 시장 도달</div>
     <div class="bar-chart">
-      <div class="bar-row">
-        <span class="bar-label">English</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:73.4%">536</div></div>
-        <span class="bar-value">73.4%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">中文简</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:4.8%"></div></div>
-        <span class="bar-value">35 (4.8%)</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Français</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:4.4%"></div></div>
-        <span class="bar-value">32 (4.4%)</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Deutsch</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:4%"></div></div>
-        <span class="bar-value">29 (4.0%)</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Español</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:3.2%"></div></div>
-        <span class="bar-value">23 (3.2%)</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">한국어</span>
-        <div class="bar-track"><div class="bar-fill gold" style="width:1%"></div></div>
-        <span class="bar-value">7 (1.0%)</span>
-      </div>
+      <div class="bar-row"><span class="bar-label">English</span><div class="bar-track"><div class="bar-fill blue" style="width:100%">23,699</div></div><span class="bar-value">71.9%</span></div>
+      <div class="bar-row"><span class="bar-label">S.Chinese</span><div class="bar-track"><div class="bar-fill blue" style="width:9.4%">2,220</div></div><span class="bar-value">6.7%</span></div>
+      <div class="bar-row"><span class="bar-label">German</span><div class="bar-track"><div class="bar-fill blue" style="width:6.7%">1,593</div></div><span class="bar-value">4.8%</span></div>
+      <div class="bar-row"><span class="bar-label">French</span><div class="bar-track"><div class="bar-fill blue" style="width:5.1%">1,217</div></div><span class="bar-value">3.7%</span></div>
+      <div class="bar-row"><span class="bar-label">Spanish</span><div class="bar-track"><div class="bar-fill blue" style="width:3.4%">805</div></div><span class="bar-value">2.4%</span></div>
+      <div class="bar-row"><span class="bar-label">T.Chinese</span><div class="bar-track"><div class="bar-fill blue" style="width:2.1%">503</div></div><span class="bar-value">1.5%</span></div>
+      <div class="bar-row"><span class="bar-label">Brazilian</span><div class="bar-track"><div class="bar-fill blue" style="width:1.8%">427</div></div><span class="bar-value">1.3%</span></div>
+      <div class="bar-row"><span class="bar-label">Korean</span><div class="bar-track"><div class="bar-fill blue" style="width:1.3%">302</div></div><span class="bar-value">0.9%</span></div>
     </div>
   </div>
 
-  <!-- 기획 성공 포인트 (리뷰 인용 + 분석 서술 통합) -->
+  <!-- 기획 성공 포인트 -->
   <div class="card fade-up">
     <div class="card-label">기획 성공 포인트</div>
 
-    <div class="card-title">A. 이중 정체성: 판매자 × 수집가</div>
+    <div class="card-title">A. "안전한 가챠 대리 만족" &mdash; 무과금 도파민 루프의 가치 제안</div>
     <div class="quote-block">
-      <div class="quote-text">"労働は楽しい。ギャンブルは楽しい。つまりこのゲームは最強だ。Supermarket Simulatorがバズってからのこの1年ちょい、この形式のゲームが溢れた。本作はこの流れの中で、最大の「正解」を導き出すことに成功している。TCGのパック剥きというガワを被ってはいるが、ようするにこれはスロットやガチャを回すのと同じだ。"</div>
-      <div class="quote-meta">japanese · 33h · 15 helpful</div>
-      <div class="quote-translation">"노동은 즐겁고 도박은 즐겁다. 즉 이 게임은 최강이다." — 슈퍼마켓 시뮬류 범람 속에서 카드 개봉이라는 '도박 메커니즘'을 결합한 것이 최적의 정답이라는 분석</div>
+      <div class="quote-text">"Completely ignoring how good this title is as a video game, I want to instead highlight the fact that it's the full addiction loop of TCGs for less than the price of McDonald's. Ever since buying this game I haven't bought a lootbox, spun for a character, or done anything even remotely resembling wasting / spending money."</div>
+      <div class="quote-meta">english &middot; 48.4h &middot; 359 helpful</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"Au lieu de d&eacute;penser 85&euro; dans une boite de 24 boosters IRL, il vaut mieux payer 12.79&euro; et ouvrir en quantit&eacute;s illimit&eacute;es. La dopamine reste la m&ecirc;me !"</div>
+      <div class="quote-meta">french &middot; 113.2h &middot; 16 helpful</div>
+      <div class="quote-translation">현실에서 부스터 24팩 박스에 85유로 쓰는 대신 12.79유로 내고 무한 개봉하는 게 낫다. 도파민은 똑같다!</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      태그 데이터가 이 이중성을 증명한다. 경영/경제 축(722표)과 수집/카드 축(415표)이 동시에 지배적이다. 플레이어는 매장을 경영하는 "노동"과 팩을 개봉하는 "도박"을 하나의 루프 안에서 교차 경험하며, 이 구조가 확정 보상과 가변 보상의 이중 도파민을 만들어낸다.
+      EN 70~80건, DE 50~60건, FR 33건에서 반복. 실제 TCG 구매의 금전적 리스크 없이 가챠의 핵심 쾌감(가변 보상)을 제공한다. <strong>"유해한 과금 메커니즘을 게임 메커니즘으로 치환"</strong>한 희귀한 성공 사례이며, 유저들은 이 게임을 "건전한 중독 대체재"로 명확히 포지셔닝하고 있다.
     </p>
 
-    <div class="card-title">B. 현실감이 만든 몰입 — 마케팅이 숨긴 킬러 피처</div>
+    <div class="card-title">B. "판매 vs 수집" &mdash; 이중 루프가 만드는 내적 갈등</div>
+    <div class="quote-block">
+      <div class="quote-text">"Unfortunately, just like in real life, I am far more interested in collecting cards than making sound financial decisions. I am consistently barely breaking even. But I am having fun."</div>
+      <div class="quote-meta">english &middot; 31.8h &middot; 133 helpful</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"My ass went bankrupt for opening packs instead of selling them. 10/10 would go bankrupt again."</div>
+      <div class="quote-meta">english &middot; 910.6h &middot; 119 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      같은 자원(카드)에 대해 "경영자 모드"(판매)와 "수집가 모드"(보관)가 충돌하면서 <strong>의미 있는 의사결정 긴장감</strong>을 부여한다. 이 갈등 자체가 "나는 사업가가 아니라 수집가였다"라는 <strong>감정적 서사</strong>를 생성하며, 유저가 자발적으로 공유하는 밈의 원천이다. 910시간 유저가 "또 파산하겠다"고 선언하는 것이 그 증거.
+    </p>
+
+    <div class="card-title">C. "One More Day" &mdash; 코지 프로그레션의 캡티베이션</div>
+    <div class="quote-block">
+      <div class="quote-text">"A combination of middle-complexity shop management, manual FPS running-around jobs and busywork, and of course the gacha mechanic... a really well constructed progression curve and a really, really impressive 'one more day' captivation."</div>
+      <div class="quote-meta">english &middot; 282.8h &middot; 92 helpful</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"Card Shop Simulator ist kein Spiel. Es ist Therapie mit Sammelkarten."</div>
+      <div class="quote-meta">german &middot; helpful</div>
+      <div class="quote-translation">이건 게임이 아니다. 카드로 하는 치료다.</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      "중복잡도(middle-complexity)"라는 유저 자신의 표현이 핵심이다. 경영 시뮬의 깊이를 <strong>의도적으로 낮추고</strong>, 그 빈 공간을 <strong>가챠 루프의 가변 보상</strong>으로 채웠다. 스트레스 없이 진행감을 느끼게 하는 "코지 프로그레션"이 장시간 세션의 근거. DE에서 "Feierabend(퇴근 후) 게임"이라는 포지셔닝이 반복된다.
+    </p>
+
+    <div class="card-title">D. 모딩 에코시스템 &mdash; 커뮤니티가 완성하는 게임</div>
+    <div class="quote-block">
+      <div class="quote-text">"Sans le mod Pokemon = 4h de jeu / Avec le mod Pokemon = 2000h+ de jeu"</div>
+      <div class="quote-meta">french &middot; helpful</div>
+      <div class="quote-translation">모드 없이 = 4시간 / 포켓몬 모드 = 2000시간+</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      EN 40~50건, FR 49건(24.5%), DE 20건에서 반복. 카드 아트를 모듈화하여 <strong>포켓몬/유희왕/매직 등 실제 IP 모드 설치가 용이</strong>하도록 설계한 것이 핵심. "3/5점 게임이 모드로 5/5점이 된다"는 리뷰가 이 전략의 효과를 정량적으로 증명한다. 단, 최근 모드 호환성 문제로 FR 부정 리뷰에서 "모드를 죽였다"는 불만도 등장.
+    </p>
+
+    <div class="card-title">E. 카드샵 서브컬처의 정서적 공명</div>
     <div class="quote-block">
       <div class="quote-text">"As an owner of a TCG shop, I have to say the attention to realism is amazing. From the customers with wild price expectations, to the smelly ones, to the ability to chuck a bunch of empty boxes in the corner of your store, the immersion level is just so high."</div>
-      <div class="quote-meta">english · 28h · 129 helpful</div>
-      <div class="quote-translation">실제 카드샵 사장이 "현실감이 놀랍다"고 인증 — 고객의 황당한 가격 제안, 냄새나는 손님, 빈 박스를 구석에 쌓아두는 것까지</div>
+      <div class="quote-meta">english &middot; 28.4h &middot; 129 helpful</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      마케팅 설명에서는 "현실감"을 거의 강조하지 않았지만, 유저가 가장 높이 평가한 요소(129 helpful)가 바로 디테일한 현실 재현이다. 냄새나는 고객, 빈 박스 물리, 황당한 가격 제안 같은 미시적 시스템들이 "진짜 카드샵을 운영하는 느낌"을 만든다. 이것은 삼각 검증에서 "숨은 강점"으로 판정된다.
-    </p>
-
-    <div class="card-title">C. 장기 리텐션: 350시간도 지루하지 않은 구조</div>
-    <div class="quote-block">
-      <div class="quote-text">"Nach knapp 350 Stunden Spielzeit kann ich mir ein gutes Urteil erlauben. Das Spiel ist deutlich mehr als ein typischer Indie-Simulator. Das Spielgefühl ist ruhig und entspannt, wird aber nie langweilig."</div>
-      <div class="quote-meta">german · 348h · 7 helpful</div>
-      <div class="quote-translation">"350시간 플레이 후 판단할 수 있다. 전형적인 인디 시뮬보다 훨씬 낫다. 게임 감각이 평온하고 여유롭지만 절대 지루하지 않다."</div>
-    </div>
-    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      100시간 이상 유저의 긍정률 95.7%가 이 리뷰를 뒷받침한다. Relaxing(75) + Casual(47) 태그가 보여주듯, 스트레스 없는 반복이 장기 플레이를 가능하게 하고, 가변 보상(팩 개봉)이 그 반복에 기대감을 주입한다.
+      실제 카드샵 주인/직원이 "현실 그대로"라고 증언. "냄새나는 손님"은 10개 이상 언어에서 반복되는 <strong>문화 초월 밈</strong>이 되었다. 시뮬레이션의 깊이가 시스템적 복잡도가 아닌 <strong>"분위기적 진정성"</strong>에 투자된 것이 차별화 요인.
     </p>
   </div>
 
-  <!-- 기획 약점 (리뷰 인용 + 분석 서술 통합) -->
+  <!-- 기획 약점 -->
   <div class="card fade-up">
     <div class="card-label">기획 약점</div>
 
-    <div class="card-title">A. 업데이트 둔화와 콘텐츠 방향성 불만</div>
+    <div class="card-title">A. 중후반 콘텐츠 고갈 &mdash; "레벨 40의 벽"</div>
     <div class="quote-block negative">
-      <div class="quote-text">"At first, this game was on a path to be a great game. Updates have slowed heavily, and more focus on plushies than anything else."</div>
-      <div class="quote-meta">english · 88h · 5 helpful</div>
-      <div class="quote-translation">초반엔 좋았지만 업데이트가 느려지고, 봉제인형 같은 부가 콘텐츠에만 집중</div>
+      <div class="quote-text">"Really fun until mid and late game where it gets repetitive and boring and mods are needed to make it fun"</div>
+      <div class="quote-meta">english &middot; 95.1h &middot; 71 helpful</div>
+    </div>
+    <div class="quote-block negative">
+      <div class="quote-text">"&#21069;&#26399;&#24456;&#19981;&#38169;&#65292;&#21487;&#20197;&#24067;&#32622;&#24215;&#38138;&#25277;&#21345;&#38598;&#21345;&#65292;&#36824;&#35201;&#32771;&#34385;&#24590;&#20040;&#36186;&#38065;&#12290;&#19981;&#36807;&#29609;&#21040;40&#32423;&#24320;&#22987;&#23601;&#26377;&#28857;&#26080;&#32842;&#65292;&#38065;&#33457;&#19981;&#23436;&#65292;&#21345;&#20063;&#24456;&#38590;&#20840;&#25910;&#38598;&#65292;&#23601;&#25104;&#20102;&#19968;&#20010;&#36229;&#24066;&#34917;&#36135;&#27169;&#25311;&#22120;&#12290;"</div>
+      <div class="quote-meta">schinese &middot; 66.9h &middot; 22 helpful</div>
+      <div class="quote-translation">전반부는 좋지만 40레벨부터 지루해진다. 돈은 넘치고, 카드 전부 수집은 어렵고, 결국 마트 재고 보충 시뮬레이터가 된다.</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      얼리 액세스 게임의 구조적 리스크다. 88시간을 투자한 유저가 "방향성 이탈"을 지적하고 있다. 핵심 루프(카드 개봉 + 경영)의 깊이를 확장하는 대신 부가 상품(플러시)에 집중하면, 코어 유저의 신뢰가 떨어진다.
+      EN 60~70건(긍정 포함), DE 20건, FR 9건. 경영 루프의 경제적 긴장감(돈이 부족한 상태)이 중반에 해소되면, <strong>"판매 vs 수집" 갈등이 사라지고 단순 반복 노동만 남는다</strong>. 핵심 임계점은 레벨 40~50(약 30~50시간). 외부 루프(사업 확장)의 목표가 "더 큰 공간"뿐이라 금전적 도전이 소멸된다.
     </p>
 
-    <div class="card-title">B. 스트리머 과대평가와 가변 보상 의존</div>
+    <div class="card-title">B. 직원 AI의 무력감 &mdash; 자동화 실패</div>
     <div class="quote-block negative">
-      <div class="quote-text">"I think this game got a lot of added hype from streamers acting like it is the most fun game ever, but realistically, it's just not that engaging. Progress feels very slow unless you hit some very good card pulls."</div>
-      <div class="quote-meta">english · 34h · 2 helpful</div>
-      <div class="quote-translation">스트리머 과대평가 지적. 실제론 그렇게 몰입감이 없고, 좋은 카드가 안 나오면 진행이 느림</div>
+      <div class="quote-text">"The only real downsides of the game are that it feels lonely to play it alone and the workers are borderline pointless since they perform 1 action per minute, roughly"</div>
+      <div class="quote-meta">english &middot; 36.9h &middot; 78 helpful</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      가변 보상 시스템의 양면이다. 팩 개봉의 도파민이 핵심 동력이지만, 운이 따르지 않으면 확정 보상(경영 수익)만으로는 진행 속도가 체감적으로 느려진다. 스트리머의 "하이라이트 편집"과 실제 평균 경험 사이의 괴리가 부정 리뷰를 유발한다.
+      EN 부정 22건, DE 12건, FR 5건. 자동화는 경영 시뮬에서 외부 루프의 <strong>핵심 보상</strong>이다. 직원이 무용하면, "재투자 &rarr; 자동화 &rarr; 효율화" 루프가 작동하지 않으며, 이것이 <strong>중후반 번아웃의 직접적 원인</strong>이다. 역설적으로, 직원 무력감이 플레이어를 팩 개봉 루프에 가두는 효과도 낳는다.
     </p>
 
-    <div class="card-title">C. 모드 의존성과 업데이트 호환 문제</div>
+    <div class="card-title">C. 경영 깊이의 부재 &mdash; "숫자만 올라가는 시뮬레이터"</div>
     <div class="quote-block negative">
-      <div class="quote-text">"Games bare without mods. Mods dont work even with version rollback. Wait at least 9 years for the dev to actually finish the game."</div>
-      <div class="quote-meta">english · 37h · 3 helpful</div>
-      <div class="quote-translation">모드 없이 빈약하고, 업데이트마다 모드도 깨짐</div>
+      <div class="quote-text">"Do not buy this if you want a shopkeeping/management sim game. There is 0 depth to the gameplay. There is no strategy around pricing, supply and demand, shop layout, customer behaviour... You just buy anything, sell it around market price, and... that's it."</div>
+      <div class="quote-meta">english &middot; 31.8h &middot; 33 helpful</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      모드 생태계가 "숨은 강점"이자 동시에 약점이다. 포켓몬 카드 모드 같은 실제 IP 모드가 게임 수명을 크게 연장하지만, 공식 업데이트와의 호환성 문제가 반복되면 "모드에 의존하는 미완성 게임"이라는 인식이 고착된다.
+      EN 40~50건. 가격을 20% 올려도 고객이 구매하는 구조 &mdash; <strong>의사결정의 의미가 소멸</strong>. "경영 시뮬레이터"라는 타이틀이 불러일으킨 기대와 실제 코어 루프(팩 개봉 시뮬레이터) 사이의 간극이 배신감의 원천. 부정 리뷰의 핵심 프레임: "이것은 카드샵 경영이 아니라 <strong>팩 오프닝 시뮬레이터</strong>다."
     </p>
 
-    <div class="card-title">D. 다국어 지원 부재</div>
+    <div class="card-title">D. 업데이트 속도에 대한 신뢰 위기</div>
     <div class="quote-block negative">
-      <div class="quote-text">"Russian not supported... В остальном игра прекрасна. Но у King of Retail есть русская локализация, а у TCG Card Shop Simulator нет."</div>
-      <div class="quote-meta">russian · 38h · 3 helpful</div>
-      <div class="quote-translation">러시아어 미지원. 경쟁작(King of Retail)은 지원하는데 이 게임은 안 됨 — 나머진 훌륭하지만 언어 때문에 비추</div>
+      <div class="quote-text">"No updates in 3 months for an early access game? Started out great at launch and now.. meh. I Regret giving the dev my money in hopes of further development."</div>
+      <div class="quote-meta">english &middot; 19.1h &middot; 25 helpful</div>
+    </div>
+    <div class="quote-block negative">
+      <div class="quote-text">"&#25569;&#30528;&#36825;&#20040;&#22909;&#30340;&#39064;&#26448;&#28779;&#20102;&#23601;&#36305;&#36335;&#30495;&#35813;&#27515;&#21834;&#65281;&#65281;&#65281;"</div>
+      <div class="quote-meta">schinese &middot; 5.0h &middot; 50 helpful</div>
+      <div class="quote-translation">이렇게 좋은 소재를 잡고 흥행하자마자 도망치다니 정말 나쁘다!!!</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      영어 리뷰 73.4%라는 압도적 편중이 비영어권 시장 확장의 구조적 한계를 보여준다. 경쟁작과의 직접 비교에서 로컬라이제이션 부재가 부정 리뷰의 직접 원인이 되고 있다.
+      EN 67건(33%), DE 5건, SCN에서 집중 발생. 중국어권에서 특히 강렬 &mdash; "국산 카피캣이 더 많은 콘텐츠를 제공한다"는 구체적 위협이 언급. 콘텐츠 고갈(약점 A)과 결합되면 <strong>치명적 이탈 루프</strong>: 콘텐츠 부족 &rarr; 업데이트 기대 &rarr; 공백 &rarr; 신뢰 붕괴 &rarr; 부정 전환.
     </p>
+
+    <div class="card-title">E. 팩 개봉의 물리적 피로감</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"Addicting game loop but you'll soon find yourself wishing for someone else to open the booster packs for you. Manually opening 100+ packs every 10-15 minutes is not great for the carpal tunnel."</div>
+      <div class="quote-meta">english &middot; 19.9h &middot; 21 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      팩 개봉이 코어 루프의 핵심인데, 후반에 100개 이상 수동 개봉은 "즐거운 반복"에서 <strong>"고통스러운 반복"</strong>으로 전환된다. FR에서 "100% 수동, 자동화 불가, 수천~수만 시간 소요"라는 극단적 지적. 의례적 행위(ritual)의 즐거움을 유지하면서도 스케일링 시 피로를 줄이는 <strong>배치 오픈/자동 오픈</strong> 기능이 시급.
+    </p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">문화권별 차이</div>
+    <div class="grid-3" style="margin-top:.5rem">
+      <div class="sys-card">
+        <strong>독일: "Suchtfaktor"가 최고의 칭찬</strong>
+        <p>"중독 요소(Suchtfaktor)"를 게임 품질의 직접적 지표로 사용. 55% 이상이 "s&uuml;chtig" 명시. "퇴근 후(Feierabend) 치료 게임" 포지셔닝.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>프랑스: 데오도란트 밈</strong>
+        <p>"고객에게 데오도란트 뿌리기"가 커뮤니티 밈으로 확산. "페퍼스프레이라고 상상하며 양념을 친다" 등 블랙 유머. Wankul(프랑스 TCG 유튜버) 모드 생태계.</p>
+      </div>
+      <div class="sys-card">
+        <strong>중국어: 업데이트 불안의 진원지</strong>
+        <p>"돈 받고 튀었다(&#22280;&#38065;&#36305;&#36335;)" 표현이 반복. 카피캣 위협이 구체적으로 언급. 긍정률은 91.8%로 다른 언어 대비 낮음.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1051,86 +840,21 @@
 <section>
   <div class="section-header fade-up">
     <span class="section-num">STEP 04</span>
-    <h2 class="section-title">삼각 검증 — Triangulation</h2>
+    <h2 class="section-title">삼각 검증 &mdash; Triangulation</h2>
     <div class="section-line"></div>
   </div>
   <div class="fade-up" style="overflow-x:auto">
     <table class="tri-table">
-      <thead>
-        <tr>
-          <th style="width:18%">기획 요소</th>
-          <th style="width:15%">마케팅</th>
-          <th style="width:15%">구현</th>
-          <th style="width:15%">유저 반응</th>
-          <th style="width:12%">판정</th>
-          <th>증거</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:18%">기획 요소</th><th style="width:14%">마케팅</th><th style="width:14%">구현</th><th style="width:14%">유저 반응</th><th style="width:11%">판정</th><th>증거</th></tr></thead>
       <tbody>
-        <tr>
-          <td><strong>카드 개봉 도파민</strong></td>
-          <td>○ "crack them"</td>
-          <td>○ 랜덤 풀 시스템</td>
-          <td>○ "가챠/슬롯과 같다"</td>
-          <td><span class="verdict success">기획 성공</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">JP리뷰: "보상이 나올 수도 있는 상태에서 뇌가 가장 쾌락물질을 분비한다"</td>
-        </tr>
-        <tr>
-          <td><strong>매장 경영 자유도</strong></td>
-          <td>○ "your own", 가격/직원/이벤트</td>
-          <td>○ 인테리어·가격·직원·라이선스</td>
-          <td>○ "경영 시뮬의 정답"</td>
-          <td><span class="verdict success">기획 성공</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">DE리뷰: 56가지 벽지, 56가지 바닥 등 세밀한 커스터마이징</td>
-        </tr>
-        <tr>
-          <td><strong>현실감·몰입감</strong></td>
-          <td>△ 약간 암시</td>
-          <td>○ 냄새 고객, 빈박스, 황당한 가격제안</td>
-          <td>◎ 가장 많이 언급</td>
-          <td><span class="verdict hidden">숨은 강점</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">실제 카드샵 사장 129 helpful — 마케팅은 강조 안 했지만 유저가 가장 높이 평가</td>
-        </tr>
-        <tr>
-          <td><strong>모드 생태계</strong></td>
-          <td>✕ 언급 없음</td>
-          <td>○ 모드 지원</td>
-          <td>◎/✕ 양극단</td>
-          <td><span class="verdict hidden">숨은 강점 + 약점</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">포켓몬 모드가 수명을 연장하지만, 업데이트 시 모드 호환 깨짐</td>
-        </tr>
-        <tr>
-          <td><strong>멀티플레이어</strong></td>
-          <td>✕ 없음</td>
-          <td>✕ 미구현</td>
-          <td>✕ 가장 많은 요청</td>
-          <td><span class="verdict weakness">실행 부재</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">74 helpful 리뷰: "would be so much better if it had multiplayer", Co-op 태그 6표</td>
-        </tr>
-        <tr>
-          <td><strong>콘텐츠 볼륨</strong></td>
-          <td>○ "expand"</td>
-          <td>△ 얼리 액세스</td>
-          <td>✕ "반복적", "모드 없이 빈약"</td>
-          <td><span class="verdict weakness">실행 미흡</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">FR리뷰: "trop répétitif", EN: 업데이트 둔화 + 플러시 집중 지적</td>
-        </tr>
-        <tr>
-          <td><strong>다국어 지원</strong></td>
-          <td>✕ 없음</td>
-          <td>△ 부분 지원</td>
-          <td>✕ 러시아어 등 부재</td>
-          <td><span class="verdict weakness">실행 미흡</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">RU리뷰: 경쟁작(King of Retail)과 비교하며 비추</td>
-        </tr>
-        <tr>
-          <td><strong>스트리머 바이럴</strong></td>
-          <td>✕ 없음</td>
-          <td>✕ 의도적 설계 아님</td>
-          <td>◎ 유기적 발생</td>
-          <td><span class="verdict marketing">커뮤니티 창발</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">"친구가 웃기라고 선물", "실제 카드샵 사장 리뷰" — 콘텐츠 소재가 자연 발생</td>
-        </tr>
+        <tr><td><strong>팩 개봉/가챠</strong></td><td>&#9675; "crack them"</td><td>&#9675; 핵심 루프</td><td>&#9678; 60%+ 리뷰 언급, "중독"</td><td><span class="verdict success">기획 성공</span></td><td style="font-size:.78rem;color:var(--text-dim)">3언어 공통 1위 키워드. 가변 보상이 핵심 리텐션 동력</td></tr>
+        <tr><td><strong>매장 경영</strong></td><td>&#9675; "Manage Your Shop"</td><td>&#9651; 외형만 존재</td><td>&#10005; "경영 깊이 0"</td><td><span class="verdict weakness">실행 미흡</span></td><td style="font-size:.78rem;color:var(--text-dim)">가격 전략/수요공급이 작동하지 않음. 유저가 "팩 오프닝 시뮬레이터"로 재정의</td></tr>
+        <tr><td><strong>카드 수집</strong></td><td>&#9675; "collect the cards"</td><td>&#9675; 수집 시스템</td><td>&#9678; Collectathon(123), 파산 밈</td><td><span class="verdict success">기획 성공</span></td><td style="font-size:.78rem;color:var(--text-dim)">"판매 vs 수집" 갈등이 감정 서사 생성. 완주율 9.7%는 수집 깊이의 증거</td></tr>
+        <tr><td><strong>직원/자동화</strong></td><td>&#9675; "hire staff"</td><td>&#9651; 구현(무력)</td><td>&#10005; "분당 1회 행동"</td><td><span class="verdict weakness">실행 미흡</span></td><td style="font-size:.78rem;color:var(--text-dim)">외부 루프의 핵심 보상이 작동하지 않음. 중후반 번아웃의 직접적 원인</td></tr>
+        <tr><td><strong>사업 확장</strong></td><td>&#9675; "expand your card shop"</td><td>&#9651; 공간 확장만</td><td>&#9651; 초반 만족, 후반 무의미</td><td><span class="verdict weakness">실행 미흡</span></td><td style="font-size:.78rem;color:var(--text-dim)">경제적 긴장감 소멸 후 확장 동기 상실. "레벨 40의 벽"</td></tr>
+        <tr><td><strong>위생/냄새 시스템</strong></td><td>&#9651; "keep clean" 1줄</td><td>&#9675; 구현됨</td><td>&#9678; 문화초월 밈 생성</td><td><span class="verdict hidden">숨은 강점</span></td><td style="font-size:.78rem;color:var(--text-dim)">마케팅에서 거의 언급 안 했지만 게임의 비공식 마스코트. 10개+ 언어에서 반복</td></tr>
+        <tr><td><strong>모딩 에코시스템</strong></td><td>&#10005; 언급 안 함</td><td>&#9675; Nexus Mods</td><td>&#9678; "3/5 &rarr; 5/5", 리텐션 핵심</td><td><span class="verdict hidden">숨은 강점</span></td><td style="font-size:.78rem;color:var(--text-dim)">포켓몬/유희왕 모드가 게임 수명을 10배 연장. 공식 Workshop 미지원이 아쉬움</td></tr>
+        <tr><td><strong>"악당 경영자" 밈</strong></td><td>&#10005; 의도 안 함</td><td>&#10005; 의도 안 함</td><td>&#9678; "고객 사기", Capitalism 태그</td><td><span class="verdict marketing">커뮤니티 창발</span></td><td style="font-size:.78rem;color:var(--text-dim)">착취적 가격 책정을 자조 유머로 즐기는 문화. IGDB "capitalism" 키워드와 공명</td></tr>
       </tbody>
     </table>
   </div>
@@ -1146,27 +870,45 @@
   <div class="grid-3 fade-up">
     <div class="card biz-stat">
       <div class="card-label">추정 매출</div>
-      <div class="biz-num gold">$26M~$65M</div>
-      <div class="biz-calc">200~500만 × $12.99 (Steam 수수료 전)</div>
+      <div class="biz-num gold">$12.7M~31.8M</div>
+      <div class="biz-calc">2~5M &times; $9.09 &times; 0.7(Steam)</div>
     </div>
     <div class="card biz-stat">
       <div class="card-label">가격당 플레이타임</div>
-      <div class="biz-num green">2.26h/$</div>
-      <div class="biz-calc">29.3h ÷ $12.99 — 매우 높은 가성비</div>
+      <div class="biz-num green">3.6h/$</div>
+      <div class="biz-calc">32.8h &div; $9.09</div>
     </div>
     <div class="card biz-stat">
       <div class="card-label">수익 모델</div>
-      <div class="biz-num purple">EA→풀가</div>
-      <div class="biz-calc">얼리 액세스 → 정식 출시 가격 인상 예상</div>
+      <div class="biz-num purple">EA 진행중</div>
+      <div class="biz-calc">얼리 액세스 &rarr; 1.0 출시 예정</div>
     </div>
   </div>
+
+  <div class="card fade-up">
+    <div class="card-title">Twitch 스트리밍 데이터</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-top:.5rem">
+      <strong>62개 라이브 채널 / 200 시청자</strong> (2026-03-18 스냅샷)<br>
+      Top 언어: en(53), fr(3), de(3), zh(1) &mdash; 프랑스어 스트리머가 리뷰 비율(3.7%) 대비 <strong>거의 동비율</strong>(4.8%). 독일어도 리뷰 4.8% 대비 스트리밍 4.8%로 균등. Twitch 도달은 리뷰 분포를 충실히 반영하며, 팩 개봉의 시각적 쾌감이 스트리밍 콘텐츠로서 <strong>적당한 watchability</strong>를 보여준다.
+    </p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-title">CheapShark 가격 이력</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-top:.5rem">
+      Deal Rating: <strong>0.0</strong> / 최저가: <strong>$7.79</strong> (2025-09-29)<br>
+      Deal Rating 0.0은 "거의 할인하지 않는" <strong>가격 자신감</strong>. $9.09라는 낮은 기본 가격 자체가 진입 장벽 제거 전략. 최저가 $7.79는 약 14% 할인에 불과하며, "맥도날드 한 끼 값"이라는 유저의 가치 프레이밍을 의도적으로 유지하는 가격 전략.
+    </p>
+  </div>
+
   <div class="card fade-up">
     <div class="card-title">수익 확장 가능성</div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
-      • <strong>DLC 카드셋</strong> — 새 IP/테마 카드팩은 자연스러운 확장 (현재 Tetremon, Ghost 등 가상 IP)<br>
-      • <strong>모드 워크숍</strong> — 포켓몬 모드 등 이미 활성화된 모딩 커뮤니티를 공식 지원으로 전환<br>
-      • <strong>멀티플레이어</strong> — 가장 많이 요청되는 기능. 코옵 경영 or 카드 트레이딩 온라인화<br>
-      • <strong>모바일 포팅</strong> — Relaxing + Casual 태그 특성상 모바일 적합
+      &bull; <strong>공식 Steam Workshop 지원</strong>: 현재 Nexus Mods 기반의 비공식 생태계를 공식화 &rarr; 모드 접근성 향상 + 리텐션 극대화<br>
+      &bull; <strong>엔드게임 콘텐츠</strong>: 레벨 40+ 신규 메커니즘 (카드 그레이딩, 경매, 온라인 트레이딩) &rarr; 경제 긴장감 재점화<br>
+      &bull; <strong>자동화 강화</strong>: 직원 AI 개선 &rarr; 외부 루프 보상 복원 &rarr; "경영자 &rarr; 수집가" 역할 전환의 자연스러운 가속<br>
+      &bull; <strong>멀티플레이어</strong>: 비동기 카드 거래 + 친구 매장 방문 (경쟁 아닌 협력) &rarr; 코지 정체성 유지하면서 소셜 층위 추가<br>
+      &bull; <strong>라이선스 DLC</strong>: 공식 TCG IP(포켓몬/매직/유희왕)와의 라이선스 협업 &rarr; 모드가 증명한 수요를 공식 수익화
     </p>
   </div>
 </section>
@@ -1174,22 +916,68 @@
 <!-- ━━━ 결론 ━━━ -->
 <section class="conclusion">
   <div class="conclusion-text fade-up">
-    이 게임이 성공한 이유는,<br>
-    "경영 시뮬레이터"라는 건전한 외피 안에<br>
-    "팩 개봉 = 합법적 도박"이라는 <strong>가변 보상 시스템</strong>을 심어,<br>
-    <em>노동의 확정 보상</em>과 <em>가챠의 가변 보상</em>이<br>
-    하나의 루프에서 교차하는 이중 도파민 구조를 만들었기 때문이다.
+    이 게임이 97.2%의 경이적 긍정률을 달성한 이유는,<br>
+    <strong>"현실 TCG의 도파민 루프"</strong>를<br>
+    맥도날드 한 끼 값에 복제했기 때문이다.<br><br>
+    경영 시뮬의 외피 아래에서<br>
+    <strong>가변 보상(팩 개봉)</strong>과 <strong>확정 보상(매출 성장)</strong>이 교차하며,<br>
+    "판매할까, 수집할까"라는 <strong>단 하나의 의사결정 갈등</strong>이<br>
+    910시간 플레이어도 "또 파산하겠다"고 선언하게 만든다.<br><br>
+    유저들은 이 구조를 직관적으로 요약했다:<br>
+    <strong>"노동은 재밌다. 도박은 재밌다.<br>즉 이 게임은 최강이다."</strong>
   </div>
   <p style="position:relative;font-size:.82rem;color:var(--text-faint);max-width:700px;margin:1.5rem auto 0;text-align:center;line-height:1.8">
-    태그 데이터가 이를 증명한다: Simulation(226) + Collectathon(123) — 유저들은
-    이 게임을 "경영"이자 "수집"으로 동시에 인식하며, 이 이중성이 97.2%라는 경이적 긍정률의 구조적 원인이다.
+    태그 데이터가 이를 증명한다: Simulation(226) + Management(178) + Economy(152) &mdash; 경영 축이 지배적(805표)이지만, Collectathon(123) + TCG(105)의 수집/카드 축(324표)이 동시에 강력하게 공존한다. 이 <strong>이중 정체성</strong>이 게임의 구조적 성공 원인이자, 동시에 "경영 시뮬이라면서 왜 팩 오프닝만 하냐"는 구조적 약점의 근원이다. RAWG의 Meh 60%가 이 양면성을 정량적으로 보여준다: 모두가 즐기지만, 적극적으로 추천하기엔 "이게 맞나?" 하는 게임. 그러나 $9.09의 가격대에서 이 고민은 사치다 &mdash; "맥도날드 한 끼 값"이라는 프레이밍이 모든 망설임을 무력화한다.
   </p>
 </section>
 
 </div>
 
 <footer class="footer">
-  Steam Game Insight Report · Generated 2026-03-19 · Data: SteamSpy + Steam Reviews API + IGDB + RAWG + HLTB + CheapShark + PCGamingWiki + Twitch · 1,073 reviews analyzed
+  <p>Steam Game Insight Report &middot; Generated 2026-03-20 &middot; Data: SteamSpy + Steam Reviews API + IGDB + RAWG + HLTB + CheapShark + PCGamingWiki + Twitch + Wikidata &middot; 32,959 reviews (957 analyzed by agents)</p>
+  <details style="margin-top:.8rem;font-size:.78rem;color:var(--text-faint)">
+    <summary>에이전트 분석 상세 (7개 에이전트, 총 ~71K 입력 + ~20K 출력 토큰 추정, ~1,046초)</summary>
+    <table style="width:100%;margin-top:.5rem;font-size:.75rem;border-collapse:collapse">
+      <tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:.3rem .5rem">에이전트</th>
+        <th style="text-align:left;padding:.3rem .5rem">모델</th>
+        <th style="text-align:left;padding:.3rem .5rem">구역</th>
+        <th style="text-align:left;padding:.3rem .5rem">리뷰수</th>
+        <th style="text-align:left;padding:.3rem .5rem">입력&asymp;</th>
+        <th style="text-align:left;padding:.3rem .5rem">출력&asymp;</th>
+        <th style="text-align:left;padding:.3rem .5rem">시간</th>
+        <th style="text-align:left;padding:.3rem .5rem">핵심 발견</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">Main-Deep</td><td>opus</td><td>TOP 100</td><td>100</td>
+        <td>~14K</td><td>~6K</td><td>260s</td><td>기획성공 5, 약점 5, 흥미발견 3, 인용 10, 루프 3</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">EN-Positive</td><td>sonnet</td><td>english&middot;긍정</td><td>200</td>
+        <td>~12K</td><td>~4K</td><td>175s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">EN-Negative</td><td>sonnet</td><td>english&middot;부정</td><td>200</td>
+        <td>~10K</td><td>~3K</td><td>175s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">DE-Positive</td><td>sonnet</td><td>german&middot;긍정</td><td>200</td>
+        <td>~12K</td><td>~3K</td><td>127s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">DE-Negative</td><td>sonnet</td><td>german&middot;부정</td><td>32</td>
+        <td>~7K</td><td>~2K</td><td>64s</td><td>패턴 5, 특이점 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">FR-Positive</td><td>sonnet</td><td>french&middot;긍정</td><td>200</td>
+        <td>~9K</td><td>~3K</td><td>178s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr>
+        <td style="padding:.3rem .5rem">FR-Negative</td><td>sonnet</td><td>french&middot;부정</td><td>25</td>
+        <td>~6K</td><td>~2K</td><td>67s</td><td>패턴 5, 특이점 2</td>
+      </tr>
+    </table>
+  </details>
 </footer>
 
 </body>
