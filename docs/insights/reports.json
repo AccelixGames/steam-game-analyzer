@@ -87,6 +87,33 @@
     "_file_hash": "0f1d49da76fb5e3bfacdd519e2f1f635"
   },
   {
+    "slug": "recettear-an-item-shops-tale",
+    "name": "Recettear: An Item Shop's Tale",
+    "name_ko": null,
+    "appid": 70400,
+    "positive_rate": 96.2,
+    "review_score": "Overwhelmingly Positive",
+    "owners": "500K~1M",
+    "price": "$19.99",
+    "avg_playtime": "9.3h",
+    "review_count": 6197,
+    "tags": [
+      "Capitalism",
+      "Anime",
+      "RPG",
+      "Dungeon Crawler",
+      "JRPG"
+    ],
+    "genres": [
+      "Indie",
+      "RPG"
+    ],
+    "date": "2026-03-20",
+    "modified": "2026-03-20 03:55",
+    "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70400/header.jpg?t=1447353479",
+    "_file_hash": "263121f27a1a91befd597cd81eeb51cd"
+  },
+  {
     "slug": "satisfactory",
     "name": "Satisfactory",
     "name_ko": null,
