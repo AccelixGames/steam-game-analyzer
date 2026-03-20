@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상점경영 유사게임 탐색 — L2 비교 리포트</title>
+<meta name="report:layer" content="2">
+<meta name="report:type" content="similar">
+<meta name="report:source_games" content="3164500,70400,3070070">
+<meta name="report:date" content="2026-03-20">
+<meta name="report:modified" content="2026-03-20">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0c0e14;
+    --bg-card: #141620;
+    --bg-card-hover: #191c28;
+    --bg-accent: #1a1d2a;
+    --border: #252838;
+    --border-strong: #363a50;
+    --text: #e8e8f0;
+    --text-dim: #9a9ab4;
+    --text-faint: #686880;
+    --accent-gold: #f0c040;
+    --accent-gold-dim: #b89830;
+    --accent-green: #3ed88a;
+    --accent-red: #f05868;
+    --accent-blue: #4c94f0;
+    --accent-purple: #a46cf0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 1.8;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 3rem 3rem;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 20%, rgba(240,192,64,0.08), transparent),
+      radial-gradient(ellipse 60% 50% at 70% 80%, rgba(160,96,240,0.06), transparent),
+      linear-gradient(180deg, transparent 40%, var(--bg-deep));
+    z-index: 1;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    filter: brightness(0.25) saturate(0.5);
+  }
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-top-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem 1rem;
+    border-radius: 100px;
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+  .hero-badge.layer {
+    background: rgba(164,108,240,0.15);
+    border: 1px solid rgba(164,108,240,0.3);
+    color: var(--accent-purple);
+  }
+  .hero-badge.type {
+    background: rgba(76,148,240,0.15);
+    border: 1px solid rgba(76,148,240,0.3);
+    color: var(--accent-blue);
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-dim);
+    max-width: 700px;
+    line-height: 1.8;
+  }
+  .hero-sources {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap;
+  }
+  .source-chip {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .6rem 1.2rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all .2s;
+  }
+  .source-chip:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-1px);
+  }
+  .source-chip img {
+    width: 120px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .source-chip .info { display: flex; flex-direction: column; }
+  .source-chip .name { font-size: .85rem; font-weight: 700; }
+  .source-chip .meta {
+    font-size: .7rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+  }
+
+  /* ── Layout ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem; font-weight: 700;
+    color: var(--accent-gold);
+    background: rgba(240,192,64,0.1);
+    border: 1px solid rgba(240,192,64,0.2);
+    padding: .3rem .7rem; border-radius: 4px;
+    letter-spacing: .08em;
+  }
+  .section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .card-label {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--accent-gold-dim);
+    margin-bottom: 1rem; padding-bottom: .6rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Similar Table ── */
+  .sim-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+  .sim-table th {
+    background: var(--bg-accent); padding: .8rem 1rem;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--text-dim); text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .sim-table td {
+    padding: .7rem 1rem; font-size: .82rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle;
+  }
+  .sim-table tr:last-child td { border-bottom: none; }
+  .sim-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .sim-table .rank {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; color: var(--text-faint); text-align: center;
+    width: 36px;
+  }
+  .sim-table .game-name { font-weight: 600; }
+  .sim-table .reviews {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+  }
+  .sim-table .rate {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: .82rem;
+  }
+  .rate.high { color: var(--accent-green); }
+  .rate.mid { color: var(--accent-gold); }
+  .rate.low { color: var(--accent-red); }
+  .sim-table .owners-col {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem; color: var(--text-dim);
+  }
+  .sim-table .price-col {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+  }
+  .sim-table .tags-col { font-size: .75rem; color: var(--text-dim); }
+  .steam-link-sm {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .steam-link-sm:hover { color: #fff; }
+
+  /* ── Highlight box ── */
+  .highlight-box {
+    background: var(--bg-accent);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 1.5rem 1.8rem;
+    margin: 1.5rem 0;
+  }
+  .highlight-box h4 {
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: .8rem;
+  }
+  .highlight-box p {
+    font-size: .85rem;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+  .highlight-box ul {
+    list-style: none;
+    margin-top: .5rem;
+  }
+  .highlight-box li {
+    font-size: .85rem;
+    color: var(--text);
+    padding: .3rem 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .highlight-box li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: .7rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+  }
+
+  /* ── Cross-reference ── */
+  .cross-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+  }
+  .cross-table th {
+    background: var(--bg-accent); padding: 1rem 1.2rem;
+    font-size: .78rem; font-weight: 700;
+    color: var(--text-dim); text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .cross-table td {
+    padding: .9rem 1.2rem; font-size: .85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top;
+  }
+  .cross-table tr:last-child td { border-bottom: none; }
+  .cross-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .reason { font-size: .78rem; color: var(--text-dim); line-height: 1.7; }
+
+  /* ── Footer ── */
+  .report-footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: .75rem;
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .hero { padding: 3rem 1.5rem 2rem; min-height: 40vh; }
+    .hero h1 { font-size: 2rem; }
+    .container { padding: 0 1rem; }
+    .card { padding: 1.5rem; }
+    .hero-sources { flex-direction: column; gap: 1rem; }
+    .source-chip img { width: 80px; height: 37px; }
+    .sim-table { font-size: .75rem; }
+    .sim-table th, .sim-table td { padding: .5rem .6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════ HERO ════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-bg">
+    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3164500/header.jpg?t=1769828261" alt="Schedule I">
+    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70400/header.jpg?t=1447353479" alt="Recettear">
+    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/b4f36532c943011a9f1600c2585ca7065ef5b1bb/header.jpg?t=1762475483" alt="TCG Card Shop Simulator">
+  </div>
+  <div class="hero-content">
+    <div class="hero-top-bar">
+      <span class="hero-badge layer">L2 CROSS-ANALYSIS</span>
+      <span class="hero-badge type">SIMILAR GAMES</span>
+    </div>
+    <h1>Similar Games Survey</h1>
+    <p class="hero-subtitle">
+      Schedule I, Recettear, TCG Card Shop Simulator 3작의 Steam "More Like This" 추천 데이터를 기반으로
+      유사 게임을 탐색하고, 리뷰 높은 게임을 중심으로 정리한 비교 리포트.
+    </p>
+
+    <div class="hero-sources">
+      <a class="source-chip" href="https://store.steampowered.com/app/3164500" target="_blank" rel="noopener">
+        <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3164500/header.jpg?t=1769828261" alt="">
+        <div class="info">
+          <span class="name">Schedule I</span>
+          <span class="meta">98.4% &middot; 204K reviews</span>
+        </div>
+      </a>
+      <a class="source-chip" href="https://store.steampowered.com/app/70400" target="_blank" rel="noopener">
+        <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70400/header.jpg?t=1447353479" alt="">
+        <div class="info">
+          <span class="name">Recettear</span>
+          <span class="meta">96.1% &middot; 7.2K reviews</span>
+        </div>
+      </a>
+      <a class="source-chip" href="https://store.steampowered.com/app/3070070" target="_blank" rel="noopener">
+        <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/b4f36532c943011a9f1600c2585ca7065ef5b1bb/header.jpg?t=1762475483" alt="">
+        <div class="info">
+          <span class="name">TCG Card Shop Simulator</span>
+          <span class="meta">97.2% &middot; 39.5K reviews</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ════════════════════════ 01. Schedule I ════════════════════════ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Schedule I — Similar Games</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Source: Steam "More Like This" &middot; SteamSpy &middot; 2026-03-20</div>
+    <table class="sim-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Game</th>
+          <th>Reviews</th>
+          <th>Rate</th>
+          <th>Owners</th>
+          <th>Price</th>
+          <th>Tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">1</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/578080" target="_blank">PUBG: BATTLEGROUNDS</a></td>
+          <td class="reviews">2,557,944</td>
+          <td><span class="rate mid">59.4%</span></td>
+          <td class="owners-col">100~200M</td>
+          <td class="price-col">Free</td>
+          <td class="tags-col">Survival, Shooter, Battle Royale</td>
+        </tr>
+        <tr>
+          <td class="rank">2</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/252490" target="_blank">Rust</a></td>
+          <td class="reviews">1,227,784</td>
+          <td><span class="rate mid">87.2%</span></td>
+          <td class="owners-col">20~50M</td>
+          <td class="price-col">$19.99</td>
+          <td class="tags-col">Survival, Crafting, Multiplayer</td>
+        </tr>
+        <tr>
+          <td class="rank">3</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/346110" target="_blank">ARK: Survival Evolved</a></td>
+          <td class="reviews">730,170</td>
+          <td><span class="rate mid">83.8%</span></td>
+          <td class="owners-col">20~50M</td>
+          <td class="price-col">$14.99</td>
+          <td class="tags-col">Survival Craft, Multiplayer</td>
+        </tr>
+        <tr>
+          <td class="rank">4</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/218620" target="_blank">PAYDAY 2</a></td>
+          <td class="reviews">663,082</td>
+          <td><span class="rate mid">89.6%</span></td>
+          <td class="owners-col">20~50M</td>
+          <td class="price-col">$4.99</td>
+          <td class="tags-col">Co-op, Action, FPS</td>
+        </tr>
+        <tr>
+          <td class="rank">5</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/892970" target="_blank">Valheim</a></td>
+          <td class="reviews">499,828</td>
+          <td><span class="rate high">94.3%</span></td>
+          <td class="owners-col">10~20M</td>
+          <td class="price-col">$9.99</td>
+          <td class="tags-col">Survival Craft, Co-Op</td>
+        </tr>
+        <tr>
+          <td class="rank">6</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1623730" target="_blank">Palworld</a></td>
+          <td class="reviews">380,709</td>
+          <td><span class="rate high">94.1%</span></td>
+          <td class="owners-col">50~100M</td>
+          <td class="price-col">$29.99</td>
+          <td class="tags-col">Survival, Creature Collector</td>
+        </tr>
+        <tr>
+          <td class="rank">7</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/251570" target="_blank">7 Days to Die</a></td>
+          <td class="reviews">370,046</td>
+          <td><span class="rate mid">88.6%</span></td>
+          <td class="owners-col">10~20M</td>
+          <td class="price-col">$44.99</td>
+          <td class="tags-col">Survival, Zombies, MP</td>
+        </tr>
+        <tr>
+          <td class="rank">8</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/648800" target="_blank">Raft</a></td>
+          <td class="reviews">346,359</td>
+          <td><span class="rate high">93.3%</span></td>
+          <td class="owners-col">10~20M</td>
+          <td class="price-col">$13.39</td>
+          <td class="tags-col">Survival, MP, Craft</td>
+        </tr>
+        <tr>
+          <td class="rank">9</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1326470" target="_blank">Sons Of The Forest</a></td>
+          <td class="reviews">253,546</td>
+          <td><span class="rate mid">87.8%</span></td>
+          <td class="owners-col">10~20M</td>
+          <td class="price-col">$29.99</td>
+          <td class="tags-col">Survival, Open World, MP</td>
+        </tr>
+        <tr>
+          <td class="rank">10</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/526870" target="_blank">Satisfactory</a></td>
+          <td class="reviews">232,064</td>
+          <td><span class="rate high">97.2%</span></td>
+          <td class="owners-col">10~20M</td>
+          <td class="price-col">$27.99</td>
+          <td class="tags-col">Automation, Base-Building</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <h4>Pattern</h4>
+      <p>Schedule I의 유사작은 대형 서바이벌/Co-op이 주류. 폭발적 인기작(200K+ 리뷰)이라 Steam 추천이 "같은 장르"보다 "같은 규모" 게임으로 편향됨.</p>
+      <ul>
+        <li><strong>Satisfactory</strong> (97.2%) — 긍정률 최상위, 생산/자동화 루프의 교과서</li>
+        <li><strong>Valheim</strong> (94.3%) — 서바이벌 Co-op 중 가장 높은 긍정률</li>
+        <li><strong>Palworld</strong> (94.1%) — 2024년 대형 히트, 유사한 성장 곡선</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ 02. Recettear ════════════════════════ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Recettear — Similar Games</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Source: Steam "More Like This" &middot; SteamSpy &middot; 2026-03-20</div>
+    <table class="sim-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Game</th>
+          <th>Reviews</th>
+          <th>Rate</th>
+          <th>Owners</th>
+          <th>Price</th>
+          <th>Tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">1</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/433340" target="_blank">Slime Rancher</a></td>
+          <td class="reviews">138,097</td>
+          <td><span class="rate high">98.0%</span></td>
+          <td class="owners-col">2~5M</td>
+          <td class="price-col">$19.99</td>
+          <td class="tags-col">Cute, Exploration, Adventure</td>
+        </tr>
+        <tr>
+          <td class="rank">2</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/881020" target="_blank">Granblue Fantasy: Relink</a></td>
+          <td class="reviews">47,999</td>
+          <td><span class="rate mid">89.8%</span></td>
+          <td class="owners-col">2~5M</td>
+          <td class="price-col">$39.99</td>
+          <td class="tags-col">Anime, JRPG, Action RPG</td>
+        </tr>
+        <tr>
+          <td class="rank">3</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1669980" target="_blank">Volcano Princess</a></td>
+          <td class="reviews">41,180</td>
+          <td><span class="rate high">97.8%</span></td>
+          <td class="owners-col">1~2M</td>
+          <td class="price-col">$10.99</td>
+          <td class="tags-col">Life Sim, Choices Matter</td>
+        </tr>
+        <tr>
+          <td class="rank">4</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1584090" target="_blank">Touhou Mystia's Izakaya</a></td>
+          <td class="reviews">28,249</td>
+          <td><span class="rate high">98.0%</span></td>
+          <td class="owners-col">500K~1M</td>
+          <td class="price-col">$5.99</td>
+          <td class="tags-col">Pixel, Casual, Simulation</td>
+        </tr>
+        <tr>
+          <td class="rank">5</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2816030" target="_blank">AI LIMIT</a></td>
+          <td class="reviews">22,025</td>
+          <td><span class="rate high">93.1%</span></td>
+          <td class="owners-col">200~500K</td>
+          <td class="price-col">$24.49</td>
+          <td class="tags-col">Souls-like, Female Protagonist</td>
+        </tr>
+        <tr>
+          <td class="rank">6</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1637250" target="_blank">ENDER MAGNOLIA</a></td>
+          <td class="reviews">13,465</td>
+          <td><span class="rate high">95.6%</span></td>
+          <td class="owners-col">200~500K</td>
+          <td class="price-col">$24.99</td>
+          <td class="tags-col">Metroidvania, 2D</td>
+        </tr>
+        <tr>
+          <td class="rank">7</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/592580" target="_blank">Ni no Kuni II</a></td>
+          <td class="reviews">10,756</td>
+          <td><span class="rate mid">83.9%</span></td>
+          <td class="owners-col">500K~1M</td>
+          <td class="price-col">$11.99</td>
+          <td class="tags-col">RPG, JRPG, Anime</td>
+        </tr>
+        <tr>
+          <td class="rank">8</td>
+          <td class="game-name">Living With Sister</td>
+          <td class="reviews">10,394</td>
+          <td><span class="rate high">96.5%</span></td>
+          <td class="owners-col">200~500K</td>
+          <td class="price-col">$10.39</td>
+          <td class="tags-col">Visual Novel, Fantasy</td>
+        </tr>
+        <tr>
+          <td class="rank">9</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2012890" target="_blank">KINGDOM HEARTS HD 1.5+2.5</a></td>
+          <td class="reviews">7,602</td>
+          <td><span class="rate mid">83.7%</span></td>
+          <td class="owners-col">1~2M</td>
+          <td class="price-col">$24.99</td>
+          <td class="tags-col">Action, RPG, Adventure</td>
+        </tr>
+        <tr>
+          <td class="rank">10</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2634340" target="_blank">WitchSpring R</a></td>
+          <td class="reviews">6,536</td>
+          <td><span class="rate high">96.5%</span></td>
+          <td class="owners-col">100~200K</td>
+          <td class="price-col">$34.99</td>
+          <td class="tags-col">Cute, RPG, Funny</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <h4>Pattern</h4>
+      <p>Recettear의 유사작은 일본 인디/RPG + 아기자기한 경영 계열. "상점 경영+RPG"라는 독특한 조합 때문에 직계 후속작이 적고, 대신 분위기가 비슷한 일본 게임이 추천됨.</p>
+      <ul>
+        <li><strong>Touhou Mystia's Izakaya</strong> (98.0%) — 상점경영+RPG의 가장 가까운 후계자</li>
+        <li><strong>Volcano Princess</strong> (97.8%) — 육성+경영 하이브리드, 한국/중국 시장 강세</li>
+        <li><strong>Slime Rancher</strong> (98.0%) — 수집+경영 루프, "아기자기한 자본주의" 공통분모</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ 03. TCG Card Shop Simulator ════════════════════════ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">TCG Card Shop Simulator — Similar Games</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Source: Steam "More Like This" &middot; SteamSpy &middot; 2026-03-20</div>
+    <table class="sim-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Game</th>
+          <th>Reviews</th>
+          <th>Rate</th>
+          <th>Owners</th>
+          <th>Price</th>
+          <th>Tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">1</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/613100" target="_blank">House Flipper</a></td>
+          <td class="reviews">95,144</td>
+          <td><span class="rate high">94.2%</span></td>
+          <td class="owners-col">2~5M</td>
+          <td class="price-col">$6.24</td>
+          <td class="tags-col">Simulation, Building</td>
+        </tr>
+        <tr>
+          <td class="rank">2</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2670630" target="_blank">Supermarket Simulator</a></td>
+          <td class="reviews">68,341</td>
+          <td><span class="rate high">93.8%</span></td>
+          <td class="owners-col">2~5M</td>
+          <td class="price-col">$11.99</td>
+          <td class="tags-col">Simulation, Management, Economy</td>
+        </tr>
+        <tr>
+          <td class="rank">3</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2581780" target="_blank">Supermarket Together</a></td>
+          <td class="reviews">67,435</td>
+          <td><span class="rate high">94.9%</span></td>
+          <td class="owners-col">2~5M</td>
+          <td class="price-col">Free</td>
+          <td class="tags-col">Simulation, Co-Op, MP</td>
+        </tr>
+        <tr>
+          <td class="rank">4</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/621060" target="_blank">PC Building Simulator</a></td>
+          <td class="reviews">51,655</td>
+          <td><span class="rate high">93.6%</span></td>
+          <td class="owners-col">1~2M</td>
+          <td class="price-col">$19.99</td>
+          <td class="tags-col">Simulation, Education</td>
+        </tr>
+        <tr>
+          <td class="rank">5</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1210320" target="_blank">Potion Craft</a></td>
+          <td class="reviews">37,608</td>
+          <td><span class="rate high">92.3%</span></td>
+          <td class="owners-col">1~2M</td>
+          <td class="price-col">$19.99</td>
+          <td class="tags-col">Crafting, Relaxing</td>
+        </tr>
+        <tr>
+          <td class="rank">6</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1119730" target="_blank">Ranch Simulator</a></td>
+          <td class="reviews">36,019</td>
+          <td><span class="rate mid">80.4%</span></td>
+          <td class="owners-col">1~2M</td>
+          <td class="price-col">$24.99</td>
+          <td class="tags-col">Simulation, MP, Co-Op</td>
+        </tr>
+        <tr>
+          <td class="rank">7</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2300320" target="_blank">Farming Simulator 25</a></td>
+          <td class="reviews">33,575</td>
+          <td><span class="rate mid">83.6%</span></td>
+          <td class="owners-col">1~2M</td>
+          <td class="price-col">$29.99</td>
+          <td class="tags-col">Farming Sim, Realistic</td>
+        </tr>
+        <tr>
+          <td class="rank">8</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/392160" target="_blank">X4: Foundations</a></td>
+          <td class="reviews">23,847</td>
+          <td><span class="rate mid">79.5%</span></td>
+          <td class="owners-col">1~2M</td>
+          <td class="price-col">$49.99</td>
+          <td class="tags-col">Space Sim, Sandbox</td>
+        </tr>
+        <tr>
+          <td class="rank">9</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1320510" target="_blank">Internet Cafe Simulator 2</a></td>
+          <td class="reviews">12,421</td>
+          <td><span class="rate mid">73.6%</span></td>
+          <td class="owners-col">200~500K</td>
+          <td class="price-col">$19.99</td>
+          <td class="tags-col">Simulation, Management</td>
+        </tr>
+        <tr>
+          <td class="rank">10</td>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2218100" target="_blank">Big Ambitions</a></td>
+          <td class="reviews">10,712</td>
+          <td><span class="rate high">92.9%</span></td>
+          <td class="owners-col">500K~1M</td>
+          <td class="price-col">$17.24</td>
+          <td class="tags-col">Management, Economy</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <h4>Pattern</h4>
+      <p>TCG Card Shop의 유사작은 "OO Simulator" 장르가 압도적. 가게 경영 시뮬레이션이 2024~2025년 Steam에서 하나의 서브장르로 확립됨.</p>
+      <ul>
+        <li><strong>Supermarket Simulator</strong> (93.8%) — 같은 "가게 경영" 장르의 최대 히트작</li>
+        <li><strong>Potion Craft</strong> (92.3%) — 아이템 제작+판매, 독특한 연금술 메카닉</li>
+        <li><strong>Big Ambitions</strong> (92.9%) — 소규모→대규모 사업 확장, Economy 태그 공유</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ 04. Cross-Reference ════════════════════════ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Cross-Reference: Notable Picks</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">3작 공통 관점에서 주목할 게임</div>
+    <table class="cross-table">
+      <thead>
+        <tr>
+          <th>Game</th>
+          <th>Source</th>
+          <th>Rate</th>
+          <th>Why Notable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1584090" target="_blank">Touhou Mystia's Izakaya</a></td>
+          <td>Recettear</td>
+          <td><span class="rate high">98.0%</span></td>
+          <td class="reason">상점경영+RPG, Recettear 직계 후속. 음식점 경영에 던전 탐험을 결합한 구조가 Recettear의 "Item Shop + Dungeon"과 정확히 대응.</td>
+        </tr>
+        <tr>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2670630" target="_blank">Supermarket Simulator</a></td>
+          <td>TCG Card Shop</td>
+          <td><span class="rate high">93.8%</span></td>
+          <td class="reason">TCG와 같은 "가게 경영 시뮬" 장르의 최대 히트작. 진열/가격 조정/고객 관리 루프가 TCG Card Shop과 거의 동일.</td>
+        </tr>
+        <tr>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/1210320" target="_blank">Potion Craft</a></td>
+          <td>TCG Card Shop</td>
+          <td><span class="rate high">92.3%</span></td>
+          <td class="reason">아이템 제작+판매, 독특한 연금술 메카닉. "특수 아이템을 만들어 팔다"는 구조가 TCG 카드 제작/판매와 유사.</td>
+        </tr>
+        <tr>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/526870" target="_blank">Satisfactory</a></td>
+          <td>Schedule I</td>
+          <td><span class="rate high">97.2%</span></td>
+          <td class="reason">97.2% 긍정률. 생산/자동화 루프의 교과서. Schedule I의 "마약 제조 최적화"가 Satisfactory의 공장 자동화와 동일한 만족감 구조.</td>
+        </tr>
+        <tr>
+          <td class="game-name"><a class="steam-link-sm" href="https://store.steampowered.com/app/2218100" target="_blank">Big Ambitions</a></td>
+          <td>TCG Card Shop</td>
+          <td><span class="rate high">92.9%</span></td>
+          <td class="reason">소규모 경영→확장, Economy 태그 공유. 단일 매장에서 시작해 체인으로 성장하는 구조가 TCG의 확장 루프와 일맥상통.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div>
+
+<footer class="report-footer">
+  Generated on 2026-03-20 &middot; Steam "More Like This" + SteamSpy API &middot; L2 Similar Games Survey
+</footer>
+
+</body>
+</html>

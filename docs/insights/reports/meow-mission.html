@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meow Mission — 기획 인사이트 보고서</title>
+<meta name="report:appid" content="3139640">
+<meta name="report:game_name" content="Meow Mission">
+<meta name="report:name_ko" content="야옹 미션">
+<meta name="report:positive_rate" content="100%">
+<meta name="report:review_score" content="9 user reviews">
+<meta name="report:owners" content="0 .. 20,000">
+<meta name="report:price" content="$1.99">
+<meta name="report:avg_playtime" content="—">
+<meta name="report:review_count" content="56">
+<meta name="report:tags" content="Puzzle,Sokoban,Difficult,Family Friendly,Cats">
+<meta name="report:genres" content="Casual,Indie,Strategy">
+<meta name="report:date" content="2026-03-20">
+<meta name="report:modified" content="2026-03-20">
+<meta name="report:header_image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3139640/header.jpg?t=1739331531">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0e0c14;
+    --bg-card: #161420;
+    --bg-card-hover: #1c1928;
+    --bg-accent: #1c1a2a;
+    --border: #2a2538;
+    --border-strong: #3e3850;
+    --text: #f0e8f0;
+    --text-dim: #a49ab4;
+    --text-faint: #706880;
+    --accent-gold: #f0c040;
+    --accent-gold-dim: #b89830;
+    --accent-green: #3ed88a;
+    --accent-red: #f05868;
+    --accent-blue: #4c94f0;
+    --accent-purple: #a46cf0;
+    --accent-rose: #f08098;
+    --accent-coral: #f0a070;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 1.8;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 3rem 3rem;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 20%, rgba(240,128,152,0.10), transparent),
+      radial-gradient(ellipse 60% 50% at 70% 80%, rgba(240,192,64,0.06), transparent),
+      linear-gradient(180deg, transparent 40%, var(--bg-deep));
+    z-index: 1;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3139640/header.jpg?t=1739331531') center/cover no-repeat;
+    filter: brightness(0.3) saturate(0.6);
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-top-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .steam-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .45rem 1.2rem;
+    background: rgba(27,40,56,0.8);
+    border: 1px solid rgba(102,192,244,0.3);
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #66c0f4;
+    text-decoration: none;
+    letter-spacing: .03em;
+    backdrop-filter: blur(10px);
+    transition: all .2s;
+  }
+  .steam-link:hover {
+    background: rgba(27,40,56,0.95);
+    border-color: #66c0f4;
+    color: #fff;
+  }
+  .steam-link svg { width: 16px; height: 16px; fill: currentColor; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem 1rem;
+    background: rgba(240,128,152,0.15);
+    border: 1px solid rgba(240,128,152,0.3);
+    border-radius: 100px;
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--accent-rose);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    max-width: 640px;
+    line-height: 1.8;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap;
+  }
+  .hero-stat { display: flex; flex-direction: column; }
+  .hero-stat .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .hero-stat .num.gold { color: var(--accent-gold); }
+  .hero-stat .num.green { color: var(--accent-green); }
+  .hero-stat .num.rose { color: var(--accent-rose); }
+  .hero-stat .label { font-size: .75rem; color: var(--text-dim); margin-top: .2rem; }
+
+  /* ── Layout ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem; font-weight: 700;
+    color: var(--accent-rose);
+    background: rgba(240,128,152,0.1);
+    border: 1px solid rgba(240,128,152,0.2);
+    padding: .3rem .7rem; border-radius: 4px;
+    letter-spacing: .08em;
+  }
+  .section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .card-label {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--accent-rose);
+    margin-bottom: 1rem; padding-bottom: .6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-label.gold { color: var(--accent-gold-dim); }
+  .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .8rem; }
+
+  /* ── Core Loop ── */
+  .loop-diagram {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: .5rem; padding: 2.5rem 1rem;
+    background: var(--bg-accent); border-radius: 12px;
+    border: 1px solid var(--border); margin-bottom: 2rem; position: relative;
+  }
+  .loop-node {
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    padding: 1.2rem 1.5rem; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 10px;
+    min-width: 120px; text-align: center; transition: all .2s;
+  }
+  .loop-node:hover { border-color: var(--accent-rose); transform: translateY(-2px); }
+  .loop-icon { font-size: 1.8rem; }
+  .loop-label { font-size: .8rem; font-weight: 700; }
+  .loop-sub { font-size: .65rem; color: var(--text-dim); }
+  .loop-arrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-rose); font-size: 1.2rem; }
+
+  /* ── Tags ── */
+  .tag-grid { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.5rem; }
+  .tag-pill {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .4rem 1rem; border-radius: 100px;
+    font-size: .78rem; font-weight: 500;
+    border: 1px solid var(--border); background: var(--bg-card); transition: all .2s;
+  }
+  .tag-pill:hover { border-color: var(--accent-rose); }
+  .tag-pill .vote { font-family: 'JetBrains Mono', monospace; font-size: .65rem; color: var(--text-faint); }
+  .tag-pill.pillar-genre { border-left: 3px solid var(--accent-blue); }
+  .tag-pill.pillar-mood { border-left: 3px solid var(--accent-purple); }
+  .tag-pill.pillar-platform { border-left: 3px solid var(--accent-green); }
+
+  /* ── Triangulation ── */
+  .tri-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+  }
+  .tri-table th {
+    background: var(--bg-accent); padding: 1rem 1.2rem;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--text-dim); text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .tri-table td {
+    padding: .9rem 1.2rem; font-size: .85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top;
+  }
+  .tri-table tr:last-child td { border-bottom: none; }
+  .tri-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .verdict {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .2rem .6rem; border-radius: 4px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .03em;
+  }
+  .verdict.success { background: rgba(64,208,128,0.12); color: var(--accent-green); }
+  .verdict.weakness { background: rgba(240,80,96,0.12); color: var(--accent-red); }
+  .verdict.hidden { background: rgba(160,96,240,0.12); color: var(--accent-purple); }
+  .verdict.community { background: rgba(240,192,64,0.12); color: var(--accent-gold); }
+
+  /* ── Bar Charts ── */
+  .bar-chart { margin: 1.5rem 0; }
+  .bar-row { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; }
+  .bar-label {
+    font-size: .78rem; font-family: 'JetBrains Mono', monospace;
+    color: var(--text); min-width: 110px; text-align: right; white-space: nowrap;
+  }
+  .bar-track {
+    flex: 1; height: 32px; background: rgba(255,255,255,0.04);
+    border-radius: 4px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 4px; display: flex; align-items: center;
+    padding-left: .8rem; font-size: .75rem; font-weight: 700; color: #fff;
+    min-width: fit-content; transition: width .8s cubic-bezier(.22,1,.36,1);
+  }
+  .bar-fill.green { background: var(--accent-green); }
+  .bar-fill.gold { background: var(--accent-gold); color: #1a1d2a; }
+  .bar-fill.rose { background: var(--accent-rose); }
+  .bar-fill.blue { background: var(--accent-blue); }
+  .bar-fill.purple { background: var(--accent-purple); }
+  .bar-value { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--text-dim); min-width: 70px; }
+
+  /* ── Quotes ── */
+  .quote-block {
+    position: relative; padding: 1.5rem 1.8rem 1.5rem 2rem;
+    margin: 1.2rem 0; background: var(--bg-accent); border-radius: 8px;
+    border-left: 4px solid var(--accent-gold);
+  }
+  .quote-block.negative { border-left-color: var(--accent-red); }
+  .quote-text { font-size: .9rem; font-style: italic; color: var(--text); line-height: 1.9; }
+  .quote-meta { margin-top: .8rem; font-size: .75rem; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+  .quote-translation {
+    margin-top: .6rem; font-size: .84rem; color: var(--text-dim);
+    font-style: normal; padding: .6rem .8rem;
+    background: rgba(255,255,255,0.02); border-radius: 4px;
+    border-left: 2px solid rgba(255,255,255,0.08);
+  }
+
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .sys-card { padding: 1rem; background: var(--bg-accent); border-radius: 8px; }
+  .sys-card strong { color: var(--accent-rose); }
+  .sys-card.alt strong { color: var(--accent-purple); }
+  .sys-card p { font-size: .8rem; color: var(--text-dim); margin-top: .3rem; }
+
+  /* ── Biz Stats ── */
+  .biz-stat { text-align: center; }
+  .biz-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; }
+  .biz-num.gold { color: var(--accent-gold); }
+  .biz-num.green { color: var(--accent-green); }
+  .biz-num.rose { color: var(--accent-rose); }
+  .biz-calc { font-size: .75rem; color: var(--text-faint); margin-top: .3rem; }
+
+  /* ── Pillar Table ── */
+  .pillar-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+  .pillar-table th {
+    background: var(--bg-accent); padding: .7rem 1rem;
+    font-size: .7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--text-dim); text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .pillar-table td {
+    padding: .6rem 1rem; font-size: .82rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .pillar-table tr:last-child td { border-bottom: none; }
+  .pillar-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: .5rem; }
+  .pillar-dot.blue { background: var(--accent-blue); }
+  .pillar-dot.rose { background: var(--accent-rose); }
+  .pillar-dot.purple { background: var(--accent-purple); }
+  .pillar-dot.green { background: var(--accent-green); }
+
+  .bias-warning {
+    background: rgba(240,160,112,0.08);
+    border: 1px solid rgba(240,160,112,0.2);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    font-size: .82rem;
+    color: var(--accent-coral);
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .hero { padding: 2rem 1.5rem; }
+  }
+
+  /* ── Conclusion ── */
+  .conclusion { text-align: center; padding: 5rem 2rem; position: relative; }
+  .conclusion::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(240,128,152,0.06), transparent 70%);
+  }
+  .conclusion-text {
+    position: relative; font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 400;
+    line-height: 1.6; max-width: 800px; margin: 0 auto; color: #fff;
+  }
+  .conclusion-text strong { color: var(--accent-rose); }
+  .conclusion-text em { color: var(--text-dim); font-style: italic; }
+  .footer {
+    text-align: center; padding: 3rem 2rem;
+    font-size: .72rem; color: var(--text-faint);
+    border-top: 1px solid var(--border);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .6s ease-out both; }
+  .fade-up:nth-child(2) { animation-delay: .1s; }
+  .fade-up:nth-child(3) { animation-delay: .2s; }
+  .fade-up:nth-child(4) { animation-delay: .3s; }
+
+  /* ── Agent Metrics (collapsible) ── */
+  details.agent-details {
+    margin-top: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  details.agent-details summary {
+    cursor: pointer;
+    padding: .8rem 1.2rem;
+    background: var(--bg-accent);
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: .03em;
+  }
+  details.agent-details .detail-body {
+    padding: 1rem 1.2rem;
+    font-size: .75rem;
+    color: var(--text-faint);
+    line-height: 1.8;
+    background: var(--bg-card);
+  }
+</style>
+</head>
+<body>
+
+<!-- ━━━ HERO ━━━ -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content fade-up">
+    <div class="hero-top-bar">
+      <a class="steam-link" href="https://store.steampowered.com/app/3139640/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 256 259"><path d="M128 0C57.3 0 0 52.6 0 117.5c0 28.5 11.3 54.7 29.8 75.2L0 259l66.3-29.5c18.6 9.8 39.9 15.4 62.7 15.4C198.7 245 256 192.4 256 127.5S198.7 0 128 0z"/></svg>
+        Steam Store
+      </a>
+      <div class="hero-badge">Steam Game Insight Report</div>
+    </div>
+    <h1>Meow Mission</h1>
+    <p class="hero-subtitle">"너, 내 캔따개가 되라냥!" &mdash; 소코반 퍼즐의 논리적 쾌감과 고양이 구출의 감성적 보상을 교차시킨 인디 퍼즐. 마초 미중년 톰캣의 갭 모에와 정교한 힌트 경제가 퍼즐 뉴비조차 끝까지 붙잡아 두는 구조를 만들었다.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num rose">100%</span>
+        <span class="label">긍정률 (9 reviews)</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">0~2만</span>
+        <span class="label">소유자 수</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num green">$1.99</span>
+        <span class="label">가격</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">81</span>
+        <span class="label">스테이지 (75+6)</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<div class="bias-warning" style="margin-top:2rem">
+  <strong>&#9888; 편향 경고</strong> &mdash; 이 게임의 Steam 공식 리뷰는 9건(긍정 9, 부정 0)이며 수집된 전체 리뷰는 56건입니다. 리뷰 수가 극히 적어 통계적 신뢰도가 낮습니다. 한국어 리뷰가 70%(39/56건)로 한국 시장 편향이 있으며, 텀블벅 크라우드펀딩 후원자 리뷰가 포함되어 있어 초기 우호적 편향이 존재합니다.
+</div>
+
+<!-- ━━━ STEP 01: 마케팅 포지셔닝 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 01</span>
+    <h2 class="section-title">마케팅 포지셔닝 &mdash; 개발사의 의도</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card fade-up">
+      <div class="card-label">English Pitch</div>
+      <p>Solve diverse <strong>Sokoban puzzles</strong> to rescue <strong>cats trapped in alien dimensions</strong> in Meow Mission! <strong>Decorate your home</strong> with furniture for the rescued cats, and create lasting memories with their <strong>unique and charming personalities</strong>!</p>
+    </div>
+    <div class="card fade-up">
+      <div class="card-label">한국어 피치</div>
+      <p>야옹미션에서 다양한 <strong>소코반 퍼즐</strong>을 풀어 외계 차원에 갇힌 <strong>고양이들을 구출</strong>하세요! 구출된 고양이를 위해 <strong>가구를 배치</strong>하여 집을 꾸미고, 개성있고 독특한 성격의 <strong>고양이들과의 추억</strong>을 쌓아보세요!</p>
+    </div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label gold">마케팅 키워드 분석</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--accent-rose)">한 줄 피치 핵심 동사</strong>: "Solve", "rescue", "Decorate", "create memories" &mdash; 퍼즐 해결과 감성적 보상이 <strong>1:1 균형</strong>으로 배치. 특이한 점은 "alien dimensions"라는 SF 설정이 등장하지만, 전체 톤은 코지/캐주얼이라 마케팅 내에서 <strong>장르 기대치의 긴장</strong>이 존재한다.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--accent-rose)">전체 피치 섹션 구조 (우선순위)</strong>:<br>
+      1. <strong>다양한 퍼즐</strong> (A Variety of Puzzles) &mdash; 소코반 기반 + "uniquely adapted with creative rules" &rarr; 기믹 변형을 핵심 차별화로 제시<br>
+      2. <strong>하우징</strong> (Housing) &mdash; 톰캣 하우스에서 고양이와 상호작용. "approach gently&mdash;some might have a temper" &rarr; 고양이 성격 시스템 힌트<br>
+      3. <strong>고양이 수집</strong> (Collect Unique Cats) &mdash; 호감도 시스템 + 특별 이벤트<br>
+      4. <strong>스토리</strong> (Stories Beyond Dimensions) &mdash; 컷 만화로 전달되는 개별 고양이 내러티브
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--accent-blue)">short vs detailed 갭</strong>: 한 줄 피치에서 완전히 생략된 것 &mdash; <strong>"너, 내 캔따개가 되라냥!"</strong>이라는 한국어 전용 캐치프레이즈. 영문에는 없는 이 문구가 톰캣의 캐릭터성(마초 집사)을 한 줄로 요약하며, 한국 시장에서 가장 강력한 셀링포인트가 되었다. 또한 한 줄 피치에서 "차원을 넘는 스토리"는 언급되지 않지만 전체 설명에서 별도 섹션으로 등장한다.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      <strong style="color:var(--accent-blue)">한/영 뉘앙스 차이</strong>: 영문은 기능 나열 중심("Solve", "Decorate")이지만 한국어는 <strong>감성 호소</strong> 중심("추억을 쌓아보세요", "캔따개가 되라냥"). 같은 게임이지만 마케팅 톤이 확연히 다르다 &mdash; 한국어 마케팅이 게임의 실제 감성에 더 가깝다.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ STEP 02: 메커니즘 실체 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 02</span>
+    <h2 class="section-title">메커니즘 실체 &mdash; 실제 구현</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label">Core Loop Diagram &mdash; 2중 루프 구조</div>
+
+    <!-- 외부 루프 (메타 진행) -->
+    <div style="border:1px dashed var(--accent-rose);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
+      <div style="font-size:.7rem;font-weight:700;color:var(--accent-rose);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">외부 루프 &mdash; 고양이 수집 &amp; 스토리 해금</div>
+
+      <!-- 내부 루프 (퍼즐) -->
+      <div class="loop-diagram" style="margin-bottom:1rem;border-color:var(--accent-blue)">
+        <div style="position:absolute;top:.5rem;left:1rem;font-size:.65rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.08em">내부 루프 &mdash; 퍼즐 도전</div>
+        <div class="loop-node">
+          <div class="loop-icon">&#129513;</div>
+          <div class="loop-label">퍼즐 진입</div>
+          <div class="loop-sub">턴 제한 소코반</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#129504;</div>
+          <div class="loop-label">시행착오</div>
+          <div class="loop-sub">되돌리기 &middot; 재시도</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node" style="border-color:var(--accent-gold)">
+          <div class="loop-icon">&#9878;</div>
+          <div class="loop-label">힌트 or 자력</div>
+          <div class="loop-sub" style="color:var(--accent-gold)">하트 소모 의사결정</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#127881;</div>
+          <div class="loop-label">클리어</div>
+          <div class="loop-sub">수집품 획득</div>
+        </div>
+      </div>
+
+      <!-- 외부 루프 노드들 -->
+      <div class="loop-diagram">
+        <div class="loop-node">
+          <div class="loop-icon">&#128049;</div>
+          <div class="loop-label">고양이 구출</div>
+          <div class="loop-sub">톰캣 하우스로 이동</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#128730;</div>
+          <div class="loop-label">가구 제작</div>
+          <div class="loop-sub">수집품으로 크래프팅</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#128150;</div>
+          <div class="loop-label">상호작용</div>
+          <div class="loop-sub">놀기 &rarr; 하트 획득</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node" style="border-color:var(--accent-purple)">
+          <div class="loop-icon">&#128214;</div>
+          <div class="loop-label">스토리 해금</div>
+          <div class="loop-sub" style="color:var(--accent-purple)">컷 만화 &middot; 숨겨진 이야기</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-top:1rem">
+      <strong style="color:var(--accent-gold)">핵심 텐션 &mdash; 하트 경제</strong>: 힌트를 사용하면 퍼즐을 넘길 수 있지만, 하트를 모으려면 고양이와 놀아야 한다. 이 설계는 "퍼즐에 막힘 &rarr; 고양이와 교감 &rarr; 힌트 획득 &rarr; 클리어"라는 <strong>좌절을 보상으로 전환하는 루프</strong>를 만든다. 퍼즐 뉴비가 포기하는 대신 고양이 콘텐츠를 소비하게 만드는 기획적 안전망이다.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-top:.5rem">
+      <strong style="color:var(--accent-purple)">유저 증언으로 확인됨</strong> &mdash; "고양이를 위해 가구를 만들어 이동시켜주면 하트를 주는데, 이 하트가 힌트 재원이 된다" (한국어 리뷰 · 1h 플레이 · helpful 7). 메타데이터 기반 루프가 실제 유저 체험과 정확히 일치한다.
+    </p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label gold">제3자 데이터 교차 분석</div>
+    <div class="grid-3" style="margin-bottom:1rem">
+      <div class="sys-card">
+        <strong>IGDB</strong>
+        <p>Themes/Keywords 없음. 요약만 존재 &mdash; "rescue cats trapped in an outer dimension"으로 마케팅과 동일한 메시지. 제3자 분류가 비어 있어 교차 분석 불가.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>Wikidata</strong>
+        <p>indie game, single-player, casual game, strategy video game &mdash; 4개 claims. "strategy" 분류가 흥미롭다: 소코반의 턴 제한 퍼즐을 전략으로 분류한 것.</p>
+      </div>
+      <div class="sys-card">
+        <strong>RAWG</strong>
+        <p>rating: 0, ratings_count: 0, added: 0 &mdash; 글로벌 게이머 데이터베이스에서 사실상 미등록 상태. 리텐션 프록시 분석 불가.</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="sys-card">
+        <strong>HLTB / CheapShark</strong>
+        <p>HowLongToBeat 미등록 (hltb_id: -1). CheapShark deal_rating: 0.0 &mdash; 의미있는 할인 이력 없음. 리뷰에 따르면 약 2~5시간 완주 추정.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>PCGamingWiki / OpenCritic</strong>
+        <p>엔진: unknown. OpenCritic 미등록 (RAPIDAPI_KEY 미설정). 소규모 인디 게임으로 전문가 리뷰 커버리지 없음.</p>
+      </div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-top:1rem">
+      <strong style="color:var(--accent-coral)">2단계 한계</strong>: IGDB themes/keywords, RAWG 리텐션, HLTB, OpenCritic 모두 데이터 없음. 소규모 인디 게임의 구조적 한계로, 2단계 분석은 <strong>Steam 마케팅 텍스트 + 리뷰 증언</strong>에 주로 의존한다. 제3자 교차 검증이 약한 만큼 3단계(유저 경험)의 비중이 높아진다.
+    </p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label gold">마케팅이 말하지 않은 시스템들</div>
+    <div class="grid-2">
+      <div class="sys-card">
+        <strong>난이도 곡선 설계</strong>
+        <p>마케팅은 "다양한 퍼즐"만 언급하지만, 실제로는 초반 쉬움 &rarr; 중반 기믹(얼음, 파괴 가능 블록) &rarr; 후반 고난도라는 정교한 난이도 곡선이 존재. 리뷰의 ~60%가 이 곡선을 언급.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>톰캣 캐릭터 갭 모에</strong>
+        <p>"마초 미중년이 고양이를 사랑하는" 설정은 마케팅에서 한국어 캐치프레이즈로만 암시. 실제로는 게임의 감성적 핵심이며 리뷰에서 반복적으로 언급되는 요소.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━ STEP 03: 유저 경험 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 03</span>
+    <h2 class="section-title">유저 경험 &mdash; 실제 반응</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">태그 분석 &mdash; 유저가 인식한 정체성</div>
+    <div class="tag-grid">
+      <div class="tag-pill pillar-genre">Puzzle <span class="vote">139</span></div>
+      <div class="tag-pill pillar-genre">Sokoban <span class="vote">133</span></div>
+      <div class="tag-pill pillar-genre">Difficult <span class="vote">131</span></div>
+      <div class="tag-pill pillar-mood">Family Friendly <span class="vote">127</span></div>
+      <div class="tag-pill pillar-mood">Cats <span class="vote">124</span></div>
+      <div class="tag-pill pillar-mood">Cute <span class="vote">117</span></div>
+      <div class="tag-pill pillar-mood">Funny <span class="vote">110</span></div>
+      <div class="tag-pill pillar-mood">Cartoony <span class="vote">105</span></div>
+      <div class="tag-pill pillar-platform">Singleplayer <span class="vote">102</span></div>
+      <div class="tag-pill pillar-genre">2D <span class="vote">99</span></div>
+      <div class="tag-pill pillar-genre">Strategy <span class="vote">94</span></div>
+      <div class="tag-pill pillar-mood">Casual <span class="vote">93</span></div>
+      <div class="tag-pill pillar-genre">Top-Down <span class="vote">71</span></div>
+      <div class="tag-pill pillar-genre">Logic <span class="vote">68</span></div>
+      <div class="tag-pill pillar-mood">Relaxing <span class="vote">65</span></div>
+      <div class="tag-pill pillar-mood">Atmospheric <span class="vote">64</span></div>
+      <div class="tag-pill pillar-mood">Surreal <span class="vote">62</span></div>
+      <div class="tag-pill pillar-mood">Story Rich <span class="vote">60</span></div>
+      <div class="tag-pill pillar-mood">Emotional <span class="vote">57</span></div>
+      <div class="tag-pill pillar-genre">Grid-Based Movement <span class="vote">56</span></div>
+    </div>
+
+    <table class="pillar-table">
+      <thead>
+        <tr>
+          <th>기획 축</th>
+          <th>포함 태그</th>
+          <th>합산 투표</th>
+          <th>비중</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pillar-dot blue"></span>퍼즐/메커니즘</td>
+          <td>Puzzle, Sokoban, Difficult, Strategy, Logic, Grid-Based Movement</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-weight:700">621</td>
+          <td><span class="verdict success">지배적</span></td>
+        </tr>
+        <tr>
+          <td><span class="pillar-dot rose"></span>분위기/감성</td>
+          <td>Cats, Cute, Funny, Cartoony, Casual, Relaxing, Atmospheric, Emotional</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-weight:700">730</td>
+          <td><span class="verdict success">지배적</span></td>
+        </tr>
+        <tr>
+          <td><span class="pillar-dot purple"></span>내러티브</td>
+          <td>Story Rich, Surreal</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-weight:700">122</td>
+          <td><span class="verdict hidden">보조</span></td>
+        </tr>
+        <tr>
+          <td><span class="pillar-dot green"></span>접근성/시점</td>
+          <td>Family Friendly, Singleplayer, 2D, Top-Down</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-weight:700">399</td>
+          <td><span class="verdict community">강력</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-top:1rem">
+      <strong style="color:var(--accent-rose)">태그 분포 해석</strong>: 퍼즐/메커니즘(621)과 분위기/감성(730)이 <strong>거의 동등한 비중</strong>으로 균형. 이는 게임이 "퍼즐이 주(主)이고 고양이가 장식"이 아니라, <strong>두 축이 동시에 작동하는 이중 정체성</strong>을 가졌음을 보여준다. "Difficult"(131)과 "Family Friendly"(127)가 나란히 있는 것이 특히 주목할 만하다 &mdash; 어려운데 접근성이 좋다는 모순이, 힌트 시스템의 설계 성공을 태그 수치로 증명한다.
+    </p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">언어별 리뷰 분포</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">koreana</span>
+        <div class="bar-track"><div class="bar-fill rose" style="width:69.6%">39건 (100% 긍정)</div></div>
+        <span class="bar-value">69.6%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">english</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:16.1%">9건</div></div>
+        <span class="bar-value">16.1%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">schinese</span>
+        <div class="bar-track"><div class="bar-fill purple" style="width:8.9%">5건</div></div>
+        <span class="bar-value">8.9%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">tchinese</span>
+        <div class="bar-track"><div class="bar-fill gold" style="width:1.8%">1</div></div>
+        <span class="bar-value">1.8%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">japanese</span>
+        <div class="bar-track"><div class="bar-fill gold" style="width:1.8%">1</div></div>
+        <span class="bar-value">1.8%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">french</span>
+        <div class="bar-track"><div class="bar-fill gold" style="width:1.8%">1</div></div>
+        <span class="bar-value">1.8%</span>
+      </div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8">한국어 70%, 영어 16%, 중국어 9%. 국내 인디 개발팀의 텀블벅 크라우드펀딩 기반 게임으로, <strong>한국 시장이 절대 다수</strong>. 중국어/일본어 리뷰의 존재는 아시아 시장에서의 잠재적 확장 가능성을 보여준다.</p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">플레이타임별 리뷰 분포</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">&lt; 1h</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:32.1%">18건 &middot; 100% 긍정</div></div>
+        <span class="bar-value">32.1%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">1-10h</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:67.9%">38건 &middot; 100% 긍정</div></div>
+        <span class="bar-value">67.9%</span>
+      </div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8">50h 이상 플레이어가 없다. 전형적인 <strong>짧고 굵은 완주형 게임</strong>. 리뷰에 따르면 2~5시간이 일반적 클리어 타임이며, 부정 리뷰 0건이 모든 구간에서 유지된다.</p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">기획 성공 포인트</div>
+
+    <h3 class="card-title" style="color:var(--accent-green)">1. 힌트 경제 &mdash; 좌절을 보상으로 전환하는 시스템</h3>
+    <div class="quote-block">
+      <div class="quote-text">고양이를 사랑하는 퍼즐게임이다. 퍼즐의 난이도는 점점 올라가고, 스트레스가 올라가면 자칫 게임을 포기할 수도 있다. 하지만, 게임을 포기 못하게 하는 여러가지 장치가 있다. 1) 사랑스런 고양이를 구해내야 한다는 사명감 2) 고양이를 위해 가구를 만들어 이동시켜주면 하트를 주는데, 이 하트가 힌트 재원이 된다.</div>
+      <div class="quote-meta">koreana &middot; 1h play &middot; helpful 7</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-bottom:2rem">퍼즐에 막히면 고양이와 놀아서 하트(힌트 자원)를 모아야 한다. 이 설계는 퍼즐 실패의 좌절감을 고양이 콘텐츠의 힐링으로 전환한다. ~15건의 리뷰에서 이 메커니즘을 독립적으로 언급 &mdash; 게임의 기획적 핵심이다.</p>
+
+    <h3 class="card-title" style="color:var(--accent-green)">2. 난이도 곡선 &mdash; "쉬운 거 아냐?" &rarr; "힌트 쓰는 중"</h3>
+    <div class="quote-block">
+      <div class="quote-text">시작한지 5분 후: 게임 너무 쉬운 거 아냐? 시작한지 50분 후: (힌트 쓰는 중)</div>
+      <div class="quote-meta">koreana &middot; 2h play &middot; helpful 17 (최다 추천)</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-bottom:2rem">가장 많은 추천을 받은 리뷰가 난이도 곡선을 두 줄로 완벽하게 요약했다. 초반의 자신감이 중반부터 도전으로 전환되는 경험은 20건 이상의 리뷰에서 반복 확인된다. "얼음 스테이지"가 난이도 전환점으로 ~10건에서 독립적으로 언급.</p>
+
+    <h3 class="card-title" style="color:var(--accent-green)">3. 톰캣 캐릭터 &mdash; 마초 미중년의 갭 모에</h3>
+    <div class="quote-block">
+      <div class="quote-text">1.귀여운 고양이 2.수상하게 섹시한 하얀 중년 3.그 중년에게 전쟁경험이있음 4.자기의 고양이에게 몹시 다정함</div>
+      <div class="quote-meta">koreana &middot; 4h play &middot; helpful 1</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">Such a cute and fun game! Sokoban-style puzzles but with an actual story. You play Tomcat, an awesome guy who owns quite a few cats.</div>
+      <div class="quote-meta">english &middot; 1h play &middot; helpful 11</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-bottom:2rem">"마초 미중년이 고양이를 사랑하는" 설정은 한국어 리뷰에서 특히 강한 반응을 이끌어냈다. "상남자", "마초", "맥가이버" 등의 표현이 반복되며, 캐릭터의 <strong>갭 모에</strong>(외견과 행동의 반전 매력)가 게임의 감성적 앵커 역할을 한다.</p>
+
+    <h3 class="card-title" style="color:var(--accent-green)">4. UX 편의성 &mdash; 되돌리기와 선입력</h3>
+    <div class="quote-block">
+      <div class="quote-text">조작감이 좀 인상깊었는데 얼음에서 미끄러질때 선입력을 해놓으면 바로바로 반응하더라구요? 이런거 보고 개발자분들이 꽤나 디테일한부분을 신경쓰셨구나 싶었습니다.</div>
+      <div class="quote-meta">koreana &middot; 2h play &middot; helpful 3</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-bottom:2rem">턴 제한 퍼즐에서 "되돌리기"의 존재는 생존 필수 요소다. 여기에 선입력 반응까지 구현한 것은 소규모 팀의 기술적 세심함을 보여준다. ~8건의 리뷰에서 조작 편의성을 독립적으로 언급.</p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label" style="color:var(--accent-red)">기획 약점</div>
+
+    <h3 class="card-title" style="color:var(--accent-red)">1. 하우징 자유도 부족</h3>
+    <div class="quote-block negative">
+      <div class="quote-text">다만, 가구 배치의 자유도가 조금 부족해서 톰캣 하우스를 꾸미는 재미가 살짝 제한적이었던 점은 아쉽네요.</div>
+      <div class="quote-meta">koreana &middot; 3h play &middot; helpful 0</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-bottom:2rem">마케팅에서 "꾸미기"를 강조했지만, 실제 배치 자유도는 제한적. 가구는 정해진 위치에만 놓을 수 있어 창의적 꾸미기 욕구를 충족하지 못한다. 다만 부정 리뷰로 이어질 만큼의 불만은 아님.</p>
+
+    <h3 class="card-title" style="color:var(--accent-red)">2. 퍼즐/컷씬 그래픽 이질감</h3>
+    <div class="quote-block negative">
+      <div class="quote-text">개인적으로 아쉬운 부분은 디자인적인 부분. 컷씬이나 일러스트들은 좋은데, 퍼즐그래픽이 게임 그래픽대비 조금 이질감이 드는 부분이 있어요.</div>
+      <div class="quote-meta">koreana &middot; 0h play &middot; helpful 1</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-bottom:2rem">컷씬 일러스트의 품질이 높은 반면, 인게임 퍼즐 화면과의 시각적 격차가 존재. 소규모 팀의 리소스 제약이 반영된 부분.</p>
+
+    <h3 class="card-title" style="color:var(--accent-red)">3. 고양이 능력의 미활용</h3>
+    <div class="quote-block negative">
+      <div class="quote-text">고양이마다 능력이 있는데, 퍼즐에 냥이능력을 사용하게끔 가미할수있었다면 좀 더 제목에 부합하는 게임이 되지 않았을까하는 아쉬움이 남는다.</div>
+      <div class="quote-meta">koreana &middot; 3h play &middot; helpful 0</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8">구출한 고양이가 퍼즐에 영향을 주지 않는다는 아쉬움. "고양이 구출"이 서사적 보상에 그치고 메커니즘적 보상으로 연결되지 않는 구조적 한계.</p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label" style="color:var(--accent-purple)">흥미로운 발견</div>
+
+    <h3 class="card-title" style="color:var(--accent-gold)">포켓몬스터 얼음동굴 향수</h3>
+    <div class="quote-block">
+      <div class="quote-text">어린 시절 포켓몬스터 금버전 얼음동굴을 넘기지 못해 도움을 받은 것처럼 이 게임에도 퍼즐 뉴비들을 위한 힌트가 있어서 자존심은 조금 상했지만 도움을 받았습니다.</div>
+      <div class="quote-meta">koreana &middot; 2h play &middot; helpful 3</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">마치 어렸을 때 플레이했던 포켓몬스터 골드버전 얼음 동굴 퍼즐의 확장판으로 느껴졌습니다.</div>
+      <div class="quote-meta">koreana &middot; 1h play &middot; helpful 0</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-bottom:2rem"><strong>3건 이상</strong>의 리뷰에서 "포켓몬스터 얼음동굴"을 독립적으로 연상. 개발사가 의도했는지 불명이나, 한국 게이머의 공유된 유년기 기억과 얼음 스테이지 기믹이 정확히 연결되어 <strong>노스탤지어 공명</strong>을 일으켰다. "헬테이커" 비교도 2건에서 등장.</p>
+
+    <h3 class="card-title" style="color:var(--accent-gold)">모바일 출시 욕구</h3>
+    <div class="quote-block">
+      <div class="quote-text">개인적으로는 컴퓨터로 퍼즐게임은 잘 안해서 모바일로 나오면 출퇴근길에 잘 플레이할 것 같아요. 모바일 출시계획이 있다면 좋겠네요!</div>
+      <div class="quote-meta">koreana &middot; 0h play &middot; helpful 1</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8">퍼즐 + 캐주얼 + 짧은 세션의 조합은 모바일 적합성이 높다. 유저가 자발적으로 모바일 출시를 요청하는 것은 플랫폼 확장의 시장 신호.</p>
+  </div>
+</section>
+
+<!-- ━━━ STEP 04: 삼각 검증 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 04</span>
+    <h2 class="section-title">삼각 검증 &mdash; Triangulation</h2>
+    <div class="section-line"></div>
+  </div>
+  <table class="tri-table fade-up">
+    <thead>
+      <tr>
+        <th>기획 요소</th>
+        <th>마케팅 (1단계)</th>
+        <th>메커니즘 (2단계)</th>
+        <th>유저 반응 (3단계)</th>
+        <th>판정</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>소코반 퍼즐</strong></td>
+        <td>핵심 셀링포인트로 강조</td>
+        <td>75+6 스테이지, 턴 제한, 기믹 변형</td>
+        <td>압도적 긍정. 태그 1위(139)</td>
+        <td><span class="verdict success">기획 성공</span></td>
+      </tr>
+      <tr>
+        <td><strong>고양이 수집</strong></td>
+        <td>3번째 섹션에서 소개</td>
+        <td>개별 성격, 호감도, 이벤트</td>
+        <td>감성적 핵심. "귀엽다" 반복</td>
+        <td><span class="verdict success">기획 성공</span></td>
+      </tr>
+      <tr>
+        <td><strong>하우징/꾸미기</strong></td>
+        <td>2번째 섹션에서 강조</td>
+        <td>구현됨 (가구 제작/배치)</td>
+        <td>자유도 부족 아쉬움 2건</td>
+        <td><span class="verdict weakness">실행 미흡</span></td>
+      </tr>
+      <tr>
+        <td><strong>스토리/컷만화</strong></td>
+        <td>4번째 섹션에서 소개</td>
+        <td>고양이별 숨겨진 스토리</td>
+        <td>긍정 반응. "감동" 언급</td>
+        <td><span class="verdict success">기획 성공</span></td>
+      </tr>
+      <tr>
+        <td><strong>힌트 경제</strong></td>
+        <td>마케팅에서 언급 없음</td>
+        <td>하트 &rarr; 힌트 변환 시스템</td>
+        <td>핵심 체험. ~15건 독립 언급</td>
+        <td><span class="verdict hidden">숨은 강점</span></td>
+      </tr>
+      <tr>
+        <td><strong>톰캣 갭 모에</strong></td>
+        <td>한국어 캐치프레이즈로만 암시</td>
+        <td>마초 외견 + 고양이 애호 설정</td>
+        <td>강한 감정 반응 ~10건</td>
+        <td><span class="verdict hidden">숨은 강점</span></td>
+      </tr>
+      <tr>
+        <td><strong>난이도 곡선</strong></td>
+        <td>"creative rules"로만 언급</td>
+        <td>얼음/파괴 블록 등 기믹 계단식 도입</td>
+        <td>리뷰의 ~60%가 언급. 핵심 체험</td>
+        <td><span class="verdict hidden">숨은 강점</span></td>
+      </tr>
+      <tr>
+        <td><strong>포켓몬 얼음동굴 향수</strong></td>
+        <td>마케팅 없음</td>
+        <td>의도 불명</td>
+        <td>3건 이상 자발적 연상</td>
+        <td><span class="verdict community">커뮤니티 창발</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="color:var(--text-dim);font-size:.85rem;line-height:1.8;margin-top:1.5rem">
+    <strong>검증 요약</strong>: 8개 기획 요소 중 <strong style="color:var(--accent-green)">4개 성공</strong>, <strong style="color:var(--accent-purple)">3개 숨은 강점</strong>, <strong style="color:var(--accent-red)">1개 실행 미흡</strong>, <strong style="color:var(--accent-gold)">1개 커뮤니티 창발</strong>. 주목할 점은 숨은 강점이 3개로 많다는 것이다 &mdash; 힌트 경제, 톰캣 캐릭터, 난이도 곡선은 모두 마케팅에서 충분히 어필하지 못한 요소들이다. 이 게임의 마케팅은 "퍼즐 + 고양이"라는 표면적 매력을 전달하지만, 실제로 유저를 붙잡는 것은 <strong>좌절 방지 시스템의 기획적 정교함</strong>이다.
+  </p>
+</section>
+
+<!-- ━━━ STEP 05: 비즈니스 구조 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 05</span>
+    <h2 class="section-title">비즈니스 구조</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-3 fade-up" style="margin-bottom:2rem">
+    <div class="card biz-stat">
+      <div class="biz-num green">$1.99</div>
+      <div class="biz-calc">가격 (199 cents)</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="biz-num rose">0~2만</div>
+      <div class="biz-calc">추정 소유자</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="biz-num gold">100%</div>
+      <div class="biz-calc">긍정률 (9 공식 리뷰)</div>
+    </div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label gold">비즈니스 분석</div>
+    <div class="grid-2" style="margin-bottom:1rem">
+      <div class="sys-card">
+        <strong>가격 전략</strong>
+        <p>$1.99는 "커피 한 잔보다 싸다"는 심리적 가격대. 75+ 스테이지를 제공하므로 가성비 인식이 높다. 리뷰에서 "이 가격에 이 볼륨은 파격"이라는 반응 존재. CheapShark deal_rating 0.0으로 의미있는 할인 이력 없음 &mdash; 이미 충분히 낮은 가격이므로 추가 할인의 여지가 적다.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>수익 모델</strong>
+        <p>$1.99 &times; 10,000(추정 중앙) = <strong>~$20,000 총매출</strong> (Steam 수수료 전). 3~4인 팀의 텀블벅 크라우드펀딩 프로젝트로, 대규모 수익보다 포트폴리오/IP 구축이 주 목적으로 추정. DLC나 시즌 확장의 여지는 있으나 현재 계획 미확인.</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="sys-card">
+        <strong>Twitch 스트리밍</strong>
+        <p>stream_count: 0, viewer_count: 0 (2026-03-20 기준). 퍼즐 게임 특성상 스트리밍 적합도가 낮다. 다만 "귀여운 고양이 + 마초 아저씨"라는 시각적 매력은 숏폼 콘텐츠 소재로 잠재력이 있다.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>플랫폼 확장 가능성</strong>
+        <p>유저가 자발적으로 모바일 출시를 요청. 터치 UI 친화적 조작(4방향 스와이프), 짧은 세션(스테이지당 1~3분), 저사양 2D 그래픽 &mdash; 모바일 이식의 기술적 장벽이 낮다. 한국 모바일 퍼즐 시장에서의 경쟁력은 검증 필요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<!-- ━━━ 결론 ━━━ -->
+<div class="conclusion">
+  <p class="conclusion-text">
+    Meow Mission의 기획적 성공은 <strong>"좌절을 힐링으로 전환하는"</strong> 경제 설계에 있다.<br><br>
+    소코반이라는 <em>익숙한 형식</em>에 턴 제한과 기믹 변형으로 난이도를 올리되,<br>
+    막히면 <strong>고양이와 놀아서 힌트를 모으는</strong> 루프가 이탈을 방지한다.<br><br>
+    퍼즐 축(621표)과 감성 축(730표)이 <em>거의 동등한 균형</em>을 이루며,<br>
+    "Difficult"(131)과 "Family Friendly"(127)의 <strong>모순적 공존</strong>이<br>
+    이 힌트 경제의 설계적 성공을 태그 수치로 증명한다.<br><br>
+    마케팅이 놓친 <strong>톰캣의 갭 모에</strong>와 <strong>포켓몬 얼음동굴 향수</strong>는<br>
+    커뮤니티가 발견한 숨겨진 가치다.
+  </p>
+</div>
+
+<!-- ━━━ Footer ━━━ -->
+<footer class="footer">
+  <p>Generated 2026-03-20 &middot; Data: SteamSpy + Steam Reviews API + IGDB + RAWG + CheapShark + PCGamingWiki + Twitch + Wikidata &middot; 56 reviews analyzed</p>
+  <p style="margin-top:.5rem">Fallback 모드: 유효 리뷰 48건 (500건 이하) &mdash; 서브에이전트 없이 메인 Opus 직접 분석</p>
+  <details class="agent-details">
+    <summary>분석 상세 메트릭</summary>
+    <div class="detail-body">
+      <strong>Main Agent (Opus)</strong><br>
+      모델: claude-opus-4-6 &middot; 리뷰 48건 (valid) / 56건 (total) 직접 분석<br>
+      분석 범위: 전체 리뷰 원문 읽기 + 5단계 프레임워크 적용<br>
+      미사용 데이터 소스: HLTB (미등록), OpenCritic (미등록), IGDB themes/keywords (없음), RAWG retention (없음)<br><br>
+      <strong>데이터 품질 노트</strong><br>
+      &bull; Steam 공식 리뷰 9건 vs 수집 56건 &mdash; 언어/필터 차이로 인한 정상적 괴리<br>
+      &bull; 부정 리뷰 0건 &mdash; 100% 긍정이므로 "기획 약점"은 긍정 리뷰 내 아쉬움 언급에서 추출<br>
+      &bull; 텀블벅 후원자 리뷰 존재 &mdash; 초기 우호적 편향 감안 필요
+    </div>
+  </details>
+</footer>
+
+</body>
+</html>
