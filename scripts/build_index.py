@@ -133,6 +133,26 @@ def _str_or_none(value: str) -> Optional[str]:
     return stripped if stripped else None
 
 
+def _format_owners(raw: str) -> str:
+    """'5,000,000 .. 10,000,000' → '5M~10M', '200,000 .. 500,000' → '200K~500K'."""
+    parts = [p.strip().replace(",", "") for p in raw.split("..")]
+    if len(parts) != 2:
+        return raw
+    try:
+        lo, hi = int(parts[0]), int(parts[1])
+    except ValueError:
+        return raw
+    def _fmt(n: int) -> str:
+        if n >= 1_000_000:
+            v = n / 1_000_000
+            return f"{v:g}M"
+        if n >= 1_000:
+            v = n / 1_000
+            return f"{v:g}K"
+        return str(n)
+    return f"{_fmt(lo)}~{_fmt(hi)}"
+
+
 def parse_report_html(html_content: str, slug: str) -> dict:
     """Parse a report HTML file and return a metadata dict.
 
@@ -316,6 +336,13 @@ def build_reports_json(
                 ).fetchone()
                 if row and row[0]:
                     entry["review_count"] = row[0]
+                # Always use DB owners with consistent format
+                row = conn.execute(
+                    "SELECT owners FROM games WHERE appid = ?",
+                    (appid,),
+                ).fetchone()
+                if row and row[0]:
+                    entry["owners"] = _format_owners(row[0])
             conn.close()
         except Exception:
             pass  # DB errors are non-fatal
