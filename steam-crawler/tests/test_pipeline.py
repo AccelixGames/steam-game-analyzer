@@ -126,6 +126,55 @@ def test_step1_collect(db_conn):
     assert len(changelog) == 2
 
 
+def test_step1_appids_mode(db_conn):
+    """step1이 query_type='appids'로 개별 게임을 수집한다."""
+    from unittest.mock import MagicMock
+    from steam_crawler.pipeline.step1_collect import run_step1
+    from steam_crawler.models.game import GameSummary
+
+    version = _create_version(db_conn)
+    mock_client = MagicMock()
+    mock_client.fetch_app_details.return_value = GameSummary(
+        appid=526870, name="Satisfactory", positive=149000, negative=3900,
+        owners="10M", avg_playtime=3000, price=2799,
+        score_rank=None, tags=None, genres=None,
+        source_tag=None,
+    )
+
+    count = run_step1(
+        db_conn, query_type="appids", query_value="526870",
+        limit=50, version=version, steamspy_client=mock_client,
+    )
+
+    assert count == 1
+    mock_client.fetch_app_details.assert_called_once_with(526870)
+    row = db_conn.execute("SELECT name, source_tag FROM games WHERE appid=526870").fetchone()
+    assert row["name"] == "Satisfactory"
+    assert row["source_tag"] == "appids:526870"
+
+
+def test_step1_appids_multiple(db_conn):
+    """step1이 복수 appids를 처리한다."""
+    from unittest.mock import MagicMock
+    from steam_crawler.pipeline.step1_collect import run_step1
+    from steam_crawler.models.game import GameSummary
+
+    version = _create_version(db_conn)
+    mock_client = MagicMock()
+    mock_client.fetch_app_details.side_effect = [
+        GameSummary(appid=526870, name="Satisfactory"),
+        GameSummary(appid=427520, name="Factorio"),
+    ]
+
+    count = run_step1(
+        db_conn, query_type="appids", query_value="526870,427520",
+        limit=50, version=version, steamspy_client=mock_client,
+    )
+
+    assert count == 2
+    assert mock_client.fetch_app_details.call_count == 2
+
+
 def test_step1b_enrich(db_conn):
     from steam_crawler.api.steamspy import SteamSpyClient
     from steam_crawler.pipeline.step1_collect import run_step1
