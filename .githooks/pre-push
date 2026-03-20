@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Branch naming convention enforcement
+# Allowed: feat/*, fix/*, chore/*
+# Pattern: lowercase + hyphens only
+
+current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+# Allow pushing from detached HEAD (CI, etc.)
+if [ -z "$current_branch" ]; then
+  exit 0
+fi
+
+# Block direct push to master
+while read local_ref local_sha remote_ref remote_sha; do
+  if [ "$remote_ref" = "refs/heads/master" ]; then
+    echo "ERROR: master에 직접 push할 수 없습니다. PR을 사용하세요."
+    exit 1
+  fi
+done
+
+# Validate branch name pattern
+if ! echo "$current_branch" | grep -qE '^(feat|fix|chore)/[a-z0-9-]+$'; then
+  echo "ERROR: 브랜치명이 규칙에 맞지 않습니다."
+  echo "  현재: $current_branch"
+  echo "  허용 패턴: feat/*, fix/*, chore/* (소문자+하이픈)"
+  echo "  예시: feat/add-review-filter, fix/rate-limiter, chore/update-ci"
+  exit 1
+fi
+
+exit 0
