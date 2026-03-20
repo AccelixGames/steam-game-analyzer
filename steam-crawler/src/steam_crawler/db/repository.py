@@ -231,7 +231,7 @@ def get_games_by_version(
     else:
         if source_tag is not None:
             cursor = conn.execute(
-                f"SELECT * FROM games WHERE source_tag = ?{appid_clause} ORDER BY positive DESC",
+                f"SELECT g.* FROM games g WHERE g.source_tag = ?{appid_clause} ORDER BY g.positive DESC",
                 (source_tag, *appid_params),
             )
         else:

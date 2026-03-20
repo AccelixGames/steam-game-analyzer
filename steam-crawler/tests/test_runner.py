@@ -241,6 +241,18 @@ def test_runner_calls_step1d_step1e(db_conn, monkeypatch):
     assert row["rawg_id"] == 3328
 
 
+def test_build_source_tag_returns_none_for_appids():
+    """build_source_tag('appids', ...) must return None so existing games aren't filtered out."""
+    from steam_crawler.pipeline.runner import build_source_tag
+
+    assert build_source_tag("appids", "526870") is None
+    assert build_source_tag("appids", "100,200,300") is None
+    # Other query types still work
+    assert build_source_tag("tag", "Roguelike") == "tag:Roguelike"
+    assert build_source_tag("genre", "RPG") == "genre:RPG"
+    assert build_source_tag("top100", None) == "top100"
+
+
 def test_appids_runs_full_pipeline(tmp_path):
     """query_type='appids'로 전체 파이프라인(step1~step1l, step2, step3)이 실행된다."""
     from unittest.mock import patch
@@ -277,5 +289,18 @@ def test_appids_runs_full_pipeline(tmp_path):
                           mock_s1h, mock_s1i, mock_s1j, mock_s1k, mock_s1l,
                           mock_s2, mock_s3]:
             mock_step.assert_called_once()
+
+        # source_tag=None이고 appids가 모든 step에 전달되는지 검증
+        for name, mock_step in [
+            ("step1b", mock_s1b), ("step1c", mock_s1c),
+            ("step1d", mock_s1d), ("step1e", mock_s1e),
+            ("step1f", mock_s1f), ("step1h", mock_s1h),
+            ("step1i", mock_s1i), ("step1j", mock_s1j),
+            ("step1k", mock_s1k), ("step1l", mock_s1l),
+            ("step2", mock_s2), ("step3", mock_s3),
+        ]:
+            kwargs = mock_step.call_args[1]
+            assert kwargs.get("source_tag") is None, f"{name} should get source_tag=None"
+            assert kwargs.get("appids") == [526870], f"{name} should get appids=[526870]"
 
     conn.close()
