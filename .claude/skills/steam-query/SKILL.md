@@ -194,3 +194,33 @@ Tags: Roguelike (1,728) · Card Game (1,588) · Rogue-like (1,398) · ...
 - 리뷰 텍스트는 기본 150자까지만 보여주고, 사용자가 원하면 전문 출력
 - 플레이타임은 분 단위로 저장되어 있으므로 시간으로 변환하여 표시 (÷60)
 - 가격은 센트 단위이므로 달러로 변환 (÷100)
+
+## Error Logging (필수)
+
+Bash로 Python 코드 실행 시 에러가 발생하면, 수정 시도 전에 반드시 기록한다:
+
+```python
+import sys
+sys.path.insert(0, "<project-root>/steam-crawler/src")
+from steam_crawler.skill_error_logger import log_skill_error
+
+log_skill_error(
+    db_path="<project-root>/data/steam.db",
+    skill_name="steam-query",
+    error_type="<type>",
+    error_message="<full error message>",
+    traceback="<traceback if available>",
+    command="<code that caused error>",
+    context={"appid": 286160, "step": "2B-igdb-keywords"},
+    fix_applied="<fix description, if applied>"
+)
+```
+
+error_type 분류:
+- `encoding` — 인코딩 에러 (cp949, utf-8 등)
+- `sql` — SQL 에러 (missing column, syntax 등)
+- `import` — 모듈 import 실패
+- `timeout` — 실행 시간 초과
+- `parse` — 데이터 파싱 실패
+- `api` — 외부 API 실패 (IGDB, RAWG, Wikidata 등)
+- `unknown` — 기타
