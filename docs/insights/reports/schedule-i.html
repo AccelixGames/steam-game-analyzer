@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Schedule I — 기획 인사이트 보고서</title>
+<meta name="report:appid" content="3164500">
+<meta name="report:game_name" content="Schedule I">
+<meta name="report:name_ko" content="">
+<meta name="report:positive_rate" content="98.0%">
+<meta name="report:review_score" content="Overwhelmingly Positive">
+<meta name="report:owners" content="10,000,000 .. 20,000,000">
+<meta name="report:price" content="$13.99">
+<meta name="report:avg_playtime" content="27.2h">
+<meta name="report:review_count" content="96155">
+<meta name="report:tags" content="Simulation,Co-op,Crime,Multiplayer,Open World">
+<meta name="report:genres" content="Action,Early Access,Indie,Simulation,Strategy">
+<meta name="report:date" content="2026-03-20">
+<meta name="report:modified" content="2026-03-20">
+<meta name="report:header_image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3164500/header.jpg?t=1769828261">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -140,26 +154,16 @@
 
   /* ── Layout ── */
   .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-  section {
-    padding: 4rem 0;
-    border-bottom: 1px solid var(--border);
-  }
+  section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
   section:last-of-type { border-bottom: none; }
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
   .section-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: .7rem;
-    font-weight: 700;
+    font-size: .7rem; font-weight: 700;
     color: var(--accent-gold);
     background: rgba(240,192,64,0.1);
     border: 1px solid rgba(240,192,64,0.2);
-    padding: .3rem .7rem;
-    border-radius: 4px;
+    padding: .3rem .7rem; border-radius: 4px;
     letter-spacing: .08em;
   }
   .section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; }
@@ -175,115 +179,67 @@
     box-shadow: 0 2px 12px rgba(0,0,0,0.25);
   }
   .card-label {
-    font-size: .72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    color: var(--accent-gold-dim);
-    margin-bottom: 1rem;
-    padding-bottom: .6rem;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--accent-gold-dim);
+    margin-bottom: 1rem; padding-bottom: .6rem;
     border-bottom: 1px solid var(--border);
   }
   .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .8rem; }
 
   /* ── Core Loop ── */
   .loop-diagram {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: .5rem;
-    padding: 2.5rem 1rem;
-    background: var(--bg-accent);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    margin-bottom: 2rem;
-    position: relative;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: .5rem; padding: 2.5rem 1rem;
+    background: var(--bg-accent); border-radius: 12px;
+    border: 1px solid var(--border); margin-bottom: 2rem; position: relative;
   }
   .loop-node {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .4rem;
-    padding: 1.2rem 1.5rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    min-width: 120px;
-    text-align: center;
-    transition: all .2s;
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    padding: 1.2rem 1.5rem; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 10px;
+    min-width: 120px; text-align: center; transition: all .2s;
   }
   .loop-node:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
   .loop-icon { font-size: 1.8rem; }
   .loop-label { font-size: .8rem; font-weight: 700; }
   .loop-sub { font-size: .65rem; color: var(--text-dim); }
-  .loop-arrow {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--accent-gold-dim);
-    font-size: 1.2rem;
-  }
+  .loop-arrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold-dim); font-size: 1.2rem; }
 
   /* ── Tags ── */
   .tag-grid { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.5rem; }
   .tag-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: .4rem;
-    padding: .4rem 1rem;
-    border-radius: 100px;
-    font-size: .78rem;
-    font-weight: 500;
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    transition: all .2s;
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .4rem 1rem; border-radius: 100px;
+    font-size: .78rem; font-weight: 500;
+    border: 1px solid var(--border); background: var(--bg-card); transition: all .2s;
   }
   .tag-pill:hover { border-color: var(--accent-gold); }
-  .tag-pill .vote {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .65rem;
-    color: var(--text-faint);
-  }
+  .tag-pill .vote { font-family: 'JetBrains Mono', monospace; font-size: .65rem; color: var(--text-faint); }
   .tag-pill.pillar-genre { border-left: 3px solid var(--accent-blue); }
   .tag-pill.pillar-mood { border-left: 3px solid var(--accent-purple); }
   .tag-pill.pillar-platform { border-left: 3px solid var(--accent-green); }
 
   /* ── Triangulation ── */
   .tri-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--border);
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
   }
   .tri-table th {
-    background: var(--bg-accent);
-    padding: 1rem 1.2rem;
-    font-size: .72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--text-dim);
-    text-align: left;
+    background: var(--bg-accent); padding: 1rem 1.2rem;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--text-dim); text-align: left;
     border-bottom: 1px solid var(--border);
   }
   .tri-table td {
-    padding: .9rem 1.2rem;
-    font-size: .85rem;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    vertical-align: top;
+    padding: .9rem 1.2rem; font-size: .85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top;
   }
   .tri-table tr:last-child td { border-bottom: none; }
   .tri-table tr:hover td { background: rgba(255,255,255,0.02); }
   .verdict {
-    display: inline-flex;
-    align-items: center;
-    gap: .3rem;
-    padding: .2rem .6rem;
-    border-radius: 4px;
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: .03em;
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .2rem .6rem; border-radius: 4px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .03em;
   }
   .verdict.success { background: rgba(64,208,128,0.12); color: var(--accent-green); }
   .verdict.weakness { background: rgba(240,80,96,0.12); color: var(--accent-red); }
@@ -294,103 +250,55 @@
   .bar-chart { margin: 1.5rem 0; }
   .bar-row { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; }
   .bar-label {
-    font-size: .82rem;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text);
-    min-width: 90px;
-    text-align: right;
-    white-space: nowrap;
+    font-size: .82rem; font-family: 'JetBrains Mono', monospace;
+    color: var(--text); min-width: 90px; text-align: right; white-space: nowrap;
   }
   .bar-track {
-    flex: 1;
-    height: 32px;
-    background: rgba(255,255,255,0.04);
-    border-radius: 4px;
-    overflow: hidden;
+    flex: 1; height: 32px; background: rgba(255,255,255,0.04);
+    border-radius: 4px; overflow: hidden;
   }
   .bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    padding-left: .8rem;
-    font-size: .75rem;
-    font-weight: 700;
-    color: #fff;
-    min-width: fit-content;
-    transition: width .8s cubic-bezier(.22,1,.36,1);
+    height: 100%; border-radius: 4px; display: flex; align-items: center;
+    padding-left: .8rem; font-size: .75rem; font-weight: 700; color: #fff;
+    min-width: fit-content; transition: width .8s cubic-bezier(.22,1,.36,1);
   }
   .bar-fill.green { background: var(--accent-green); }
   .bar-fill.gold { background: var(--accent-gold); color: #1a1d2a; }
   .bar-fill.red { background: var(--accent-red); }
   .bar-fill.blue { background: var(--accent-blue); }
-  .bar-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .78rem;
-    color: var(--text-dim);
-    min-width: 70px;
-  }
+  .bar-value { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--text-dim); min-width: 70px; }
 
   /* ── Quotes ── */
   .quote-block {
-    position: relative;
-    padding: 1.5rem 1.8rem 1.5rem 2rem;
-    margin: 1.2rem 0;
-    background: var(--bg-accent);
-    border-radius: 8px;
+    position: relative; padding: 1.5rem 1.8rem 1.5rem 2rem;
+    margin: 1.2rem 0; background: var(--bg-accent); border-radius: 8px;
     border-left: 4px solid var(--accent-gold);
   }
   .quote-block.negative { border-left-color: var(--accent-red); }
-  .quote-text {
-    font-size: .9rem;
-    font-style: italic;
-    color: var(--text);
-    line-height: 1.9;
-  }
-  .quote-meta {
-    margin-top: .8rem;
-    font-size: .75rem;
-    color: var(--text-faint);
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .quote-text { font-size: .9rem; font-style: italic; color: var(--text); line-height: 1.9; }
+  .quote-meta { margin-top: .8rem; font-size: .75rem; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
   .quote-translation {
-    margin-top: .6rem;
-    font-size: .84rem;
-    color: var(--text-dim);
-    font-style: normal;
-    padding: .6rem .8rem;
-    background: rgba(255,255,255,0.02);
-    border-radius: 4px;
+    margin-top: .6rem; font-size: .84rem; color: var(--text-dim);
+    font-style: normal; padding: .6rem .8rem;
+    background: rgba(255,255,255,0.02); border-radius: 4px;
     border-left: 2px solid rgba(255,255,255,0.08);
   }
 
   /* ── Grids ── */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-  .sys-card {
-    padding: 1rem;
-    background: var(--bg-accent);
-    border-radius: 8px;
-  }
+  .sys-card { padding: 1rem; background: var(--bg-accent); border-radius: 8px; }
   .sys-card strong { color: var(--accent-gold); }
   .sys-card.alt strong { color: var(--accent-purple); }
   .sys-card p { font-size: .8rem; color: var(--text-dim); margin-top: .3rem; }
 
   /* ── Biz Stats ── */
   .biz-stat { text-align: center; }
-  .biz-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 2rem;
-    font-weight: 700;
-  }
+  .biz-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; }
   .biz-num.gold { color: var(--accent-gold); }
   .biz-num.green { color: var(--accent-green); }
   .biz-num.purple { color: var(--accent-purple); }
-  .biz-calc {
-    font-size: .75rem;
-    color: var(--text-faint);
-    margin-top: .3rem;
-  }
+  .biz-calc { font-size: .75rem; color: var(--text-faint); margin-top: .3rem; }
 
   @media (max-width: 768px) {
     .grid-2, .grid-3 { grid-template-columns: 1fr; }
@@ -401,28 +309,19 @@
   /* ── Conclusion ── */
   .conclusion { text-align: center; padding: 5rem 2rem; position: relative; }
   .conclusion::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: radial-gradient(ellipse at center, rgba(240,192,64,0.06), transparent 70%);
   }
   .conclusion-text {
-    position: relative;
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-    font-weight: 400;
-    line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto;
-    color: #fff;
+    position: relative; font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 400;
+    line-height: 1.6; max-width: 800px; margin: 0 auto; color: #fff;
   }
   .conclusion-text strong { color: var(--accent-gold); }
   .conclusion-text em { color: var(--text-dim); font-style: italic; }
   .footer {
-    text-align: center;
-    padding: 3rem 2rem;
-    font-size: .72rem;
-    color: var(--text-faint);
+    text-align: center; padding: 3rem 2rem;
+    font-size: .72rem; color: var(--text-faint);
     border-top: 1px solid var(--border);
   }
 
@@ -450,22 +349,22 @@
       <div class="hero-badge">Steam Game Insight Report</div>
     </div>
     <h1>Schedule I</h1>
-    <p class="hero-subtitle">"마약 제국 시뮬레이터"를 표방하지만 유저들이 실제로 경험한 것은 <strong style="color:var(--accent-gold)">"중독적으로 코지한 크래프팅 경영 게임"</strong>이었다 — 이 기획적 반전이 98.4%의 경이적 긍정률을 만들었다.</p>
+    <p class="hero-subtitle">"마약을 파는 게 아니라, 마약이 이 게임이다" — Breaking Bad 판타지 위에 Stardew Valley식 코어 루프를 올린 범죄 타이쿤. 금기 테마와 Co-op 역할 분화의 삼각 구조가 98%의 긍정률을 만들어냈다.</p>
     <div class="hero-stats">
       <div class="hero-stat">
-        <span class="num gold">98.4%</span>
+        <span class="num gold">98.0%</span>
         <span class="label">긍정률 (Overwhelmingly Positive)</span>
       </div>
       <div class="hero-stat">
-        <span class="num">10~20M</span>
+        <span class="num">1,000~2,000만</span>
         <span class="label">소유자 수</span>
       </div>
       <div class="hero-stat">
-        <span class="num green">$19.99</span>
+        <span class="num green">$13.99</span>
         <span class="label">가격</span>
       </div>
       <div class="hero-stat">
-        <span class="num">28.1h</span>
+        <span class="num">27.2h</span>
         <span class="label">평균 플레이타임</span>
       </div>
     </div>
@@ -484,28 +383,30 @@
   <div class="grid-2">
     <div class="card fade-up">
       <div class="card-label">English Description</div>
-      <p>From <strong>small-time dope pusher</strong> to <strong>kingpin</strong> - <strong>manufacture</strong> and <strong>distribute</strong> a range of drugs throughout the grungy city of Hyland Point. <strong>Expand your empire</strong> with properties, businesses, employees and more.</p>
+      <p>From small-time <strong>dope pusher</strong> to <strong>kingpin</strong> — manufacture and distribute a range of drugs throughout the grungy city of Hyland Point. Expand your empire with <strong>properties, businesses, employees</strong> and more.</p>
     </div>
     <div class="card fade-up">
       <div class="card-label">한국어 설명</div>
-      <p>(한국어 고유 설명 없음 — 영문과 동일한 텍스트 제공)</p>
+      <p style="color:var(--text-faint)">(한국어 설명 없음 — 영문과 동일)</p>
     </div>
   </div>
   <div class="card fade-up">
     <div class="card-label">마케팅 키워드 분석</div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
-      <strong style="color:var(--text)">한 줄 피치의 핵심 구조:</strong> "small-time → kingpin" — 전형적인 <strong style="color:var(--accent-gold)">성장 판타지(rags-to-riches)</strong> 서사. 동사 선택이 매우 의도적이다: <em>manufacture</em>(생산), <em>distribute</em>(유통), <em>expand</em>(확장) — 모두 능동적 제국 건설을 약속한다. "dope pusher"라는 도발적 단어로 시선을 잡고, "empire"라는 야심찬 결론으로 매듭짓는다.
+      <strong style="color:var(--accent-gold)">한 줄 피치 핵심 동사</strong>: "manufacture", "distribute", "expand" — 제조-유통-확장의 비즈니스 성장 서사. "dope pusher to kingpin"이라는 양극단 대비로 <strong>성장 호</strong>를 약속. "grungy"라는 형용사가 분위기적 포지셔닝(어둡고 거친 도시).
     </p>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
-      <strong style="color:var(--text)">전체 피치의 피처 우선순위 (소개 순서):</strong><br>
-      ① <strong style="color:var(--accent-blue)">약물 생산 + 레시피 발견</strong> — "Produce a range of drugs… Discover special recipes" — 핵심 셀링포인트<br>
-      ② <strong style="color:var(--accent-blue)">유통 (도보/스케이트/운전)</strong> — "Walk, skate or drive" — 다양한 이동 수단 = 오픈월드 암시<br>
-      ③ <strong style="color:var(--accent-blue)">부동산 + 직원 + 자동화</strong> — "Purchase new properties… fully automated production" — 경영 시뮬 핵심<br>
-      ④ <strong style="color:var(--accent-red)">법 집행 + 카르텔 전투</strong> — "Fight with fists, melee weapons or firearms" — 위험/긴장감<br>
-      ⑤ <strong style="color:var(--accent-green)">코옵 멀티플레이</strong> — "Reach new heights in co-op multiplayer" — 마지막 한 줄로 언급
+      <strong style="color:var(--accent-gold)">전체 피치 섹션 구조 (우선순위)</strong>:<br>
+      1. <strong>DEA 인용문</strong> — "Schedule I: no accepted medical use, high potential for abuse" &rarr; 현실 법률 용어로 즉각적 금기 감각 형성<br>
+      2. <strong>성장 서사</strong> — "no cash, no product, no connections" &rarr; 제로에서 시작하는 성장 판타지<br>
+      3. <strong>제조(Produce)</strong> — "unique production process", "special recipes", "new drug variants" &rarr; 조합/실험 시스템 강조<br>
+      4. <strong>유통(Distribution)</strong> — "Walk, skate or drive", "Hire dealers" &rarr; 이동 다양성 + 자동화 가능성 암시<br>
+      5. <strong>확장(Expand)</strong> — "properties, employees, fully automated" &rarr; 제국 건설의 종착점<br>
+      6. <strong>위협(Threat)</strong> — "law enforcement, deadly cartel competitors" &rarr; 외부 긴장감<br>
+      7. <strong>Co-op</strong> — 마지막 한 줄 "co-op multiplayer" &rarr; 부차적 위치
     </p>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
-      <strong style="color:var(--text)">short vs detailed 갭:</strong> 한 줄 피치에서 완전히 빠진 요소가 있다: <strong style="color:var(--accent-purple)">레시피 시스템</strong>(약물 변형/특수 속성), <strong style="color:var(--accent-purple)">이동 수단 다양성</strong>(스케이트보드), <strong style="color:var(--accent-purple)">전투 시스템</strong>. 특히 레시피 시스템은 게임의 핵심 재미 중 하나임에도 한 줄 피치에서 누락되었다 — 마케팅이 "크래프팅"보다 "범죄 판타지"에 무게를 뒀음을 시사한다.
+      <strong style="color:var(--accent-blue)">short vs detailed 갭</strong>: 한 줄 피치에서는 "manufacture and distribute"만 언급하지만, 전체 설명에서 새로 등장하는 요소: <strong>스케이트보드/자동차 이동</strong>, <strong>특수 레시피/변종 약물</strong>, <strong>완전 자동화 생산-유통 체인</strong>, <strong>근접/원거리 전투</strong>. 특히 "fully automated production and distribution chain"이라는 종착점 약속은 유저 기대치를 크게 높이는 셀링포인트이자, 후술할 약점의 근원이 된다.
     </p>
   </div>
 </section>
@@ -522,63 +423,63 @@
 
     <!-- 외부 루프 (성장) -->
     <div style="border:1px dashed var(--accent-gold-dim);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
-      <div style="font-size:.7rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">외부 루프 — 제국 확장</div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">외부 루프 — 제국 확장 &amp; 자동화</div>
 
       <!-- 내부 루프 (일일) -->
       <div class="loop-diagram" style="margin-bottom:1rem;border-color:var(--accent-blue)">
-        <div style="position:absolute;top:.5rem;left:1rem;font-size:.65rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.08em">내부 루프 — 일일 운영</div>
+        <div style="position:absolute;top:.5rem;left:1rem;font-size:.65rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.08em">내부 루프 — 일일 운영 사이클</div>
         <div class="loop-node">
-          <div class="loop-icon">🌿</div>
-          <div class="loop-label">재배/제조</div>
-          <div class="loop-sub">약물 생산 + 레시피 실험</div>
+          <div class="loop-icon">&#127793;</div>
+          <div class="loop-label">재배 &amp; 수확</div>
+          <div class="loop-sub">대마 &middot; 코카 &middot; 버섯</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">📦</div>
+          <div class="loop-icon">&#9878;</div>
+          <div class="loop-label">제조 &amp; 믹싱</div>
+          <div class="loop-sub">레시피 조합 &rarr; 변종</div>
+        </div>
+        <span class="loop-arrow">&rarr;</span>
+        <div class="loop-node">
+          <div class="loop-icon">&#128230;</div>
           <div class="loop-label">포장</div>
-          <div class="loop-sub">바기에 소분 + 라벨링</div>
+          <div class="loop-sub">봉지 &middot; 벽돌 포장</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">🛹</div>
-          <div class="loop-label">유통/배달</div>
-          <div class="loop-sub">도보·스케이트·차량</div>
+          <div class="loop-icon">&#128176;</div>
+          <div class="loop-label">판매 &amp; 배달</div>
+          <div class="loop-sub">직접 or 딜러 위임</div>
         </div>
-        <span class="loop-arrow">→</span>
-        <div class="loop-node">
-          <div class="loop-icon">💵</div>
-          <div class="loop-label">수익 수집</div>
-          <div class="loop-sub">고객 거래 + 평판 상승</div>
-        </div>
-        <span class="loop-arrow" style="opacity:.4">↩</span>
+        <span class="loop-arrow" style="opacity:.4">&#8617;</span>
       </div>
 
       <!-- 외부 루프 노드 -->
       <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap">
         <div class="loop-node">
-          <div class="loop-icon">💰</div>
-          <div class="loop-label">수익 재투자</div>
-          <div class="loop-sub">자금 → 확장 자본</div>
+          <div class="loop-icon">&#127942;</div>
+          <div class="loop-label">수익 축적</div>
+          <div class="loop-sub">지역 해금 조건 달성</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">🏠</div>
-          <div class="loop-label">부동산 매입</div>
-          <div class="loop-sub">새 거점 + 생산 시설</div>
+          <div class="loop-icon">&#127970;</div>
+          <div class="loop-label">부동산 구매</div>
+          <div class="loop-sub">더 큰 공장 &middot; 새 거점</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">👥</div>
+          <div class="loop-icon">&#128101;</div>
           <div class="loop-label">직원 고용</div>
-          <div class="loop-sub">딜러 + 재배사 + 포장원</div>
+          <div class="loop-sub">재배사 &middot; 포장사 &middot; 딜러</div>
         </div>
-        <span class="loop-arrow">→</span>
+        <span class="loop-arrow">&rarr;</span>
         <div class="loop-node">
-          <div class="loop-icon">⚙️</div>
-          <div class="loop-label">자동화</div>
-          <div class="loop-sub">생산→유통 자동 체인</div>
+          <div class="loop-icon">&#128081;</div>
+          <div class="loop-label">새 지역 진출</div>
+          <div class="loop-sub">더 큰 시장 &middot; 더 큰 위험</div>
         </div>
-        <span class="loop-arrow" style="opacity:.4">↩ 내부 루프</span>
+        <span class="loop-arrow" style="opacity:.4">&#8617; 내부 루프로</span>
       </div>
     </div>
 
@@ -586,43 +487,111 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
       <div style="padding:1rem;background:rgba(64,208,128,0.06);border:1px solid rgba(64,208,128,0.15);border-radius:8px">
         <strong style="color:var(--accent-green);font-size:.8rem">확정 보상</strong>
-        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">매출 성장, 부동산 매입, 직원 고용, 고객 네트워크 확장 — 노력에 비례하는 예측 가능한 성장</p>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">판매 수익, 지역 해금, 부동산 확장, 직원 수 증가 — 숫자로 측정되는 제국의 성장</p>
       </div>
       <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
         <strong style="color:var(--accent-gold);font-size:.8rem">가변 보상</strong>
-        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">레시피 조합 → 예측 불가한 특수 효과 발견, 고객 요구의 랜덤성, 경찰/카르텔 조우의 불확실성</p>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">레시피 조합 실험의 예측 불가한 결과, 고객별 선호도 차이, 카르텔/경찰의 습격, 블랙잭 도박</p>
       </div>
     </div>
-    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">자동화 시스템은 플레이어의 역할을 근본적으로 전환시킨다. 초반에는 "직접 뛰는 배달부"였던 플레이어가, 직원을 고용하고 자동 체인을 구축하면 <strong style="color:var(--text)">"전략적 경영자"</strong>로 변모한다. 이 전환은 게임의 핵심 기획적 성취다: 반복적 수작업의 "명상적 몰입"과 자동화 이후의 "전략적 최적화"를 순차적으로 경험하게 하여, 단일 게임 안에서 두 종류의 재미를 제공한다. 리뷰에서 "trance-like state, packing baggies"라는 표현이 반복되는 이유가 바로 이것이다.</p>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">
+      <strong>유저 증언으로 확인된 핵심 루프</strong>: "You start by micromanaging your production and sales. Later, you can create workflows with employees." (269.9h 유저) — 메타 진행은 "수동 숙달 &rarr; 자동화 해금 &rarr; 새 지역에서 수동 시작"의 순환 구조다. 낮/밤 주기가 "낮=대면 판매(리스크), 밤=생산/보급(안전)"이라는 리듬을 형성하여 세션에 자연스러운 절을 만든다. 그러나 자동화의 마지막 단계("킹핀")에서 새로운 도전이 부재하여 순환이 끊기는 문제가 존재한다.
+    </p>
   </div>
+
+  <!-- 제3자 분석 카드 -->
   <div class="card fade-up">
-    <div class="card-label">IGDB / RAWG 기반 시스템 분석</div>
+    <div class="card-label">IGDB / RAWG / Wikidata 기반 시스템 분석</div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">IGDB 분류 vs Steam 태그 교차</div>
+      <div class="grid-2" style="margin-top:.8rem">
+        <div class="sys-card">
+          <strong>IGDB Themes</strong>
+          <p>Action, Open World — Steam 태그의 Action(505), Open World(707)와 일치하는 대분류</p>
+        </div>
+        <div class="sys-card alt">
+          <strong>IGDB Keywords (숨은 특성)</strong>
+          <p><strong>drugs, gambling, blackjack, skateboarding, police, automation</strong> — Steam 태그에 없는 키워드. drugs는 게임의 본질이지만 태그에서 직접 사용되지 않음. gambling/blackjack은 카지노 미니게임의 존재를 확인</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">Wikidata 온톨로지</div>
+      <div class="grid-3" style="margin-top:.8rem">
+        <div class="sys-card">
+          <strong>장르</strong>
+          <p>Management Simulation — 3소스 교차 확인. "경영 시뮬레이션"이 확실한 정체성</p>
+        </div>
+        <div class="sys-card alt">
+          <strong>게임 모드</strong>
+          <p>Single-player + Co-op. Steam Award "Better with Friends" 노미네이트</p>
+        </div>
+        <div class="sys-card">
+          <strong>수상</strong>
+          <p>Golden Joystick — <strong>Breakthrough Award</strong> 수상. "Best Early Access Game" 노미네이트. 신규 IP 돌파력 인정</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">RAWG 리텐션 프록시</div>
+      <div class="grid-3" style="margin-top:.8rem">
+        <div class="sys-card">
+          <strong>드롭률: 21.3%</strong>
+          <p>26 dropped / 122 added. 상대적으로 높지만 RAWG 표본(122명)이 작아 통계적 신뢰도 낮음</p>
+        </div>
+        <div class="sys-card alt">
+          <strong>클리어률: 25.0%</strong>
+          <p>17 beaten / 68 active. EA 콘텐츠 소진 가능성 시사</p>
+        </div>
+        <div class="sys-card">
+          <strong>평가 분포</strong>
+          <p>Exceptional 16.7% + Recommended 54.8% = 71.5%. Meh 19.1%. Steam 98% 대비 냉정한 RAWG 평가</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">HowLongToBeat 게임 길이</div>
+      <div class="grid-3" style="margin-top:.8rem">
+        <div class="sys-card">
+          <strong>메인: 16.1h</strong>
+          <p>핵심 경험이 16시간으로 응축된 효율적 설계</p>
+        </div>
+        <div class="sys-card alt">
+          <strong>메인+엑스트라: 39.0h</strong>
+          <p>Main/Extra 비율 2.42x — 사이드 콘텐츠가 메인의 2.4배 볼륨</p>
+        </div>
+        <div class="sys-card">
+          <strong>컴플리셔니스트: 47.0h</strong>
+          <p>Steam 평균 27.2h은 메인의 169% &mdash; 대부분 메인을 끝내고 사이드를 즐기는 중</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">PCGamingWiki 기술 스펙</div>
+      <div class="sys-card" style="margin-top:.8rem">
+        <strong>Engine: Unity</strong>
+        <p>1인 개발에 최적화된 엔진 선택. 모바일/콘솔 포팅 기반 보유</p>
+      </div>
+    </div>
+
     <div class="card-title">마케팅이 말하지 않은 시스템들</div>
-    <p style="font-size:.82rem;color:var(--text-faint);margin-bottom:1rem">※ IGDB/RAWG 설명이 Steam 설명과 동일하여 제3자 독립 분석이 제한적. 유저 리뷰와 태그에서 역추적한 시스템:</p>
     <div class="grid-3" style="margin-top:1rem">
       <div class="sys-card">
-        <strong>NPC 관계 시스템</strong>
-        <p>이웃과 친밀도를 쌓고 단골 고객으로 전환하는 소셜 시뮬레이션. 마케팅에서 전혀 언급되지 않았지만 리뷰에서 "befriending neighbors"로 반복 언급</p>
+        <strong>카지노/블랙잭</strong>
+        <p>IGDB가 gambling, blackjack을 인식 — 마케팅 미언급이지만 경제에 영향을 주는 도박 시스템 존재</p>
       </div>
       <div class="sys-card alt">
+        <strong>"Breaking Bad 판타지"</strong>
+        <p>마케팅은 BB를 언급하지 않지만, 유저의 자발적 레퍼런스가 BB로 수렴. 대중문화 판타지 수요 포착</p>
+      </div>
+      <div class="sys-card">
         <strong>스케이트보드 이동</strong>
-        <p>"Walk, skate or drive"에서 한 단어로 언급됐지만, 실제로는 독립적 물리 시스템이 구현된 이동 메커니즘</p>
-      </div>
-      <div class="sys-card">
-        <strong>시간 제한 시스템</strong>
-        <p>"time restrictions really make the player feel like they have to keep going" — 일일 시간 제한이 긴장감과 루프 반복을 강제하는 숨은 설계</p>
-      </div>
-      <div class="sys-card alt">
-        <strong>경찰 AI + 수배 시스템</strong>
-        <p>경찰의 적극적 추적과 문 차단 등 법 집행 시뮬레이션. 일부 유저에게 과도한 난이도로 작용</p>
-      </div>
-      <div class="sys-card">
-        <strong>약물 효과 시스템</strong>
-        <p>각 약물이 고유 효과와 가격대를 가지며, 레시피 조합으로 변형 가능한 크래프팅 시스템</p>
-      </div>
-      <div class="sys-card alt">
-        <strong>NPC 강도 시스템</strong>
-        <p>"rival dealers you can rob for free product" — 마케팅에서 카르텔 전투로만 언급했지만 실제로는 PvE 약탈 메커니즘이 존재</p>
+        <p>IGDB keywords에 skateboarding — 도보/자동차 외 독특한 이동 수단. "skate"로만 짧게 언급</p>
       </div>
     </div>
   </div>
@@ -636,7 +605,6 @@
     <div class="section-line"></div>
   </div>
 
-  <!-- 태그 -->
   <div class="card fade-up">
     <div class="card-label">태그 프로필 — 유저가 인식한 정체성</div>
     <div class="tag-grid">
@@ -646,7 +614,7 @@
       <span class="tag-pill pillar-platform">Multiplayer <span class="vote">768</span></span>
       <span class="tag-pill pillar-genre">Open World <span class="vote">707</span></span>
       <span class="tag-pill pillar-genre">Management <span class="vote">704</span></span>
-      <span class="tag-pill pillar-genre">First-Person <span class="vote">568</span></span>
+      <span class="tag-pill pillar-mood">First-Person <span class="vote">568</span></span>
       <span class="tag-pill pillar-genre">Action <span class="vote">505</span></span>
       <span class="tag-pill pillar-genre">Crafting <span class="vote">460</span></span>
       <span class="tag-pill pillar-genre">Base-Building <span class="vote">454</span></span>
@@ -655,261 +623,76 @@
       <span class="tag-pill pillar-genre">Stealth <span class="vote">411</span></span>
       <span class="tag-pill pillar-genre">Strategy <span class="vote">358</span></span>
       <span class="tag-pill pillar-genre">FPS <span class="vote">328</span></span>
-      <span class="tag-pill pillar-mood">Character Customization <span class="vote">320</span></span>
+      <span class="tag-pill pillar-mood">Char. Custom <span class="vote">320</span></span>
       <span class="tag-pill pillar-genre">Driving <span class="vote">319</span></span>
       <span class="tag-pill pillar-genre">Shooter <span class="vote">314</span></span>
       <span class="tag-pill pillar-platform">Early Access <span class="vote">306</span></span>
-      <span class="tag-pill pillar-genre">Action-Adventure <span class="vote">280</span></span>
+      <span class="tag-pill pillar-mood">Action-Adv <span class="vote">280</span></span>
     </div>
     <p style="font-size:.78rem;color:var(--text-dim)">
-      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-blue);border-radius:2px;margin-right:4px"></span>장르/메커니즘 축 &nbsp;&nbsp;
-      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-purple);border-radius:2px;margin-right:4px"></span>분위기/감성 축 &nbsp;&nbsp;
-      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-green);border-radius:2px;margin-right:4px"></span>플랫폼/접근성 축
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-blue);border-radius:2px;margin-right:4px"></span>장르/메커니즘 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-purple);border-radius:2px;margin-right:4px"></span>분위기/감성 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-green);border-radius:2px;margin-right:4px"></span>플랫폼/접근성
     </p>
-    <p style="font-size:.85rem;color:var(--text-dim);margin-top:1rem">태그 분포가 <strong style="color:var(--text)">극도로 균등하다</strong>. 1위 Simulation(893)과 6위 Management(704)의 차이가 21%에 불과하다. 이는 이 게임이 단일 정체성이 아닌 <strong style="color:var(--accent-gold)">다축 설계</strong>를 통해 "경영 시뮬 + 범죄 액션 + 코옵 샌드박스"를 동시에 충족하고 있음을 의미한다. 특히 Simulation(893)과 Crime(804)이 거의 동등한 투표를 받은 것은, 유저가 이 게임을 "범죄 시뮬레이션"이라는 하이브리드 정체성으로 인식하고 있음을 보여준다.</p>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-top:1rem">
+      투표수 분포가 <strong>균등</strong>하다. 1위(Simulation 893)와 10위(Base-Building 454)의 격차가 2:1. <strong>Co-op(825)이 2위</strong>라는 점이 주목 — 마케팅에서 마지막 한 줄이었던 Co-op이 유저에게는 핵심 정체성으로 인식된다. Crime(804)이 3위로 테마적 정체성도 강력.
+    </p>
   </div>
 
-  <!-- 태그 수평 바 차트 -->
   <div class="card fade-up">
     <div class="card-label">태그 투표수 분포</div>
     <div class="bar-chart">
-      <div class="bar-row">
-        <span class="bar-label">Simulation</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:100%">893</div></div>
-        <span class="bar-value">893</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Co-op</span>
-        <div class="bar-track"><div class="bar-fill green" style="width:92.4%">825</div></div>
-        <span class="bar-value">825</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Crime</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:90.0%">804</div></div>
-        <span class="bar-value">804</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Multiplayer</span>
-        <div class="bar-track"><div class="bar-fill green" style="width:86.0%">768</div></div>
-        <span class="bar-value">768</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Open World</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:79.2%">707</div></div>
-        <span class="bar-value">707</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Management</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:78.8%">704</div></div>
-        <span class="bar-value">704</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">First-Person</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:63.6%">568</div></div>
-        <span class="bar-value">568</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Action</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:56.6%">505</div></div>
-        <span class="bar-value">505</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Crafting</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:51.5%">460</div></div>
-        <span class="bar-value">460</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Base-Building</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:50.8%">454</div></div>
-        <span class="bar-value">454</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Automation</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:50.3%">449</div></div>
-        <span class="bar-value">449</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Building</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:50.1%">447</div></div>
-        <span class="bar-value">447</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Stealth</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:46.0%">411</div></div>
-        <span class="bar-value">411</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Strategy</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:40.1%">358</div></div>
-        <span class="bar-value">358</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">FPS</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:36.7%">328</div></div>
-        <span class="bar-value">328</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Char. Custom</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:35.8%">320</div></div>
-        <span class="bar-value">320</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Driving</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:35.7%">319</div></div>
-        <span class="bar-value">319</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Shooter</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:35.2%">314</div></div>
-        <span class="bar-value">314</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Early Access</span>
-        <div class="bar-track"><div class="bar-fill gold" style="width:34.3%">306</div></div>
-        <span class="bar-value">306</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Action-Adv.</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:31.4%">280</div></div>
-        <span class="bar-value">280</span>
-      </div>
+      <div class="bar-row"><span class="bar-label">Simulation</span><div class="bar-track"><div class="bar-fill blue" style="width:100%">893</div></div><span class="bar-value">893</span></div>
+      <div class="bar-row"><span class="bar-label">Co-op</span><div class="bar-track"><div class="bar-fill green" style="width:92.4%">825</div></div><span class="bar-value">825</span></div>
+      <div class="bar-row"><span class="bar-label">Crime</span><div class="bar-track"><div class="bar-fill blue" style="width:90%">804</div></div><span class="bar-value">804</span></div>
+      <div class="bar-row"><span class="bar-label">Multiplayer</span><div class="bar-track"><div class="bar-fill green" style="width:86%">768</div></div><span class="bar-value">768</span></div>
+      <div class="bar-row"><span class="bar-label">Open World</span><div class="bar-track"><div class="bar-fill blue" style="width:79.2%">707</div></div><span class="bar-value">707</span></div>
+      <div class="bar-row"><span class="bar-label">Management</span><div class="bar-track"><div class="bar-fill blue" style="width:78.8%">704</div></div><span class="bar-value">704</span></div>
+      <div class="bar-row"><span class="bar-label">First-Person</span><div class="bar-track"><div class="bar-fill blue" style="width:63.6%">568</div></div><span class="bar-value">568</span></div>
+      <div class="bar-row"><span class="bar-label">Action</span><div class="bar-track"><div class="bar-fill blue" style="width:56.6%">505</div></div><span class="bar-value">505</span></div>
+      <div class="bar-row"><span class="bar-label">Crafting</span><div class="bar-track"><div class="bar-fill blue" style="width:51.5%">460</div></div><span class="bar-value">460</span></div>
+      <div class="bar-row"><span class="bar-label">Base-Building</span><div class="bar-track"><div class="bar-fill blue" style="width:50.8%">454</div></div><span class="bar-value">454</span></div>
     </div>
   </div>
 
-  <!-- 기획 축 분류 테이블 -->
   <div class="card fade-up">
     <div class="card-label">기획 축 분류 (Pillar Analysis)</div>
     <table class="tri-table">
-      <thead>
-        <tr>
-          <th style="width:15%">기획 축</th>
-          <th>포함 태그</th>
-          <th style="width:12%">합산 투표</th>
-          <th style="width:10%">비중</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:15%">기획 축</th><th>포함 태그</th><th style="width:12%">합산 투표</th><th style="width:10%">비중</th></tr></thead>
       <tbody>
-        <tr>
-          <td><strong>경영/생산</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Simulation, Management, Crafting, Automation, Building, Base-Building, Strategy</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">3,765</span></td>
-          <td><span class="verdict success">지배적</span></td>
-        </tr>
-        <tr>
-          <td><strong>범죄/액션</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Crime, Stealth, Action, FPS, Shooter, Action-Adventure</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">2,642</span></td>
-          <td><span class="verdict hidden">강력</span></td>
-        </tr>
-        <tr>
-          <td><strong>세계관/탐색</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Open World, First-Person, Driving, Character Customization</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">1,914</span></td>
-          <td><span class="verdict hidden">강력</span></td>
-        </tr>
-        <tr>
-          <td><strong>소셜/멀티</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Co-op, Multiplayer</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">1,593</span></td>
-          <td><span class="verdict hidden">강력</span></td>
-        </tr>
-        <tr>
-          <td><strong>플랫폼</strong></td>
-          <td style="font-size:.8rem;color:var(--text-dim)">Early Access</td>
-          <td><span style="font-family:'JetBrains Mono';font-weight:700">306</span></td>
-          <td><span class="verdict marketing">보조</span></td>
-        </tr>
+        <tr><td><strong>경영/제조</strong></td><td style="font-size:.8rem;color:var(--text-dim)">Simulation, Management, Crafting, Automation, Base-Building, Building, Strategy</td><td><span style="font-family:'JetBrains Mono';font-weight:700">3,765</span></td><td><span class="verdict success">지배적</span></td></tr>
+        <tr><td><strong>범죄/액션</strong></td><td style="font-size:.8rem;color:var(--text-dim)">Crime, Action, Stealth, FPS, Shooter, Driving</td><td><span style="font-family:'JetBrains Mono';font-weight:700">2,980</span></td><td><span class="verdict hidden">강력</span></td></tr>
+        <tr><td><strong>소셜/멀티</strong></td><td style="font-size:.8rem;color:var(--text-dim)">Co-op, Multiplayer, Early Access</td><td><span style="font-family:'JetBrains Mono';font-weight:700">1,899</span></td><td><span class="verdict marketing">보조</span></td></tr>
+        <tr><td><strong>세계/분위기</strong></td><td style="font-size:.8rem;color:var(--text-dim)">Open World, First-Person, Character Customization, Action-Adventure</td><td><span style="font-family:'JetBrains Mono';font-weight:700">1,875</span></td><td>맥락</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- 플레이타임별 긍정률 -->
   <div class="card fade-up">
     <div class="card-label">플레이타임별 긍정률 — 리텐션 곡선</div>
     <div class="bar-chart">
-      <div class="bar-row">
-        <span class="bar-label">&lt; 1h</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:100%">100.0%</div>
-        </div>
-        <span class="bar-value">3명</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">1-10h</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:97.2%">97.2%</div>
-        </div>
-        <span class="bar-value">143명</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">10-50h</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:97.9%">97.9%</div>
-        </div>
-        <span class="bar-value">516명</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">50-100h</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:97.1%">97.1%</div>
-        </div>
-        <span class="bar-value">242명</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">100h+</span>
-        <div class="bar-track">
-          <div class="bar-fill green" style="width:96.9%">96.9%</div>
-        </div>
-        <span class="bar-value">128명</span>
-      </div>
+      <div class="bar-row"><span class="bar-label">&lt; 1h</span><div class="bar-track"><div class="bar-fill red" style="width:72.9%">72.9%</div></div><span class="bar-value">595명</span></div>
+      <div class="bar-row"><span class="bar-label">1-10h</span><div class="bar-track"><div class="bar-fill green" style="width:96.8%">96.8%</div></div><span class="bar-value">20,041명</span></div>
+      <div class="bar-row"><span class="bar-label">10-50h</span><div class="bar-track"><div class="bar-fill green" style="width:97.1%">97.1%</div></div><span class="bar-value">52,141명</span></div>
+      <div class="bar-row"><span class="bar-label">50-100h</span><div class="bar-track"><div class="bar-fill green" style="width:97.1%">97.1%</div></div><span class="bar-value">16,577명</span></div>
+      <div class="bar-row"><span class="bar-label">100h+</span><div class="bar-track"><div class="bar-fill green" style="width:96.7%">96.7%</div></div><span class="bar-value">6,801명</span></div>
     </div>
-    <p style="font-size:.85rem;color:var(--text-dim)">긍정률이 전 구간에서 <strong style="color:var(--accent-green)">96.9%~100%</strong>를 유지하는 놀라운 평탄 곡선. 일반적으로 100시간 이상 플레이한 유저의 긍정률은 콘텐츠 고갈로 하락하는데, Schedule I은 96.9%를 유지한다. 이는 자동화 시스템이 장기 플레이어에게 "최적화 퍼즐"로 작동하여 콘텐츠 고갈을 지연시키고 있음을 시사한다. 10-50시간 구간에 리뷰가 가장 집중(516명)된 것은 이 구간이 게임의 핵심 경험이 완성되는 시점임을 의미한다.</p>
+    <p style="font-size:.85rem;color:var(--text-dim)">
+      <strong>1시간 미만 72.9%</strong>에서 <strong>1-10시간 96.8%</strong>로의 급등이 핵심이다. 10-50시간 구간이 52,141명으로 압도적이며, 대다수 유저가 메인 콘텐츠(HLTB 16h)를 충분히 즐긴 후 리뷰를 남긴다. 100시간 이상에서도 96.7%로 장기 플레이어 충성도가 유지된다.
+    </p>
   </div>
 
-  <!-- 언어별 분포 -->
   <div class="card fade-up">
     <div class="card-label">언어별 리뷰 분포 — 시장 도달</div>
     <div class="bar-chart">
-      <div class="bar-row">
-        <span class="bar-label">English</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:100%">771</div></div>
-        <span class="bar-value">74.7%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Spanish</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:7.5%">58</div></div>
-        <span class="bar-value">5.6%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">German</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:6.4%">49</div></div>
-        <span class="bar-value">4.7%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Russian</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:5.6%">43</div></div>
-        <span class="bar-value">4.2%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">French</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:3.2%">25</div></div>
-        <span class="bar-value">2.4%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Brazilian</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:2.3%">18</div></div>
-        <span class="bar-value">1.7%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Polish</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:1.7%">13</div></div>
-        <span class="bar-value">1.3%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">LatAm</span>
-        <div class="bar-track"><div class="bar-fill blue" style="width:1.4%">11</div></div>
-        <span class="bar-value">1.1%</span>
-      </div>
+      <div class="bar-row"><span class="bar-label">English</span><div class="bar-track"><div class="bar-fill blue" style="width:100%">65,659</div></div><span class="bar-value">68.3%</span></div>
+      <div class="bar-row"><span class="bar-label">German</span><div class="bar-track"><div class="bar-fill blue" style="width:9.3%">6,106</div></div><span class="bar-value">6.4%</span></div>
+      <div class="bar-row"><span class="bar-label">Spanish</span><div class="bar-track"><div class="bar-fill blue" style="width:8.1%">5,298</div></div><span class="bar-value">5.5%</span></div>
+      <div class="bar-row"><span class="bar-label">Russian</span><div class="bar-track"><div class="bar-fill blue" style="width:5.7%">3,736</div></div><span class="bar-value">3.9%</span></div>
+      <div class="bar-row"><span class="bar-label">Polish</span><div class="bar-track"><div class="bar-fill blue" style="width:3.6%">2,357</div></div><span class="bar-value">2.5%</span></div>
+      <div class="bar-row"><span class="bar-label">French</span><div class="bar-track"><div class="bar-fill blue" style="width:3.4%">2,252</div></div><span class="bar-value">2.3%</span></div>
+      <div class="bar-row"><span class="bar-label">Turkish</span><div class="bar-track"><div class="bar-fill blue" style="width:2.6%">1,715</div></div><span class="bar-value">1.8%</span></div>
+      <div class="bar-row"><span class="bar-label">Brazilian</span><div class="bar-track"><div class="bar-fill blue" style="width:2.6%">1,693</div></div><span class="bar-value">1.8%</span></div>
     </div>
   </div>
 
@@ -917,49 +700,65 @@
   <div class="card fade-up">
     <div class="card-label">기획 성공 포인트</div>
 
-    <div class="card-title">A. "Breaking Bad 판타지"의 정확한 구현</div>
+    <div class="card-title">A. "Breaking Bad 판타지" — 기존 판타지 수요의 정확한 포착</div>
     <div class="quote-block">
-      <div class="quote-text">"Se você já assistiu Breaking Bad e pensou 'eu faria isso melhor', esse jogo basicamente te entrega a oportunidade. E o mais impressionante é que ele sustenta essa fantasia muito bem."</div>
-      <div class="quote-meta">brazilian · 19.3h · 12 helpful</div>
-      <div class="quote-translation">번역: "Breaking Bad를 보고 '나라면 더 잘할 텐데'라고 생각했다면, 이 게임이 그 기회를 준다. 가장 인상적인 건 이 판타지를 매우 잘 유지한다는 것이다."</div>
+      <div class="quote-text">"It's like Breaking Bad mixed with tycoon sim vibes and some co-op chaos, and somehow it just works."</div>
+      <div class="quote-meta">english &middot; 44.0h &middot; 587 helpful</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"Для знаменитого мета от Джесси Пинкмэна вам понадобится: фосфор, кислота, псевдо и конечно же перец чили."</div>
+      <div class="quote-meta">russian &middot; 42.2h &middot; 47 helpful</div>
+      <div class="quote-translation">제시 핑크맨의 유명한 메스를 만들려면 인, 산, 슈도, 그리고 물론 칠리 페퍼가 필요합니다.</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      이 리뷰는 Schedule I의 핵심 기획 성공을 정확히 짚는다: <strong style="color:var(--text)">"판타지를 유지(sustenta essa fantasia)"</strong>한다는 것. 많은 범죄 게임이 판타지를 약속하지만 유지하지 못한다. Schedule I은 반복적 일상(재배→포장→배달)이 오히려 "내가 정말 이 일을 하고 있다"는 몰입감을 강화한다. 브라질 유저가 포르투갈어로 이 감정을 표현한다는 것은 문화권을 초월한 보편적 매력의 증거다.
+      유저가 자발적으로 "Breaking Bad"를 소환한다. EN 45건, DE 20건, ES 12건. 테마 선택 자체가 마케팅 비용을 절감하는 <strong>셀프 포지셔닝 효과</strong>를 낸다. 한 유저는 "Schedule I은 Stardew Valley의 다크 버전"이라고 직관적으로 비교 — 실제 기획 DNA가 "범죄 시뮬레이터"보다 <strong>"농장 경영 시뮬레이터의 금기 변주"</strong>에 가깝다.
     </p>
 
-    <div class="card-title">B. "코지 범죄" — 의도치 않은 장르 창조</div>
+    <div class="card-title">B. "게임이 곧 마약" — 테마와 게임플레이의 자기참조적 일치</div>
     <div class="quote-block">
-      <div class="quote-text">"Schedule 1 is a crime sim that mashes its dark subject matter and dirty jokes with surprisingly cozy management mechanics in a way that works really well, resulting in an extremely unique and highly amusing crafting game."</div>
-      <div class="quote-meta">english · 129.2h · 15 helpful</div>
+      <div class="quote-text">"This game is as addictive to me as my drugs are addictive to my customers."</div>
+      <div class="quote-meta">english &middot; 114.2h &middot; 197 helpful</div>
     </div>
     <div class="quote-block">
-      <div class="quote-text">"My husband bought this game because he wanted to play with someone and honestly, I'm glad he did. This game is so fun and addicting. I love cozy games and this is definitely those vibes."</div>
-      <div class="quote-meta">english · 11.7h · 0 helpful</div>
+      <div class="quote-text">"Al final la droga no la vendes t&uacute;, la droga es este juego."</div>
+      <div class="quote-meta">spanish &middot; 135.0h &middot; helpful</div>
+      <div class="quote-translation">결국 당신이 파는 건 마약이 아니다. 마약은 이 게임 자체다.</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"Eigentlich simples Game mit immer wiederkehrenden Abl&auml;ufen, was aber seltsamer Weise genau so s&uuml;chtig macht, wie den Stuff, den es herzustellen und zu verkaufen gilt."</div>
+      <div class="quote-meta">german &middot; helpful</div>
+      <div class="quote-translation">반복적인 루틴의 단순한 게임인데, 이상하게도 만들고 파는 그 물건만큼 중독성이 있다.</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      두 리뷰가 보여주는 것은 동일하다: <strong style="color:var(--text)">"코지 게임" 유저가 범죄 시뮬레이터에 끌리고 있다</strong>. 이것은 마케팅이 전혀 의도하지 않은 포지셔닝이다. 마케팅은 "grungy", "deadly"를 강조했지만, 실제 게임플레이의 반복적 수작업(포장, 물주기, 배달)이 코지 게임의 핵심 루프와 구조적으로 동일하다. 129시간 유저가 "extremely unique"라고 말하는 것은 이 장르 혼합이 기존에 없던 경험이라는 의미다.
+      EN 30건, DE 60건, ES 30건에서 반복. "addictive"가 게임 테마와 플레이 경험을 동시에 지시하는 <strong>의미 이중성</strong>. 코어 루프의 점진적 보상 구조가 효과적이며, 게임 테마가 이를 유머러스하게 정당화하는 이중 구조가 작동한다.
     </p>
 
-    <div class="card-title">C. 반복 작업의 "명상적 중독성"</div>
+    <div class="card-title">C. Co-op 역할 분화 — 자발적 분업이 만드는 소셜 재미</div>
     <div class="quote-block">
-      <div class="quote-text">"This game has the same kind of allure to me as games like powerwashing simulator. I end up just invariably in a trance-like state, packing baggies full of meth and loading them into the van, watering the plants that my botanist hasn't got to yet."</div>
-      <div class="quote-meta">english · 65.6h · 0 helpful</div>
+      <div class="quote-text">"мы с женой играем, она выращивает, фасует, а я бегаю толкаю нарикам"</div>
+      <div class="quote-meta">russian &middot; 5.6h &middot; 274 helpful</div>
+      <div class="quote-translation">아내와 같이 하는데, 아내는 재배하고 포장하고, 나는 뛰어다니며 약쟁이들에게 판다.</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      <strong style="color:var(--text)">"Trance-like state"</strong> — 이 표현이 Schedule I의 기획적 핵심을 관통한다. PowerWash Simulator와의 비교는 의미심장하다: 두 게임 모두 반복적 수작업을 통해 "명상적 몰입(flow state)"을 유발한다. 차이는 Schedule I이 여기에 "불법"이라는 서사적 긴장감을 더해, 평범한 반복이 "위험한 일을 하고 있다"는 스릴로 전환된다는 것이다. 65.6시간이라는 플레이타임이 이 중독성의 실증적 증거다.
+      게임이 명시적으로 역할을 강제하지 않는데도, 유저들이 "재배자/판매자"로 자발적 분화. 생산-유통 파이프라인의 각 단계가 독립적 에이전시를 제공하는 설계 증거. <strong>"2번째 PC 구매"/"친구에게 선물"</strong>을 유도하는 바이럴 루프.
     </p>
 
-    <div class="card-title">D. Early Access임에도 가격 이상의 가치</div>
+    <div class="card-title">D. 레시피 실험 — 유저 생성 콘텐츠의 자동 엔진</div>
     <div class="quote-block">
-      <div class="quote-text">"Considering the game version I have played is around 0.4, you might assume the game is half baked but I... Worth the money even in the current state."</div>
-      <div class="quote-meta">english · 23.8h · 0 helpful</div>
-    </div>
-    <div class="quote-block">
-      <div class="quote-text">"I actually pirated this game originally and enjoyed it so much that I decided to buy it, which is rare."</div>
-      <div class="quote-meta">english · 65.6h · 0 helpful</div>
+      <div class="quote-text">"Half the fun is messing around with all the ingredients and trying to mix stuff to see what kind of weird new effects you can make"</div>
+      <div class="quote-meta">english &middot; 58.6h &middot; 80 helpful</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      불법 복제 후 정품 구매라는 행위는 게임 가치에 대한 가장 강력한 증거다. v0.4(40% 완성)에서도 23시간 이상의 만족스러운 경험을 제공한다는 것은, 코어 루프 자체가 완성도 높게 설계되었음을 의미한다. Early Access의 흔한 함정인 "미완성 ≠ 재미없음"을 정면으로 반박하는 기획 성공 사례다.
+      이름 짓기+효과 조합 시스템이 유저마다 고유한 "작품"을 만들고, 리뷰/SNS에서 자발적 공유. <strong>1인 개발 체제에서 극도로 효율적</strong>: 개발자가 콘텐츠를 안 만들어도 유저가 생산. EN에서 외부 스프레드시트로 레시피를 추적하는 플레이어까지 등장.
+    </p>
+
+    <div class="card-title">E. 개발자 Tyler에 대한 신뢰 — 커뮤니티 공동 소유권</div>
+    <div class="quote-block">
+      <div class="quote-text">"Tyler added a roadmap and in-game voting system for the next month's update. MONTHLY UPDATES!!!"</div>
+      <div class="quote-meta">english &middot; 69.7h &middot; 138 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      인게임 업데이트 투표 시스템이 <strong>커뮤니티 접착제</strong>로 기능. EN 50건, DE 25건에서 개발자 칭찬. 이 신뢰가 레이트게임 부재와 버그를 상당 부분 상쇄한다.
     </p>
   </div>
 
@@ -967,50 +766,74 @@
   <div class="card fade-up">
     <div class="card-label">기획 약점</div>
 
-    <div class="card-title">A. 멀티플레이어 안정성 — 핵심 셀링포인트의 기술적 실패</div>
+    <div class="card-title">A. 멀티플레이어 버그 — 핵심 셀링포인트의 신뢰 붕괴</div>
     <div class="quote-block negative">
-      <div class="quote-text">"Don't let the negative review make you think I hate this game, I LOVE this game, but the issues with multiplayer are still here... I'd have more hours in this game if it wasn't for the bugs with multiplayer."</div>
-      <div class="quote-meta">english · 113.8h · 5 helpful</div>
+      <div class="quote-text">"Multiplayer is completely bugged and there are no reliable solutions. Dev should either remove the multiplayer functionality or publish updates only after they are bug free."</div>
+      <div class="quote-meta">english &middot; 38.1h &middot; helpful</div>
     </div>
     <div class="quote-block negative">
-      <div class="quote-text">"Currently my friend and I cannot play a save we had started just yesterday. The non-host of the game is unable to see any custom products that have been created."</div>
-      <div class="quote-meta">english · 4.9h · 4 helpful</div>
+      <div class="quote-text">"Der Bug mit den Fehlenden Items f&uuml;r den Mitspieler wenn man dem Host beitritt. Unendlicher Ladescreen..."</div>
+      <div class="quote-meta">german &middot; helpful</div>
+      <div class="quote-translation">호스트에 접속할 때 아이템이 사라지는 버그. 무한 로딩 화면&hellip;</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      Co-op(825)과 Multiplayer(768)가 2위와 4위 태그인 것은 유저가 이 게임을 <strong style="color:var(--accent-red)">소셜 경험으로 인식</strong>하고 있음을 보여준다. 그런데 이 핵심 기둥이 기술적으로 불안정하다. 113시간 유저가 "I LOVE this game"을 전제로 부정 리뷰를 남긴다는 것은, <strong style="color:var(--text)">게임 자체가 아닌 멀티플레이어 인프라에 대한 불만</strong>이다. 세이브 동기화, 커스텀 약물 공유, 수면 시스템 등 기본적 코옵 기능에 문제가 있다.
+      Co-op이 태그 2위(825표)인 게임에서 <strong>부정 리뷰의 공통 1위</strong>: EN 90건(45%), DE 60건(47%), ES 18건(28%). Non-Host가 "2등 시민"이 되는 구조적 문제. 콘텐츠보다 네트워크 아키텍처 재검토가 우선.
     </p>
 
-    <div class="card-title">B. Linux/Steam Deck 지원 제거 — 플랫폼 신뢰 파괴</div>
+    <div class="card-title">B. 세이브 파일 손상 — 수십 시간 투자의 소멸</div>
     <div class="quote-block negative">
-      <div class="quote-text">"the fact i have over 60 hrs and beat schedule 1 on my steam deck and now i cant even play it at all because of operating system is beyond wild to me."</div>
-      <div class="quote-meta">english · 60.2h · 5 helpful</div>
-    </div>
-    <div class="quote-block negative">
-      <div class="quote-text">"Removed linux compatibility, was a fun game but I can no longer play."</div>
-      <div class="quote-meta">english · 11.1h · 6 helpful</div>
+      <div class="quote-text">"I've lost two saved games so far. Played in total 127 hours for nought. I don't think I have it in me to start again."</div>
+      <div class="quote-meta">english &middot; 127.6h &middot; helpful</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      이미 작동하던 플랫폼 지원을 제거하는 것은 단순 기능 부재보다 더 큰 문제다. 60시간을 투자한 유저가 갑자기 접근 불가가 되는 것은 <strong style="color:var(--accent-red)">기존 고객에 대한 신뢰 파괴</strong>다. 여러 부정 리뷰에서 이 패턴이 반복되며, Early Access 기간 중 이런 결정은 커뮤니티 평판에 장기적 악영향을 미칠 수 있다.
+      EN 40건(20%), DE 32건(24%). 100시간 이상 투자자도 이탈하는 치명적 문제. <strong>자동 백업 시스템은 신뢰 유지의 최소 요건.</strong>
     </p>
 
-    <div class="card-title">C. 경찰 AI 밸런싱 — 코어 긴장감의 과잉</div>
+    <div class="card-title">C. 카르텔 업데이트 — 기대의 역풍</div>
     <div class="quote-block negative">
-      <div class="quote-text">"IT'S IMPOSSIBLE TO ESCAPE FROM THEM, THEY LEAD YOU HALF THE MAP, YOUR DOORS ARE BLOCKED, AND THE COPS THEMSELVES RUN AT THE SPEED OF THE PLAYER."</div>
-      <div class="quote-meta">russian · 148.5h · 1 helpful</div>
-      <div class="quote-translation">번역: "도망이 불가능하다, 맵 절반을 추적하고, 문을 차단하며, 경찰이 플레이어와 같은 속도로 달린다."</div>
+      <div class="quote-text">"That tight loop of building, optimising, and watching your empire grow was the heart of this game. The Cartel update is truly awful."</div>
+      <div class="quote-meta">english &middot; 23.2h &middot; helpful</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      148시간 플레이한 러시아 유저의 분노는 흥미로운 기획적 딜레마를 드러낸다. 경찰은 "코지한 경영"과 "위험한 범죄" 사이의 긴장감을 만드는 장치인데, 이것이 과하면 코지 경험을 파괴한다. <strong style="color:var(--text)">확정 보상(생산/판매)의 만족감을 경찰이라는 가변 리스크가 과도하게 침해</strong>하는 밸런스 문제다.
+      EN 45건, DE 18건, ES 8건. "플레이어 제어 불가능한 손실"이 성장 판타지와 정면 충돌. 외부 위협은 <strong>플레이어가 대응 가능하다고 느낄 수 있도록</strong> 설계되어야 한다.
     </p>
 
-    <div class="card-title">D. 후반부 콘텐츠 고갈 + 최적화 문제</div>
+    <div class="card-title">D. "킹핀 천장" — 자동화 이후 목표 상실</div>
     <div class="quote-block negative">
-      <div class="quote-text">"The game is not optimised to run well, once you get a good amount of workers the game cannot run at all."</div>
-      <div class="quote-meta">english · 93.8h · 6 helpful</div>
+      <div class="quote-text">"The game hints at building a serious empire, but you never quite reach that 'kingpin' level."</div>
+      <div class="quote-meta">english &middot; 20.3h &middot; 71 helpful</div>
     </div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
-      자동화(외부 루프)의 극대화가 기술적 한계와 충돌한다. 직원을 많이 고용할수록 성능이 저하되는 것은, 게임의 핵심 성장 루프가 자기 자신의 기술적 한계에 의해 차단된다는 의미다. 특히 1인 개발(solo dev)이라는 제약 하에서, 확장 가능한 아키텍처 설계가 과제로 남아 있다.
+      EN 55건, DE 30건, ES 15건. 핵심 임계점은 <strong>~20시간</strong>. "마약왕" 약속과 "자동화된 공장의 배달부" 현실의 괴리. 자동화 이후의 메타 게임이 부재한 구조적 결함.
     </p>
+
+    <div class="card-title">E. 다국어 로컬라이제이션 공백</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"Pongo Negativo, pero realmente lo recomiendo. Cambiar&eacute; la review cuando est&eacute; en espa&ntilde;ol."</div>
+      <div class="quote-meta">spanish &middot; helpful</div>
+      <div class="quote-translation">부정으로 남기지만 사실 추천해요. 스페인어 지원되면 리뷰 바꿀게요.</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      ES 부정 14건(22%)이 순수 로컬라이제이션 요구. 스페인어 공식 지원 시 <strong>부정 리뷰 &rarr; 긍정 전환</strong> 가능한 드문 케이스.
+    </p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">문화권별 차이</div>
+    <div class="grid-3" style="margin-top:.5rem">
+      <div class="sys-card">
+        <strong>독일: 블랙 유머의 폭주</strong>
+        <p>"엄마가 방에 들어왔는데 Crystal Meth에 칠리랑 비아그라 섞는 얘기를 하고 있었다. 외출금지 당했다. 최고의 게임." — 금기의 안전한 연기 공간. Wirtschaftssimulation 친숙성.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>스페인어: 카르텔 문화 공명</strong>
+        <p>"me cro como el chapo gusman" — BB + 실제 카르텔 인물 비교가 영어권보다 빈번. 문화적 현실과 공명하는 콘텐츠. 스페인어 미지원이 부정 22%.</p>
+      </div>
+      <div class="sys-card">
+        <strong>3언어 공통: "현실/게임 경계" 밈</strong>
+        <p>"현실에서 OO했고, 집에 와서 게임을 켰다" — EN, DE, ES, RU, BR 모든 언어권에서 반복. 밈 자체가 바이럴 마케팅 역할.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1023,81 +846,16 @@
   </div>
   <div class="fade-up" style="overflow-x:auto">
     <table class="tri-table">
-      <thead>
-        <tr>
-          <th style="width:18%">기획 요소</th>
-          <th style="width:15%">마케팅</th>
-          <th style="width:15%">구현</th>
-          <th style="width:15%">유저 반응</th>
-          <th style="width:12%">판정</th>
-          <th>증거</th>
-        </tr>
-      </thead>
+      <thead><tr><th style="width:18%">기획 요소</th><th style="width:14%">마케팅</th><th style="width:14%">구현</th><th style="width:14%">유저 반응</th><th style="width:11%">판정</th><th>증거</th></tr></thead>
       <tbody>
-        <tr>
-          <td><strong>마약 제국 판타지</strong></td>
-          <td>○ "pusher to kingpin"</td>
-          <td>○ 완전한 생산→유통 체인</td>
-          <td>◎ "Breaking Bad 판타지"</td>
-          <td><span class="verdict success">기획 성공</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">Crime 태그 804표, 브라질·독일·러시아 등 다국적 공감</td>
-        </tr>
-        <tr>
-          <td><strong>자동화/경영</strong></td>
-          <td>○ "fully automated production"</td>
-          <td>○ 직원+공급망 체인</td>
-          <td>◎ "automation itch" "trance-like"</td>
-          <td><span class="verdict success">기획 성공</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">Automation(449) + Management(704) = 경영축 지배적</td>
-        </tr>
-        <tr>
-          <td><strong>코옵 멀티플레이</strong></td>
-          <td>○ "co-op multiplayer"</td>
-          <td>△ 구현되었으나 버그 다수</td>
-          <td>✕ 세이브 깨짐, 동기화 실패</td>
-          <td><span class="verdict weakness">실행 미흡</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">Co-op 825표(2위)인데 부정 리뷰의 주요 원인</td>
-        </tr>
-        <tr>
-          <td><strong>코지/힐링 경험</strong></td>
-          <td>✕ "grungy" "deadly"로 정반대 마케팅</td>
-          <td>○ 반복 수작업 = 코지 루프</td>
-          <td>◎ "cozy vibes" "PowerWash 같다"</td>
-          <td><span class="verdict hidden">숨은 강점</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">마케팅과 정반대 반응. 코지 게임 유저층 유입</td>
-        </tr>
-        <tr>
-          <td><strong>전투/무기 시스템</strong></td>
-          <td>○ "Fight with fists, melee, firearms"</td>
-          <td>△ 기본적 전투 구현</td>
-          <td>△ 거의 언급 없음</td>
-          <td><span class="verdict marketing">과대 마케팅</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">FPS(328) + Shooter(314)이 하위권 — 유저 관심 낮음</td>
-        </tr>
-        <tr>
-          <td><strong>오픈월드 탐색</strong></td>
-          <td>△ "Hyland Point" 한 줄 언급</td>
-          <td>○ 도보/스케이트/차량 이동</td>
-          <td>○ Open World 태그 707표</td>
-          <td><span class="verdict hidden">숨은 강점</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">Open World가 5위인데 마케팅에서 거의 강조하지 않음</td>
-        </tr>
-        <tr>
-          <td><strong>레시피/크래프팅</strong></td>
-          <td>△ 전체 설명에서만 언급</td>
-          <td>○ 약물 변형 + 특수 효과</td>
-          <td>◎ "unique mechanics" "human chemist"</td>
-          <td><span class="verdict hidden">숨은 강점</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">Crafting(460) — 한 줄 피치에 없지만 핵심 재미 요소</td>
-        </tr>
-        <tr>
-          <td><strong>Linux/Steam Deck</strong></td>
-          <td>✕ 언급 없음</td>
-          <td>✕ 지원 후 제거</td>
-          <td>✕ 다수 부정 리뷰</td>
-          <td><span class="verdict weakness">실행 미흡</span></td>
-          <td style="font-size:.78rem;color:var(--text-dim)">60시간+ 유저의 접근 차단 → 신뢰 파괴</td>
-        </tr>
+        <tr><td><strong>마약 제조/레시피</strong></td><td>&#9675; "unique production"</td><td>&#9675; 조합 시스템</td><td>&#9678; Crafting(460)+밈 폭발</td><td><span class="verdict success">기획 성공</span></td><td style="font-size:.78rem;color:var(--text-dim)">레시피 조합이 UGC 엔진. 밈이 바이럴 마케팅</td></tr>
+        <tr><td><strong>Co-op 멀티</strong></td><td>&#9651; 마지막 1줄</td><td>&#9675; 구현(버그 多)</td><td>&#9678; 태그 2위(825)+역할 분화</td><td><span class="verdict success">기획 성공</span></td><td style="font-size:.78rem;color:var(--text-dim)">마케팅 비중 대비 유저 인식 압도적. 기술 안정성이 위협</td></tr>
+        <tr><td><strong>제국 확장/자동화</strong></td><td>&#9675; "fully automated"</td><td>&#9651; 부분 자동화</td><td>&#10005; "킹핀이 안 된다"</td><td><span class="verdict weakness">실행 미흡</span></td><td style="font-size:.78rem;color:var(--text-dim)">마케팅 약속 "완전 자동화" 미구현. 확장 후에도 배달부</td></tr>
+        <tr><td><strong>법 집행/카르텔</strong></td><td>&#9675; "intensifying"</td><td>&#9651; 카르텔 업데이트(버그)</td><td>&#10005; "위험하지 않다"</td><td><span class="verdict weakness">실행 미흡</span></td><td style="font-size:.78rem;color:var(--text-dim)">경찰/카르텔이 단발성 성가심. 엔드게임 공허의 원인</td></tr>
+        <tr><td><strong>멀티 안정성</strong></td><td>&#10005; 미언급</td><td>&#10005; 심각한 버그</td><td>&#10005; 부정 리뷰 45%</td><td><span class="verdict weakness">실행 미흡</span></td><td style="font-size:.78rem;color:var(--text-dim)">3언어권 부정의 공통 1위. 세이브 손상+무한 로딩</td></tr>
+        <tr><td><strong>"BB 판타지"</strong></td><td>&#10005; 언급 안 함</td><td>&#9675; 테마 일치</td><td>&#9678; 3언어권 자발적 BB 레퍼런스</td><td><span class="verdict hidden">숨은 강점</span></td><td style="font-size:.78rem;color:var(--text-dim)">대중문화가 만든 판타지 수요 포착</td></tr>
+        <tr><td><strong>"게임=마약" 메타포</strong></td><td>&#10005; 의도 안 함</td><td>&#10005; 의도 안 함</td><td>&#9678; EN/DE/ES 120건+</td><td><span class="verdict marketing">커뮤니티 창발</span></td><td style="font-size:.78rem;color:var(--text-dim)">테마와 게임플레이의 자기참조적 일치. 유저 제작 마케팅 카피</td></tr>
+        <tr><td><strong>밈 생산 엔진</strong></td><td>&#10005; 언급 안 함</td><td>&#9675; 네이밍 시스템</td><td>&#9678; "현실/게임 경계" 밈 폭발</td><td><span class="verdict marketing">커뮤니티 창발</span></td><td style="font-size:.78rem;color:var(--text-dim)">금기 테마+커스텀 네이밍 = 바이럴 자동 생성</td></tr>
       </tbody>
     </table>
   </div>
@@ -1113,27 +871,45 @@
   <div class="grid-3 fade-up">
     <div class="card biz-stat">
       <div class="card-label">추정 매출</div>
-      <div class="biz-num gold">$60M~$120M</div>
-      <div class="biz-calc">10~20M owners × $19.99 × 0.3(보정)</div>
+      <div class="biz-num gold">$98M~196M</div>
+      <div class="biz-calc">10~20M &times; $13.99 &times; 0.7(Steam)</div>
     </div>
     <div class="card biz-stat">
       <div class="card-label">가격당 플레이타임</div>
-      <div class="biz-num green">1.4h/$</div>
-      <div class="biz-calc">28.1h ÷ $19.99</div>
+      <div class="biz-num green">1.94h/$</div>
+      <div class="biz-calc">27.2h &div; $13.99</div>
     </div>
     <div class="card biz-stat">
       <div class="card-label">수익 모델</div>
-      <div class="biz-num purple">EA→풀가</div>
-      <div class="biz-calc">Early Access 기간 중, 1인 개발</div>
+      <div class="biz-num purple">EA 진행중</div>
+      <div class="biz-calc">1인 개발 &rarr; 팀 확대 중</div>
     </div>
   </div>
+
+  <div class="card fade-up">
+    <div class="card-title">Twitch 스트리밍 데이터</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-top:.5rem">
+      <strong>68개 라이브 채널 / 397 시청자</strong> (2026-03-18 스냅샷)<br>
+      Top 언어: en(43), de(16), es(7), fr(1), ru(1) — 독일어 스트리머가 리뷰 비율(6.4%) 대비 <strong>과대 대표</strong>(23.5%). 독일어권에서 "시청용 콘텐츠"로서 가치가 높다. 스페인어도 리뷰 5.5% 대비 스트리밍 10.3%로 잠재 성장 시장.
+    </p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-title">CheapShark 가격 이력</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-top:.5rem">
+      Deal Rating: <strong>0.0</strong> / 최저가: <strong>$13.99</strong> (2025-06-26)<br>
+      출시 이후 <strong>단 한 번도 할인하지 않았다</strong>. Deal Rating 0.0은 극단적 <strong>가격 자신감</strong>. $13.99라는 낮은 가격 자체가 진입 장벽 제거 전략이며, 할인 없이 1,000~2,000만 소유자를 달성한 것은 바이럴 효과의 증거.
+    </p>
+  </div>
+
   <div class="card fade-up">
     <div class="card-title">수익 확장 가능성</div>
     <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
-      <strong style="color:var(--text)">1. DLC 확장 — 새로운 약물 카테고리 + 도시:</strong> 게임의 핵심이 "레시피 발견"과 "영역 확장"이므로, 새로운 약물 타입(예: 버섯이 추가됨)과 새 도시/맵은 자연스러운 DLC 경로다. 기존 코어 루프를 유지하면서 콘텐츠를 수평 확장할 수 있다.<br><br>
-      <strong style="color:var(--text)">2. 모딩 커뮤니티:</strong> 리뷰에서 "gold bar duplication glitch"를 활용하는 유저가 있고, 커스텀 약물 레시피에 대한 관심이 높다. Steam Workshop 통합으로 유저 생성 레시피/맵을 허용하면 장기 리텐션을 대폭 향상시킬 수 있다.<br><br>
-      <strong style="color:var(--text)">3. 정가 인상:</strong> EA 기간 $19.99에서 정식 출시 시 $24.99~$29.99로의 인상이 가능하다. 현재 가격 대비 28시간의 평균 플레이타임은 가성비가 매우 높아, 가격 인상에 대한 저항이 낮을 것으로 예상된다.<br><br>
-      <strong style="color:var(--text)">4. 코옵 안정화가 매출 핵심:</strong> Co-op이 2위 태그(825표)인 만큼, 멀티플레이어 안정화는 단순 버그 수정이 아니라 매출 확장의 핵심 과제다. 안정적 코옵은 "친구 추천 구매"를 유발하여 바이럴 성장을 가속한다.
+      &bull; <strong>로컬라이제이션</strong>: 스페인어/포르투갈어/독일어 공식 지원 &rarr; 부정 리뷰 전환 + 비영어권 확대<br>
+      &bull; <strong>엔드게임 콘텐츠</strong>: 카르텔 영역 전쟁, PvP, 새 도시 확장 &rarr; 20시간 임계점 이후의 동기 부여<br>
+      &bull; <strong>완전 자동화</strong>: "킹핀 판타지" 완성 &mdash; 유저 역할을 "노동자 &rarr; 경영자 &rarr; 마약왕"으로 전환<br>
+      &bull; <strong>모딩 지원</strong>: 레시피 조합의 UGC를 공식 모드 도구로 확장<br>
+      &bull; <strong>콘솔 시장</strong>: Unity 기반 포팅 가능. Co-op 강점을 콘솔 소파 경험으로 확장
     </p>
   </div>
 </section>
@@ -1141,26 +917,67 @@
 <!-- ━━━ 결론 ━━━ -->
 <section class="conclusion">
   <div class="conclusion-text fade-up">
-    Schedule I이 성공한 이유는,<br>
-    "마약 범죄"라는 도발적 외피 안에<br>
-    <strong>"반복 수작업 = 명상적 몰입"</strong>이라는<br>
-    코지 게임의 핵심 쾌감을 심어,<br>
-    <em>범죄 판타지의 스릴</em>과 <em>크래프팅의 안정감</em>이<br>
-    하나의 루프에서 교차하는<br>
-    <strong>이중 도파민 구조</strong>를 만들었기 때문이다.
+    이 게임이 98%의 경이적 긍정률을 달성한 이유는,<br>
+    <strong>"Breaking Bad가 만들어 놓은 판타지"</strong> 위에<br>
+    <strong>Stardew Valley식 코어 루프</strong>를 올렸기 때문이다.<br><br>
+    금기 테마는 마케팅 비용을 절감하고,<br>
+    레시피 조합은 유저를 콘텐츠 생산자로 만들며,<br>
+    Co-op 역할 분화는 바이럴 구매를 유도한다.<br><br>
+    유저들은 이 구조를 한 문장으로 요약했다:<br>
+    <strong>"결국 당신이 파는 건 마약이 아니다.<br>마약은 이 게임 자체다."</strong>
   </div>
   <p style="position:relative;font-size:.82rem;color:var(--text-faint);max-width:700px;margin:1.5rem auto 0;text-align:center;line-height:1.8">
-    태그 데이터가 이를 증명한다: Simulation(893) + Crime(804) — 유저들은 이 게임을 "범죄"이자 "시뮬레이션"으로 동시에 인식한다.
-    여기에 Crafting(460) + Automation(449)이 더해져 "만드는 재미"가 경영축을 완성하고,
-    Co-op(825)이 이 경험을 소셜로 확장한다.
-    결과: 98.4%의 긍정률과 10~20M의 소유자 — 1인 개발 EA 타이틀로서는 역사적 성과다.
+    태그 데이터가 이를 증명한다: Simulation(893) + Co-op(825) + Crime(804) — 경영 시뮬레이션과 소셜 경험과 범죄 판타지가 동시에 작동하는 삼축 구조. 할인 없이 $13.99로 1,000~2,000만 카피를 판매한 것은 바이럴 밈과 Co-op 선물이 유료 마케팅을 대체했음을 수치로 증명한다. 부정 리뷰의 70%가 "게임은 좋은데"로 시작하는 이 게임에서, 핵심 과제는 "더 재미있게 만드는 것"이 아니라 "약속한 것을 완성하는 것"이다.
   </p>
 </section>
 
 </div>
 
 <footer class="footer">
-  Steam Game Insight Report · Generated 2026-03-19 · Data: SteamSpy + Steam Reviews API + IGDB + RAWG + HLTB + CheapShark + PCGamingWiki + Twitch · 1,032 reviews analyzed
+  <p>Steam Game Insight Report &middot; Generated 2026-03-20 &middot; Data: SteamSpy + Steam Reviews API + IGDB + RAWG + HLTB + CheapShark + PCGamingWiki + Twitch + Wikidata &middot; 96,155 reviews (1,098 analyzed by agents)</p>
+  <details style="margin-top:.8rem;font-size:.78rem;color:var(--text-faint)">
+    <summary>에이전트 분석 상세 (7개 에이전트, 총 ~118K 입력 + ~32K 출력 토큰, ~694초)</summary>
+    <table style="width:100%;margin-top:.5rem;font-size:.75rem;border-collapse:collapse">
+      <tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:.3rem .5rem">에이전트</th>
+        <th style="text-align:left;padding:.3rem .5rem">모델</th>
+        <th style="text-align:left;padding:.3rem .5rem">구역</th>
+        <th style="text-align:left;padding:.3rem .5rem">리뷰수</th>
+        <th style="text-align:left;padding:.3rem .5rem">입력&asymp;</th>
+        <th style="text-align:left;padding:.3rem .5rem">출력&asymp;</th>
+        <th style="text-align:left;padding:.3rem .5rem">시간</th>
+        <th style="text-align:left;padding:.3rem .5rem">핵심 발견</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">Main-Deep</td><td>opus</td><td>TOP 100</td><td>100</td>
+        <td>~14K</td><td>~8K</td><td>159s</td><td>기획성공 5, 약점 5, 흥미발견 3, 인용 10, 루프 3</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">EN-Positive</td><td>sonnet</td><td>english&middot;긍정</td><td>200</td>
+        <td>~23K</td><td>~4K</td><td>82s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">EN-Negative</td><td>sonnet</td><td>english&middot;부정</td><td>200</td>
+        <td>~27K</td><td>~4K</td><td>81s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">DE-Positive</td><td>sonnet</td><td>german&middot;긍정</td><td>200</td>
+        <td>~19K</td><td>~5K</td><td>108s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">DE-Negative</td><td>sonnet</td><td>german&middot;부정</td><td>134</td>
+        <td>~15K</td><td>~4K</td><td>93s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:.3rem .5rem">ES-Positive</td><td>sonnet</td><td>spanish&middot;긍정</td><td>200</td>
+        <td>~14K</td><td>~4K</td><td>100s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+      <tr>
+        <td style="padding:.3rem .5rem">ES-Negative</td><td>sonnet</td><td>spanish&middot;부정</td><td>64</td>
+        <td>~6K</td><td>~3K</td><td>72s</td><td>패턴 5, 특이점 2, 루프 2</td>
+      </tr>
+    </table>
+  </details>
 </footer>
 
 </body>
