@@ -116,8 +116,9 @@ def test_partial_meta_uses_fallback():
 def test_incremental_build_skips_unchanged(tmp_path):
     from build_index import build_reports_json
     insights_dir = tmp_path / "insights"
-    insights_dir.mkdir()
-    (insights_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    reports_dir = insights_dir / "reports"
+    reports_dir.mkdir(parents=True)
+    (reports_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
     result1 = build_reports_json(insights_dir, force=False, db_path=None)
     assert len(result1) == 1
     (insights_dir / "reports.json").write_text(json.dumps(result1), encoding="utf-8")
@@ -128,12 +129,13 @@ def test_incremental_build_skips_unchanged(tmp_path):
 def test_incremental_build_detects_change(tmp_path):
     from build_index import build_reports_json
     insights_dir = tmp_path / "insights"
-    insights_dir.mkdir()
-    (insights_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    reports_dir = insights_dir / "reports"
+    reports_dir.mkdir(parents=True)
+    (reports_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
     result1 = build_reports_json(insights_dir, force=False, db_path=None)
     (insights_dir / "reports.json").write_text(json.dumps(result1), encoding="utf-8")
     modified = SAMPLE_HTML_WITH_META.replace("98.3%", "99.0%")
-    (insights_dir / "hades.html").write_text(modified, encoding="utf-8")
+    (reports_dir / "hades.html").write_text(modified, encoding="utf-8")
     result2 = build_reports_json(insights_dir, force=False, db_path=None)
     assert result2[0]["positive_rate"] == 99.0
     assert result2[0]["_file_hash"] != result1[0]["_file_hash"]
@@ -142,11 +144,12 @@ def test_incremental_build_detects_change(tmp_path):
 def test_deleted_report_removed(tmp_path):
     from build_index import build_reports_json
     insights_dir = tmp_path / "insights"
-    insights_dir.mkdir()
-    (insights_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    reports_dir = insights_dir / "reports"
+    reports_dir.mkdir(parents=True)
+    (reports_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
     result1 = build_reports_json(insights_dir, force=False, db_path=None)
     (insights_dir / "reports.json").write_text(json.dumps(result1), encoding="utf-8")
-    (insights_dir / "hades.html").unlink()
+    (reports_dir / "hades.html").unlink()
     result2 = build_reports_json(insights_dir, force=False, db_path=None)
     assert len(result2) == 0
 
@@ -154,8 +157,9 @@ def test_deleted_report_removed(tmp_path):
 def test_force_rebuild_reparses_unchanged(tmp_path):
     from build_index import build_reports_json
     insights_dir = tmp_path / "insights"
-    insights_dir.mkdir()
-    (insights_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    reports_dir = insights_dir / "reports"
+    reports_dir.mkdir(parents=True)
+    (reports_dir / "hades.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
     result1 = build_reports_json(insights_dir, force=False, db_path=None)
     (insights_dir / "reports.json").write_text(json.dumps(result1), encoding="utf-8")
     result2 = build_reports_json(insights_dir, force=True, db_path=None)
@@ -167,11 +171,12 @@ def test_duplicate_appid_keeps_newest(tmp_path):
     import time
     from build_index import build_reports_json
     insights_dir = tmp_path / "insights"
-    insights_dir.mkdir()
-    (insights_dir / "hades-old.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
+    reports_dir = insights_dir / "reports"
+    reports_dir.mkdir(parents=True)
+    (reports_dir / "hades-old.html").write_text(SAMPLE_HTML_WITH_META, encoding="utf-8")
     time.sleep(0.1)
     newer = SAMPLE_HTML_WITH_META.replace("98.3%", "99.5%")
-    (insights_dir / "hades-new.html").write_text(newer, encoding="utf-8")
+    (reports_dir / "hades-new.html").write_text(newer, encoding="utf-8")
     result = build_reports_json(insights_dir, force=True, db_path=None)
     appid_entries = [r for r in result if r["appid"] == 1145360]
     assert len(appid_entries) == 1

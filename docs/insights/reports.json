@@ -26,7 +26,7 @@
     "date": "2026-03-20",
     "modified": "2026-03-20",
     "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/427520/header.jpg?t=1763986204",
-    "_file_hash": "33a76cf6cb9d541d97c962e8e3e584ef"
+    "_file_hash": "16aa3e5318638c246de81fb0da45b6aa"
   },
   {
     "slug": "hades",
@@ -51,10 +51,10 @@
       "Indie",
       "RPG"
     ],
-    "date": "2026-03-19",
-    "modified": "2026-03-19",
+    "date": "2026-03-20",
+    "modified": "2026-03-20",
     "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/header.jpg?t=1758127023",
-    "_file_hash": "43e658046c4ae0e8efcd91e8c0409396"
+    "_file_hash": "8b2657860bcf1e769722bc16e90a383e"
   },
   {
     "slug": "palworld",
@@ -111,10 +111,10 @@
       "Simulation",
       "Strategy"
     ],
-    "date": "2026-03-19",
-    "modified": "2026-03-19",
+    "date": "2026-03-20",
+    "modified": "2026-03-20",
     "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3164500/header.jpg?t=1769828261",
-    "_file_hash": "1fb7d0d6a71280a832d493e86ae5ca82"
+    "_file_hash": "46cbbe7f53e658b2ba1a847852619b79"
   },
   {
     "slug": "stardew-valley",
@@ -126,7 +126,7 @@
     "owners": "2,000~5,000만",
     "price": "$14.99",
     "avg_playtime": "75.7h",
-    "review_count": 10002,
+    "review_count": 200070,
     "tags": [
       "Farming Sim",
       "Pixel Graphics",
@@ -139,10 +139,10 @@
       "RPG",
       "Simulation"
     ],
-    "date": "2026-03-18",
-    "modified": "2026-03-18",
+    "date": "2026-03-20",
+    "modified": "2026-03-20",
     "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/header.jpg?t=1754692865",
-    "_file_hash": "b201dba43ec51b57a483fd4cd7708b48"
+    "_file_hash": "19d02826bd404177004a4eca1c7a654a"
   },
   {
     "slug": "tcg-card-shop-simulator",
@@ -163,9 +163,9 @@
       "Collectathon"
     ],
     "genres": [],
-    "date": "2026-03-19",
-    "modified": "2026-03-19",
+    "date": "2026-03-20",
+    "modified": "2026-03-20",
     "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/b4f36532c943011a9f1600c2585ca7065ef5b1bb/header.jpg?t=1762475483",
-    "_file_hash": "407236e9035c19d24aedced3fb0971bd"
+    "_file_hash": "a4eb43d597f106882e63da9759fe210a"
   }
 ]

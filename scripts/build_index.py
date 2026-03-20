@@ -1,6 +1,6 @@
 """Build index script for Steam insight HTML reports.
 
-Pipeline: docs/insights/*.html → reports.json → index page
+Pipeline: docs/insights/reports/*.html → reports.json → index page
 """
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from typing import Optional
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 INSIGHTS_DIR = PROJECT_ROOT / "docs" / "insights"
+REPORTS_SUBDIR = "reports"  # ← subdirectory under INSIGHTS_DIR where HTML reports live
 DB_PATH = PROJECT_ROOT / "data" / "steam.db"
 
 
@@ -225,7 +226,7 @@ def build_reports_json(
     reports.json. Deduplicates by appid, keeping the entry from the newest file.
 
     Args:
-        insights_dir: Directory containing *.html report files.
+        insights_dir: Root insights directory. HTML reports are in insights_dir/reports/.
         force: When True, re-parse all files regardless of cache.
         db_path: Path to SQLite DB for enriching fallback-parsed reports.
 
@@ -243,10 +244,9 @@ def build_reports_json(
         except (json.JSONDecodeError, KeyError):
             cache = {}
 
-    # Collect all HTML files (exclude index.html)
-    html_files = [
-        p for p in insights_dir.glob("*.html") if p.name != "index.html"
-    ]
+    # Collect all HTML files from reports/ subdirectory
+    reports_dir = insights_dir / REPORTS_SUBDIR
+    html_files = list(reports_dir.glob("*.html")) if reports_dir.is_dir() else []
 
     # Parse each file, using cache when possible
     parsed: list[tuple[float, dict]] = []  # (mtime, entry)
