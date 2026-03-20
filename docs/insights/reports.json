@@ -57,6 +57,34 @@
     "_file_hash": "8b2657860bcf1e769722bc16e90a383e"
   },
   {
+    "slug": "meow-mission",
+    "name": "Meow Mission",
+    "name_ko": "야옹 미션",
+    "appid": 3139640,
+    "positive_rate": 100.0,
+    "review_score": "9 user reviews",
+    "owners": "0~20K",
+    "price": "$1.99",
+    "avg_playtime": "—",
+    "review_count": 9,
+    "tags": [
+      "Puzzle",
+      "Sokoban",
+      "Difficult",
+      "Family Friendly",
+      "Cats"
+    ],
+    "genres": [
+      "Casual",
+      "Indie",
+      "Strategy"
+    ],
+    "date": "2026-03-20",
+    "modified": "2026-03-20 05:48",
+    "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3139640/header.jpg?t=1739331531",
+    "_file_hash": "d4f768f8f56f9c53af5330f837168142"
+  },
+  {
     "slug": "palworld",
     "name": "Palworld",
     "name_ko": "Palworld / 팰월드",
@@ -223,5 +251,34 @@
     "modified": "2026-03-20 05:24",
     "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3070070/b4f36532c943011a9f1600c2585ca7065ef5b1bb/header.jpg?t=1762475483",
     "_file_hash": "6de9c053c6980ae8d56d019cef53813b"
+  },
+  {
+    "slug": "touhou-mystias-izakaya",
+    "name": "Touhou Mystia's Izakaya",
+    "name_ko": "동방야작식당 -Touhou Mystia's Izakaya",
+    "appid": 1584090,
+    "positive_rate": 98.6,
+    "review_score": "Overwhelmingly Positive",
+    "owners": "500K~1M",
+    "price": "$5.99",
+    "avg_playtime": "21.3h",
+    "review_count": 31111,
+    "tags": [
+      "Pixel Graphics",
+      "Casual",
+      "Simulation",
+      "RPG",
+      "Time Management"
+    ],
+    "genres": [
+      "Casual",
+      "Indie",
+      "RPG",
+      "Simulation"
+    ],
+    "date": "2026-03-20",
+    "modified": "2026-03-20 05:55",
+    "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1584090/header.jpg?t=1769899942",
+    "_file_hash": "fcf09dbf36f6c5b8b72d603a334c20f4"
   }
 ]

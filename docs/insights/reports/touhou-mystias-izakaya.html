@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Touhou Mystia's Izakaya — 기획 인사이트 보고서</title>
+<meta name="report:appid" content="1584090">
+<meta name="report:game_name" content="Touhou Mystia's Izakaya">
+<meta name="report:name_ko" content="동방야작식당 -Touhou Mystia's Izakaya">
+<meta name="report:positive_rate" content="98.6%">
+<meta name="report:review_score" content="Overwhelmingly Positive">
+<meta name="report:owners" content="50~100만">
+<meta name="report:price" content="$5.99">
+<meta name="report:avg_playtime" content="21.3h">
+<meta name="report:review_count" content="31111">
+<meta name="report:tags" content="Pixel Graphics,Casual,Simulation,RPG,Time Management">
+<meta name="report:genres" content="Casual,Indie,RPG,Simulation">
+<meta name="report:date" content="2026-03-20">
+<meta name="report:modified" content="2026-03-20">
+<meta name="report:header_image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1584090/header.jpg?t=1769899942">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0c0e14;
+    --bg-card: #141620;
+    --bg-card-hover: #191c28;
+    --bg-accent: #1a1d2a;
+    --border: #252838;
+    --border-strong: #363a50;
+    --text: #e8e8f0;
+    --text-dim: #9a9ab4;
+    --text-faint: #686880;
+    --accent-gold: #f0c040;
+    --accent-gold-dim: #b89830;
+    --accent-green: #3ed88a;
+    --accent-red: #f05868;
+    --accent-blue: #4c94f0;
+    --accent-purple: #a46cf0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 1.8;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 3rem 3rem;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 20%, rgba(240,192,64,0.08), transparent),
+      radial-gradient(ellipse 60% 50% at 70% 80%, rgba(160,96,240,0.06), transparent),
+      linear-gradient(180deg, transparent 40%, var(--bg-deep));
+    z-index: 1;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1584090/header.jpg?t=1769899942') center/cover no-repeat;
+    filter: brightness(0.3) saturate(0.6);
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-top-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .steam-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .45rem 1.2rem;
+    background: rgba(27,40,56,0.8);
+    border: 1px solid rgba(102,192,244,0.3);
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #66c0f4;
+    text-decoration: none;
+    letter-spacing: .03em;
+    backdrop-filter: blur(10px);
+    transition: all .2s;
+  }
+  .steam-link:hover { background: rgba(27,40,56,0.95); border-color: #66c0f4; color: #fff; }
+  .steam-link svg { width: 16px; height: 16px; fill: currentColor; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem 1rem;
+    background: rgba(240,192,64,0.15);
+    border: 1px solid rgba(240,192,64,0.3);
+    border-radius: 100px;
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--accent-gold);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle { font-size: 1.1rem; color: var(--text-dim); max-width: 600px; line-height: 1.8; }
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .hero-stat { display: flex; flex-direction: column; }
+  .hero-stat .num { font-family: 'JetBrains Mono', monospace; font-size: 1.8rem; font-weight: 700; color: #fff; }
+  .hero-stat .num.gold { color: var(--accent-gold); }
+  .hero-stat .num.green { color: var(--accent-green); }
+  .hero-stat .label { font-size: .75rem; color: var(--text-dim); margin-top: .2rem; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem; font-weight: 700; color: var(--accent-gold);
+    background: rgba(240,192,64,0.1); border: 1px solid rgba(240,192,64,0.2);
+    padding: .3rem .7rem; border-radius: 4px; letter-spacing: .08em;
+  }
+  .section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 2rem 2.2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .card-label {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--accent-gold-dim); margin-bottom: 1rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border);
+  }
+  .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .8rem; }
+  .loop-diagram {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .5rem;
+    padding: 2.5rem 1rem; background: var(--bg-accent); border-radius: 12px;
+    border: 1px solid var(--border); margin-bottom: 2rem; position: relative;
+  }
+  .loop-node {
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    padding: 1.2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; min-width: 120px; text-align: center; transition: all .2s;
+  }
+  .loop-node:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+  .loop-icon { font-size: 1.8rem; }
+  .loop-label { font-size: .8rem; font-weight: 700; }
+  .loop-sub { font-size: .65rem; color: var(--text-dim); }
+  .loop-arrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold-dim); font-size: 1.2rem; }
+  .tag-grid { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.5rem; }
+  .tag-pill {
+    display: inline-flex; align-items: center; gap: .4rem; padding: .4rem 1rem;
+    border-radius: 100px; font-size: .78rem; font-weight: 500;
+    border: 1px solid var(--border); background: var(--bg-card); transition: all .2s;
+  }
+  .tag-pill:hover { border-color: var(--accent-gold); }
+  .tag-pill .vote { font-family: 'JetBrains Mono', monospace; font-size: .65rem; color: var(--text-faint); }
+  .tag-pill.pillar-genre { border-left: 3px solid var(--accent-blue); }
+  .tag-pill.pillar-mood { border-left: 3px solid var(--accent-purple); }
+  .tag-pill.pillar-platform { border-left: 3px solid var(--accent-green); }
+  .tri-table {
+    width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 12px;
+    overflow: hidden; border: 1px solid var(--border);
+  }
+  .tri-table th {
+    background: var(--bg-accent); padding: 1rem 1.2rem; font-size: .72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .tri-table td {
+    padding: .9rem 1.2rem; font-size: .85rem; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top;
+  }
+  .tri-table tr:last-child td { border-bottom: none; }
+  .tri-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .verdict {
+    display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .6rem;
+    border-radius: 4px; font-size: .72rem; font-weight: 700; letter-spacing: .03em;
+  }
+  .verdict.success { background: rgba(64,208,128,0.12); color: var(--accent-green); }
+  .verdict.weakness { background: rgba(240,80,96,0.12); color: var(--accent-red); }
+  .verdict.hidden { background: rgba(160,96,240,0.12); color: var(--accent-purple); }
+  .verdict.marketing { background: rgba(240,192,64,0.12); color: var(--accent-gold); }
+  .bar-chart { margin: 1.5rem 0; }
+  .bar-row { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; }
+  .bar-label {
+    font-size: .82rem; font-family: 'JetBrains Mono', monospace; color: var(--text);
+    min-width: 90px; text-align: right; white-space: nowrap;
+  }
+  .bar-track { flex: 1; height: 32px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; }
+  .bar-fill {
+    height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: .8rem;
+    font-size: .75rem; font-weight: 700; color: #fff; min-width: fit-content;
+    transition: width .8s cubic-bezier(.22,1,.36,1);
+  }
+  .bar-fill.green { background: var(--accent-green); }
+  .bar-fill.gold { background: var(--accent-gold); color: #1a1d2a; }
+  .bar-fill.red { background: var(--accent-red); }
+  .bar-fill.blue { background: var(--accent-blue); }
+  .bar-value { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--text-dim); min-width: 70px; }
+  .quote-block {
+    position: relative; padding: 1.5rem 1.8rem 1.5rem 2rem; margin: 1.2rem 0;
+    background: var(--bg-accent); border-radius: 8px; border-left: 4px solid var(--accent-gold);
+  }
+  .quote-block.negative { border-left-color: var(--accent-red); }
+  .quote-text { font-size: .9rem; font-style: italic; color: var(--text); line-height: 1.9; }
+  .quote-meta { margin-top: .8rem; font-size: .75rem; color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+  .quote-translation {
+    margin-top: .6rem; font-size: .84rem; color: var(--text-dim); font-style: normal;
+    padding: .6rem .8rem; background: rgba(255,255,255,0.02); border-radius: 4px;
+    border-left: 2px solid rgba(255,255,255,0.08);
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .sys-card { padding: 1rem; background: var(--bg-accent); border-radius: 8px; }
+  .sys-card strong { color: var(--accent-gold); }
+  .sys-card.alt strong { color: var(--accent-purple); }
+  .sys-card p { font-size: .8rem; color: var(--text-dim); margin-top: .3rem; }
+  .biz-stat { text-align: center; }
+  .biz-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; }
+  .biz-num.gold { color: var(--accent-gold); }
+  .biz-num.green { color: var(--accent-green); }
+  .biz-num.purple { color: var(--accent-purple); }
+  .biz-calc { font-size: .75rem; color: var(--text-faint); margin-top: .3rem; }
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .hero { padding: 2rem 1.5rem; }
+  }
+  .conclusion { text-align: center; padding: 5rem 2rem; position: relative; }
+  .conclusion::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(240,192,64,0.06), transparent 70%);
+  }
+  .conclusion-text {
+    position: relative;
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 400; line-height: 1.6; max-width: 800px; margin: 0 auto; color: #fff;
+  }
+  .conclusion-text strong { color: var(--accent-gold); }
+  .conclusion-text em { color: var(--text-dim); font-style: italic; }
+  .footer {
+    text-align: center; padding: 3rem 2rem; font-size: .72rem; color: var(--text-faint);
+    border-top: 1px solid var(--border);
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .6s ease-out both; }
+  .fade-up:nth-child(2) { animation-delay: .1s; }
+  .fade-up:nth-child(3) { animation-delay: .2s; }
+  .fade-up:nth-child(4) { animation-delay: .3s; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content fade-up">
+    <div class="hero-top-bar">
+      <a class="steam-link" href="https://store.steampowered.com/app/1584090/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 256 259"><path d="M128 0C57.3 0 0 52.6 0 117.5c0 28.5 11.3 54.7 29.8 75.2L0 259l66.3-29.5c18.6 9.8 39.9 15.4 62.7 15.4C198.7 245 256 192.4 256 127.5S198.7 0 128 0z"/></svg>
+        Steam Store
+      </a>
+      <div class="hero-badge">Steam Game Insight Report</div>
+    </div>
+    <h1>Touhou Mystia's Izakaya</h1>
+    <p class="hero-subtitle">동방 프로젝트의 요괴 소녀 미스티아가 운영하는 이자카야 경영 시뮬레이션. "한판만 더"의 중독 루프 속에서 50명 이상의 캐릭터와 인연을 쌓는, 치유와 경영의 이중 나선 구조.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num gold">98.6%</span>
+        <span class="label">긍정률 (Overwhelmingly Positive)</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">50~100만</span>
+        <span class="label">소유자 수</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num green">$5.99</span>
+        <span class="label">가격</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">21.3h</span>
+        <span class="label">평균 플레이타임</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- STEP 01 -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 01</span>
+    <h2 class="section-title">마케팅 포지셔닝 — 개발사의 의도</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card fade-up">
+      <div class="card-label">English Description</div>
+      <p>A brand new <strong>pixel art restaurant simulator</strong> based on the <strong>Touhou Project</strong>! Play as Mystia, the owner of a small izakaya. <strong>Collect ingredients</strong> by day, <strong>cater to the customers</strong> by night, learn <strong>recipes</strong> from familiar characters, and become the best izakaya owner in all of Gensokyo!</p>
+    </div>
+    <div class="card fade-up">
+      <div class="card-label">한국어 설명</div>
+      <p>작은 요스즈메 요괴 미스티아 로렐라이의 <strong>꿈</strong>을 좇아 <strong>환상향에서 가장 인기있는 음식점</strong>을 운영해 봅시다! 매일매일 열심히 <strong>요리를 연구</strong>하고, 돈을 모으고... 어느 날 갑자기 무시무시한 손님이 찾아와 꿈을 무너트리고 <strong>빚더미</strong>에 오르기도 하는... <strong>인간미 넘치는</strong> 환상향의 포장마차 경영 이야기입니다.</p>
+    </div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label">마케팅 키워드 분석</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--text)">영문 피치의 핵심 동사:</strong> Collect, Cater, Learn, Become — 수집·서빙·학습·성장의 4단계 경험을 약속한다. "no battle and no danmaku"를 명시하여 동방 원작(탄막 슈팅)과의 차별화를 선언.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--text)">한국어 피치의 뉘앙스 차이:</strong> "꿈", "인간미", "빚더미" — 영문이 게임플레이 기능을 나열하는 반면, 한국어는 감정적 서사(꿈의 좌절과 재기)를 중심으로 피치한다. 동일 게임에 대해 기능 vs 감성이라는 이중 마케팅 전략.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--text)">상세 설명 피처 우선순위 (섹션 순서):</strong><br>
+      1. 코어 게임플레이 (이자카야 경영) → 2. 캐릭터 & 이벤트 (인연/동료) → 3. 월드 탐험 (6개 지역) → 4. 수집 요소 (의상/CG/BGM) → 5. 시청각 완성도 (픽셀 아트/음악)<br>
+      개발사가 생각하는 우선순위: <strong>경영 > 캐릭터 > 탐험 > 수집 > 감각</strong>
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      <strong style="color:var(--text)">Short vs Detailed 갭:</strong> 한 줄 피치에는 없지만 상세 설명에서 강조하는 요소들 — <strong>스펠카드 보상/처벌 시스템</strong>(희귀 손님의 버프/디버프), <strong>동료 자동화</strong>(3명 고용 가능), <strong>호감도 스토리</strong>(캐릭터별 개인 서사). 특히 스펠카드 시스템은 게임의 핵심 차별점이지만 한 줄 피치에서 완전히 누락되어 있다.
+    </p>
+  </div>
+</section>
+
+<!-- STEP 02 -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 02</span>
+    <h2 class="section-title">메커니즘 실체 — 실제 구현</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label">Core Loop Diagram — 2중 루프 구조</div>
+
+    <!-- 외부 루프 -->
+    <div style="border:1px dashed var(--accent-gold-dim);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
+      <div style="font-size:.7rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">외부 루프 — 성장/서사</div>
+
+      <!-- 내부 루프 -->
+      <div class="loop-diagram" style="margin-bottom:1rem;border-color:var(--accent-blue)">
+        <div style="position:absolute;top:.5rem;left:1rem;font-size:.65rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.08em">내부 루프 — 일일 운영</div>
+        <div class="loop-node">
+          <div class="loop-icon">🌅</div>
+          <div class="loop-label">낮: 채집</div>
+          <div class="loop-sub">지역 순회, 재료 수집</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🍳</div>
+          <div class="loop-label">준비</div>
+          <div class="loop-sub">레시피 선택, 가료 조합</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🌙</div>
+          <div class="loop-label">밤: 영업</div>
+          <div class="loop-sub">요리 + 서빙 + 리듬게임</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">✨</div>
+          <div class="loop-label">희귀 손님</div>
+          <div class="loop-sub">태그 퍼즐 → 스펠카드</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">💰</div>
+          <div class="loop-label">결산/저장</div>
+          <div class="loop-sub">1일 종료 = 세이브</div>
+        </div>
+        <span class="loop-arrow" style="opacity:.4">↩</span>
+      </div>
+
+      <!-- 외부 루프 노드 -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap">
+        <div class="loop-node">
+          <div class="loop-icon">💸</div>
+          <div class="loop-label">부채 상환</div>
+          <div class="loop-sub">야쿠모 가 채무</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🗺️</div>
+          <div class="loop-label">지역 해금</div>
+          <div class="loop-sub">6개 맵 진행</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">💛</div>
+          <div class="loop-label">호감도 성장</div>
+          <div class="loop-sub">50+ 캐릭터 인연</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">👥</div>
+          <div class="loop-label">동료 자동화</div>
+          <div class="loop-sub">최대 3명 고용</div>
+        </div>
+        <span class="loop-arrow" style="opacity:.4">↩</span>
+      </div>
+    </div>
+
+    <!-- 핵심 텐션 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+      <div style="padding:1rem;background:rgba(64,208,128,0.06);border:1px solid rgba(64,208,128,0.15);border-radius:8px">
+        <strong style="color:var(--accent-green);font-size:.8rem">확정 보상</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">매출 성장, 부채 상환 진척, 지역 해금, 동료 획득 — 매일 밤 영업은 반드시 수익을 낳는다</p>
+      </div>
+      <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
+        <strong style="color:var(--accent-gold);font-size:.8rem">가변 보상</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">희귀 손님 등장 확률, 스펠카드 버프/처벌 결과, 캐릭터 개인 스토리 해금 — 예측 불가능한 기쁨</p>
+      </div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">
+      <strong style="color:var(--text)">기획적 핵심:</strong> 동료 자동화가 플레이어 역할을 "요리사/서빙원"에서 "경영자/공략가"로 전환시킨다. 일반 손님은 동료가 처리하고, 플레이어는 희귀 손님의 태그 퍼즐에 집중하게 되는 구조. 그러나 이 전환 이후 금전적 목표가 소멸되어 후반부 동기 부여 공백이 발생한다 — 리뷰에서 반복 확인된 구조적 약점이다.
+      <br><br>
+      <strong style="color:var(--text)">유저 증언으로 확인된 루프:</strong> "재료 수집 완료 → 오늘 밤만 더 → 영업 종료 후 내일 재료 프리뷰 → 다시 채집 욕구" 의 무한 사이클. 1일 종료 = 세이브라는 설계가 "한판만 더" 중독의 핵심 장치다.
+    </p>
+  </div>
+
+  <!-- IGDB/RAWG/외부 소스 분석 -->
+  <div class="card fade-up">
+    <div class="card-label">외부 소스 교차 분석</div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">IGDB Themes & Keywords</div>
+      <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:.8rem">
+        <strong style="color:var(--accent-blue)">Themes:</strong> Fantasy, Comedy, Business, Drama<br>
+        <strong style="color:var(--accent-purple)">주요 Keywords:</strong> cooking, economy, time management, jrpg, story rich, youkai, touhou fangame, maid, great soundtrack, music and rhythm, alternate costumes, level up, food
+      </p>
+      <p style="font-size:.85rem;color:var(--text-dim)">
+        <strong style="color:var(--text)">Steam 태그에 없지만 IGDB에 있는 것:</strong> music and rhythm (리듬 미니게임의 존재를 제3자가 인식), alternate costumes (의상 수집), puppet, heterochromia — Steam 커뮤니티는 이를 핵심 정체성으로 보지 않지만 실제 구현되어 있다.
+      </p>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">Wikidata 기획 온톨로지</div>
+      <p style="font-size:.85rem;color:var(--text-dim)">
+        <strong style="color:var(--accent-blue)">Genre:</strong> business simulation game<br>
+        <strong style="color:var(--accent-blue)">Game Mode:</strong> single-player<br>
+        <strong style="color:var(--accent-blue)">Input:</strong> keyboard + mouse<br>
+        Wikidata의 분류는 최소한이지만, "business simulation"이라는 핵심 정체성은 Steam 태그(Simulation), IGDB 테마(Business), Wikidata 모두에서 공통으로 확인 — <strong>게임의 확실한 정체성</strong>.
+      </p>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">RAWG 리텐션 프록시</div>
+      <p style="font-size:.85rem;color:var(--text-dim)">
+        추가된 유저: 127명 | owned: 114 | playing: 5 | beaten: 2 | dropped: 0<br>
+        <strong style="color:var(--accent-green)">드롭률: 0%</strong> (소규모 샘플이지만 주목할 만한 수치)<br>
+        클리어률: 2/121 = 1.7% — 극히 낮음. 대부분이 "소유만 하거나 진행 중"으로, 장기 플레이형 게임의 특성.<br>
+        RAWG 평가: exceptional 16.7%, recommended 50%, meh 16.7%, skip 16.7%<br>
+        <strong style="color:var(--text)">Steam 98.6% vs RAWG recommended+exceptional 66.7%</strong> — 30% 이상의 괴리. RAWG 유저층은 "재밌지만 적극 추천까진 아닌" 온도차를 보인다.
+      </p>
+    </div>
+
+    <div style="margin-bottom:1.5rem">
+      <div class="card-title">HowLongToBeat 게임 길이</div>
+      <p style="font-size:.85rem;color:var(--text-dim)">
+        Main Story: <strong>36.4h</strong> | Main + Extra: <strong>45.8h</strong> | Completionist: <strong>59.1h</strong><br>
+        Main/Completionist 비율: <strong>1:1.62</strong> — 메인 경험에 집중된 설계. 완전주의 콘텐츠(수집/전 캐릭터 호감도 MAX)가 메인의 약 63%를 추가하는 적정 수준.<br>
+        Steam 평균 플레이타임 21.3h는 Main Story의 59% — <strong>유저의 상당수가 메인 스토리를 완주하지 못하거나 중반부에서 리뷰를 작성</strong>한다.
+      </p>
+    </div>
+
+    <div>
+      <div class="card-title">PCGamingWiki 기술 스펙</div>
+      <p style="font-size:.85rem;color:var(--text-dim)">
+        엔진: <strong>Unity</strong> — 모바일/Switch 포팅에 유리한 선택. 실제로 모바일 버전이 존재.<br>
+        울트라와이드/HDR/컨트롤러 지원: 데이터 없음 (인디 픽셀 게임 특성상 미지원 추정)
+      </p>
+    </div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label">마케팅이 말하지 않은 시스템들</div>
+    <div class="grid-3" style="margin-top:1rem">
+      <div class="sys-card">
+        <strong>리듬 미니게임</strong>
+        <p>요리 시 강제 연주 메커니즘. IGDB에서 "music and rhythm" 키워드로 분류되지만 마케팅에서는 거의 언급 없음. 유저 반응은 양극화.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>치유/정서적 안식처</strong>
+        <p>마케팅에서 의도하지 않았지만 인연 시스템의 구조가 자연발생적으로 만든 가치. 중국어 리뷰에서 "생존 이유"라는 극단적 증언 다수.</p>
+      </div>
+      <div class="sys-card">
+        <strong>1일 1저장 중독 구조</strong>
+        <p>"한판만 더"의 구조적 원인이지만 마케팅에서 전혀 언급 안 됨. Civilization의 "한 턴만 더"와 동일한 세션 연장 메커니즘.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>의상 수집 시스템</strong>
+        <p>IGDB의 "alternate costumes" 키워드. 지하실 컬렉션 시스템으로 구현. 마케팅에선 부가 수집 요소로만 취급.</p>
+      </div>
+      <div class="sys-card">
+        <strong>동방 IP 입문 게이트웨이</strong>
+        <p>비팬을 팬으로 전환하는 깔때기 역할. "이 게임 때문에 동방 팬이 됐다"는 증언이 전 언어권에서 반복.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>다이나믹 BGM 시스템</strong>
+        <p>손님 수에 따라 음악이 격화되는 구조. 유저가 이를 "게임플레이 정보"로 인식하지만 마케팅에선 단순 "음악이 좋다"로만 표현.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 03 -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 03</span>
+    <h2 class="section-title">유저 경험 — 실제 반응</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- 태그 -->
+  <div class="card fade-up">
+    <div class="card-label">태그 프로필 — 유저가 인식한 정체성</div>
+    <div class="tag-grid">
+      <span class="tag-pill pillar-mood">Pixel Graphics <span class="vote">599</span></span>
+      <span class="tag-pill pillar-platform">Casual <span class="vote">562</span></span>
+      <span class="tag-pill pillar-genre">Simulation <span class="vote">527</span></span>
+      <span class="tag-pill pillar-genre">RPG <span class="vote">501</span></span>
+      <span class="tag-pill pillar-genre">Time Management <span class="vote">463</span></span>
+      <span class="tag-pill pillar-mood">Faith <span class="vote">452</span></span>
+      <span class="tag-pill pillar-mood">Anime <span class="vote">411</span></span>
+      <span class="tag-pill pillar-mood">Comedy <span class="vote">408</span></span>
+      <span class="tag-pill pillar-genre">JRPG <span class="vote">375</span></span>
+      <span class="tag-pill pillar-genre">Cooking <span class="vote">374</span></span>
+      <span class="tag-pill pillar-mood">2D <span class="vote">349</span></span>
+      <span class="tag-pill pillar-genre">Capitalism <span class="vote">310</span></span>
+      <span class="tag-pill pillar-platform">Female Protagonist <span class="vote">304</span></span>
+      <span class="tag-pill pillar-mood">Story Rich <span class="vote">302</span></span>
+      <span class="tag-pill pillar-mood">Drama <span class="vote">297</span></span>
+      <span class="tag-pill pillar-genre">Clicker <span class="vote">293</span></span>
+      <span class="tag-pill pillar-mood">Cartoon <span class="vote">292</span></span>
+      <span class="tag-pill pillar-mood">1990's <span class="vote">287</span></span>
+      <span class="tag-pill pillar-mood">Old School <span class="vote">286</span></span>
+      <span class="tag-pill pillar-genre">Economy <span class="vote">285</span></span>
+    </div>
+    <p style="font-size:.78rem;color:var(--text-dim)">
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-blue);border-radius:2px;margin-right:4px"></span>장르/메커니즘 축 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-purple);border-radius:2px;margin-right:4px"></span>분위기/감성 축 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-green);border-radius:2px;margin-right:4px"></span>플랫폼/접근성 축
+    </p>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-top:1rem">
+      투표 분포가 극히 균등하다 — 최상위(599)와 최하위(285)의 차이가 2.1배에 불과. 이는 게임이 <strong>단일 정체성이 아닌 다축 설계</strong>로 인식되고 있음을 의미한다. "경영 게임"이면서 "RPG"이고 "캐주얼"이며 "스토리 리치"한 게임 — 각 축이 독립적으로 작동하면서 서로를 보강하는 구조.
+    </p>
+  </div>
+
+  <!-- 태그 바 차트 -->
+  <div class="card fade-up">
+    <div class="card-label">태그 투표수 분포</div>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-label">Pixel Graphics</span><div class="bar-track"><div class="bar-fill blue" style="width:100%">599</div></div><span class="bar-value">599</span></div>
+      <div class="bar-row"><span class="bar-label">Casual</span><div class="bar-track"><div class="bar-fill green" style="width:93.8%">562</div></div><span class="bar-value">562</span></div>
+      <div class="bar-row"><span class="bar-label">Simulation</span><div class="bar-track"><div class="bar-fill blue" style="width:88.0%">527</div></div><span class="bar-value">527</span></div>
+      <div class="bar-row"><span class="bar-label">RPG</span><div class="bar-track"><div class="bar-fill blue" style="width:83.6%">501</div></div><span class="bar-value">501</span></div>
+      <div class="bar-row"><span class="bar-label">Time Mgmt</span><div class="bar-track"><div class="bar-fill blue" style="width:77.3%">463</div></div><span class="bar-value">463</span></div>
+      <div class="bar-row"><span class="bar-label">Faith</span><div class="bar-track"><div class="bar-fill gold" style="width:75.5%">452</div></div><span class="bar-value">452</span></div>
+      <div class="bar-row"><span class="bar-label">Anime</span><div class="bar-track"><div class="bar-fill gold" style="width:68.6%">411</div></div><span class="bar-value">411</span></div>
+      <div class="bar-row"><span class="bar-label">Comedy</span><div class="bar-track"><div class="bar-fill gold" style="width:68.1%">408</div></div><span class="bar-value">408</span></div>
+      <div class="bar-row"><span class="bar-label">JRPG</span><div class="bar-track"><div class="bar-fill blue" style="width:62.6%">375</div></div><span class="bar-value">375</span></div>
+      <div class="bar-row"><span class="bar-label">Cooking</span><div class="bar-track"><div class="bar-fill blue" style="width:62.4%">374</div></div><span class="bar-value">374</span></div>
+    </div>
+  </div>
+
+  <!-- 기획 축 분류 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 축 분류 (Pillar Analysis)</div>
+    <table class="tri-table">
+      <thead>
+        <tr><th style="width:15%">기획 축</th><th>포함 태그</th><th style="width:12%">합산 투표</th><th style="width:10%">비중</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>서사/캐릭터</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">RPG(501), Faith(452), Comedy(408), JRPG(375), Story Rich(302), Drama(297), Female Protagonist(304)</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">2,639</span></td>
+          <td><span class="verdict success">지배적</span></td>
+        </tr>
+        <tr>
+          <td><strong>비주얼/스타일</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Pixel Graphics(599), Anime(411), 2D(349), Cartoon(292), Old School(286), 1990's(287)</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">2,224</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>경영/경제</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Simulation(527), Time Management(463), Cooking(374), Capitalism(310), Economy(285), Clicker(293)</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">2,252</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>접근성</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Casual(562)</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">562</span></td>
+          <td><span class="verdict marketing">보조</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem">
+      주목할 점: 개발사는 "경영 > 캐릭터"로 마케팅했지만, 유저 태그는 <strong>"서사/캐릭터(2,639) > 경영(2,252)"</strong>으로 인식한다. 유저에게 이 게임의 핵심 가치는 이자카야 경영이 아니라 <strong>50명의 캐릭터와 쌓는 인연</strong>이다.
+    </p>
+  </div>
+
+  <!-- 플레이타임별 긍정률 -->
+  <div class="card fade-up">
+    <div class="card-label">플레이타임별 긍정률 — 리텐션 곡선</div>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-label">&lt; 1h</span><div class="bar-track"><div class="bar-fill green" style="width:92.0%">92.0%</div></div><span class="bar-value">803명</span></div>
+      <div class="bar-row"><span class="bar-label">1-10h</span><div class="bar-track"><div class="bar-fill green" style="width:98.5%">98.5%</div></div><span class="bar-value">10,643명</span></div>
+      <div class="bar-row"><span class="bar-label">10-50h</span><div class="bar-track"><div class="bar-fill green" style="width:98.9%">98.9%</div></div><span class="bar-value">13,668명</span></div>
+      <div class="bar-row"><span class="bar-label">50-100h</span><div class="bar-track"><div class="bar-fill green" style="width:99.0%">99.0%</div></div><span class="bar-value">4,165명</span></div>
+      <div class="bar-row"><span class="bar-label">100h+</span><div class="bar-track"><div class="bar-fill green" style="width:99.5%">99.5%</div></div><span class="bar-value">1,832명</span></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--text-dim)">
+      <strong>경이적인 리텐션 곡선.</strong> 1시간 미만(92.0%)에서 100시간 이상(99.5%)까지 <strong>긍정률이 오히려 상승</strong>한다. 대부분의 게임은 장시간 플레이 시 피로도로 긍정률이 하락하는데, 이 게임은 반대다. "오래 할수록 더 좋아진다"는 것은 캐릭터 인연 시스템의 점진적 보상이 장기 리텐션을 지탱함을 의미한다. <1h 구간의 92%는 초반 튜토리얼 과부하(70개 텍스트 블록)로 인한 것으로 보인다.
+    </p>
+  </div>
+
+  <!-- 언어별 분포 -->
+  <div class="card fade-up">
+    <div class="card-label">언어별 리뷰 분포 — 시장 도달</div>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-label">schinese</span><div class="bar-track"><div class="bar-fill blue" style="width:100%">24,363</div></div><span class="bar-value">78.3%</span></div>
+      <div class="bar-row"><span class="bar-label">english</span><div class="bar-track"><div class="bar-fill blue" style="width:15.1%">3,684</div></div><span class="bar-value">11.8%</span></div>
+      <div class="bar-row"><span class="bar-label">koreana</span><div class="bar-track"><div class="bar-fill gold" style="width:5.8%">1,411</div></div><span class="bar-value">4.5%</span></div>
+      <div class="bar-row"><span class="bar-label">tchinese</span><div class="bar-track"><div class="bar-fill blue" style="width:3.7%">911</div></div><span class="bar-value">2.9%</span></div>
+      <div class="bar-row"><span class="bar-label">japanese</span><div class="bar-track"><div class="bar-fill blue" style="width:0.8%">194</div></div><span class="bar-value">0.6%</span></div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:.8rem">
+      중국어 간체가 78.3%로 압도적. 동방 프로젝트 IP의 중국 시장 침투력 + 중국 개발사(二色幽紫蝶)라는 이중 효과. 한국어 리뷰(4.5%)는 한글화 완료 시점 이후 폭증 — 번역이 곧 마케팅 이벤트.
+    </p>
+  </div>
+
+  <!-- 기획 성공 포인트 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 성공 포인트</div>
+
+    <div class="card-title">A. "한판만 더" 중독 루프 — 하루 단위 저장 시스템</div>
+    <div class="quote-block">
+      <div class="quote-text">"诶呀把东西都捡完了，再打一晚好了。诶呀把东西都捡完了，再打一晚好了。诶呀把东西都捡完了，再打一晚好了。诶呀把东西都捡完了，再打一晚好了。"</div>
+      <div class="quote-meta">schinese · 2.8h · 371 helpful</div>
+      <div class="quote-translation">"어, 재료 다 모았으니까 오늘 밤만 더 하고 자자. (×6 반복)"</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      하루 단위 저장은 Civilization의 "한 턴만 더"와 구조적으로 동일한 세션 연장 메커니즘이다. 한 사이클(낮 채집 → 밤 영업 → 결산)을 완료해야 저장되므로, "이번 밤만 끝내자"를 반복하게 된다. 전 언어권에서 "정신 차려보니 새벽"이라는 증언이 반복 확인 — <strong>3개 언어 62% 이상의 리뷰에서 중독성 언급</strong>.
+    </p>
+
+    <div class="card-title">B. IP 팬덤을 초월하는 캐릭터 접근성</div>
+    <div class="quote-block">
+      <div class="quote-text">"A month ago, if you told me that I'd stop playing Baldur's Gate 3 for weeks because I got too absorbed in a $4 restaurant running fangame from a franchise I wasn't really into before, I would have thought you were joking."</div>
+      <div class="quote-meta">english · 33.2h · 189 helpful</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"씹덕IP를 빼놓고 봐도 재밌게 잘 만든 타이쿤 게임. 동방프로젝트에 대해서 하나도 몰랐지만 캐릭터와 스토리를 이해하는 데 불편함이 하나도 없었다"</div>
+      <div class="quote-meta">koreana · helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      동인 게임의 최대 리스크인 팬덤 의존성을 완전히 극복했다. 영어·한국어·중국어 모든 파티션에서 "동방 몰라도 된다"가 가장 높은 빈도의 긍정 패턴(영어 35~40%, 한국어 30~35%, 중국어 35건+). 게임 내 캐릭터 노트북이 자연스러운 온보딩 역할을 수행하며, 오히려 <strong>"이 게임으로 동방 팬이 됐다"</strong>는 역방향 유입까지 발생.
+    </p>
+
+    <div class="card-title">C. 가격 대비 극단적 가성비 충격</div>
+    <div class="quote-block">
+      <div class="quote-text">"이게 왜 7700원이지 지금 내 플탐이 50시간인데 ㅋㅋㅋ"</div>
+      <div class="quote-meta">koreana</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"Costing less than 5 euros, this game has no business being this good. I'd pay like $30 or $40 for this game, easily."</div>
+      <div class="quote-meta">english</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      $5.99에 36~59시간의 콘텐츠. 시간당 비용 $0.10~$0.17. 영어 33%, 한국어 25~30%의 리뷰가 가격을 명시하며 충격을 표현. "할로우 나이트급 가성비"라는 비교가 반복되며, 이것이 <strong>낮은 진입가 → 콘텐츠 감탄 → DLC 자발 구매</strong>의 퍼널을 구동하는 핵심 엔진이다.
+    </p>
+
+    <div class="card-title">D. 캐릭터 인연이 만드는 치유적 가치</div>
+    <div class="quote-block">
+      <div class="quote-text">"我永远不会忘记，在我人生无比灰暗的时期遇到这款游戏。如果不是雀食，我可能已经走了吧"</div>
+      <div class="quote-meta">schinese · 307.9h · 170 helpful</div>
+      <div class="quote-translation">"인생에서 가장 어두웠던 시기에 이 게임을 만났습니다. 이 게임이 없었다면 저는 이미 떠났을 것입니다."</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      단순 오락을 넘어 <strong>정서적 레퓨지(refuge)</strong>로 기능. 중국어 리뷰에서 "생존 이유"라는 극단적 증언이 45/200건으로 나타나며, 이는 일반적인 게임 리뷰에서 극히 드문 수치. 경쟁/과금 스트레스 없는 저압 루프 + 점진적 캐릭터 친밀감이 현실 고독에 대한 보상 기제로 작동 — <strong>기획 의도를 넘어선 창발적 성공</strong>.
+    </p>
+
+    <div class="card-title">E. 희귀 손님 태그 퍼즐 — 서빙이 아닌 추리</div>
+    <div class="quote-block">
+      <div class="quote-text">"I spend very little time rushing to do things quickly, and instead will ponder for minutes at a time about good ingredient combinations for each special guest."</div>
+      <div class="quote-meta">english · 100.6h · 74 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      레시피 선택 + 재료 추가 = 태그 조합 퍼즐이라는 간결한 구조가 수십 명의 희귀 손님 각각에게 다른 최적해를 만든다. 영어권에서 이를 명확히 <strong>"퍼즐 게임"</strong>으로 재정의하여 인식하고 있으며, 보상/처벌 스펠카드의 양면 결과가 "최적해를 찾는 재미"를 극대화한다.
+    </p>
+  </div>
+
+  <!-- 기획 약점 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 약점</div>
+
+    <div class="card-title">A. 후반부 루프 붕괴 — 머니싱크 부재</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"前期很好玩，玩到后面就没意思了，无情的刷钱机器.jpg。攒这么多钱没多少意思的"</div>
+      <div class="quote-meta">schinese · 23.5h · 174 helpful</div>
+      <div class="quote-translation">"전반부는 재밌는데 후반은 무정한 돈 벌기 기계. 이렇게 많이 벌어도 쓸 곳이 없다."</div>
+    </div>
+    <div class="quote-block negative">
+      <div class="quote-text">"Once you've served the first few guests, you've served them all. There is no deeper system than what you access in the first two or three hours."</div>
+      <div class="quote-meta">english</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      전 언어권의 부정 리뷰 1위 패턴. 중국어 부정 122건 중 55~60건(45~50%), 영어 부정 29건 중 14~16건이 "후반부 단조로움"을 지적. 부채 상환 완료 후 금전적 목표가 소멸되고, DLC 추가로 볼륨만 늘어나면서 핵심 메커니즘이 버텨내지 못하는 <strong>구조적 결함</strong>. "7~10시간 밀도의 게임을 80시간으로 희석"이라는 날카로운 비판.
+    </p>
+
+    <div class="card-title">B. 강제 스토리 잠금 — 자유도 파괴</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"但凡在今晚有一句剧情对话，他都要给你把开店位置锁在最新章节地点，并且锁在最小规模...连续给我锁了六天店铺"</div>
+      <div class="quote-meta">schinese · 32.3h · 774 helpful</div>
+      <div class="quote-translation">"그날 밤 대사 한 마디만 있으면 가게를 최신 챕터에 강제 고정 + 최소 규모로 잠근다. 연속 6일 잠겼다."</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      가장 높은 helpful 수(774)를 받은 부정 리뷰. 스토리 진행을 위한 강제 지역/규모 잠금이 부채 상환 데드라인과 충돌하여 극심한 좌절감 유발. 자유도 기반 경영 시뮬에서 외부 제약이 반복되면 <strong>"내 가게"라는 주체성이 훼손</strong>된다.
+    </p>
+
+    <div class="card-title">C. 리듬 미니게임 강제성</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"Just after you've played enough to void a return, the game introduces a music note mini game you're now forced to do every single time you want to cook a dish and it just killed the game for me."</div>
+      <div class="quote-meta">english</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      영어 부정 6~7건, 중국어 부정 20~25건이 리듬 미니게임 강제성을 지적. 실패 시 재료 낭비 패널티가 있어 "보상 없는 위험"으로 인식. 요리를 할 때마다 반복 강제되는 구조가 코어 루프의 <strong>불필요한 마찰</strong>로 작동한다.
+    </p>
+
+    <div class="card-title">D. 낮 채집 파트의 결정론적 단조로움</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"收集阶段可以说是比较拉跨的一段时间...物资出现的规律明显且易于掌控...整个过程真的可以说毫无惊喜"</div>
+      <div class="quote-meta">schinese · 8.8h · 162 helpful</div>
+      <div class="quote-translation">"채집 단계는 꽤 허접하다. 자원 출현 규칙이 뻔하다. 전혀 서프라이즈가 없다."</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      낮-밤 2사이클의 "낮" 파트가 결정론적 자원 배치로 "루틴 작업"에 전락. 밤 영업의 높은 몰입감과 대비되어 체감 품질 차가 크다. 랜덤 이벤트나 채집 미니게임 등의 변동성이 부재.
+    </p>
+
+    <div class="card-title">E. 저장 시스템 기술적 결함</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"키보드, 패드 다 먹히지 않아서 싸그리 날려먹음. ㅂㅂ 정떨어졌어. 별개로 겜은 잘만듬"</div>
+      <div class="quote-meta">koreana</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      1일 1저장 구조 + 20분 이상의 1일 소요 시간 조합에서 크래시 발생 시 피해가 극대화. Steam Cloud 동기화 미작동, 세이브 데이터 완전 손실 등 기술적 문제가 전 언어권에서 보고. 게임 품질 자체의 문제가 아닌 <strong>"신뢰의 문제"</strong>로 환불/부정 리뷰의 직접 트리거.
+    </p>
+  </div>
+
+  <!-- 문화권별 차이 -->
+  <div class="card fade-up">
+    <div class="card-label">문화권별 특이점</div>
+    <div class="grid-3" style="margin-top:.5rem">
+      <div class="sys-card">
+        <strong>중국어: 치유 서사 + 국산 자부심</strong>
+        <p>"생존 이유" 수준의 극단적 치유 증언. 게임을 "국산 게임의 등대"로 위치시키는 자부심 담론. 제작자 발언 논란이 부정 리뷰의 25~28%를 차지.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>영어: AAA 대체재 + 밈 생산</strong>
+        <p>"BG3/Hades 대신 이것을 했다"는 기회비용 서술. "kneecaps" 빚 밈의 자생적 재생산. 팬덤 버블 의심 표현 존재.</p>
+      </div>
+      <div class="sys-card">
+        <strong>한국어: 욕설이 곧 애정 + 향수</strong>
+        <p>"진상 손님"에 대한 욕설이 몰입의 증거. 피처폰 타이쿤/플래시 게임 시절 향수를 불러일으키는 장르적 기억. 한글화 팀에 대한 감사가 독자적 충성도 축.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 04 -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 04</span>
+    <h2 class="section-title">삼각 검증 — Triangulation</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="fade-up" style="overflow-x:auto">
+    <table class="tri-table">
+      <thead>
+        <tr>
+          <th style="width:16%">기획 요소</th>
+          <th style="width:14%">마케팅</th>
+          <th style="width:14%">구현</th>
+          <th style="width:14%">유저 반응</th>
+          <th style="width:11%">판정</th>
+          <th>증거</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>이자카야 경영</strong></td>
+          <td>○ 핵심 피치</td>
+          <td>○ 코어 루프</td>
+          <td>◎ Simulation(527)</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">전 언어권 "최고의 타이쿤 게임" 평가. 한국어: "음식 경영계의 할로우 나이트"</td>
+        </tr>
+        <tr>
+          <td><strong>캐릭터 인연/스토리</strong></td>
+          <td>○ 섹션2 피처</td>
+          <td>○ 50+ 캐릭터</td>
+          <td>◎ Story Rich+RPG 1,303</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">태그 1위 축. 유저가 NPC에게 적자 서빙을 감수하는 감정 이입 증거</td>
+        </tr>
+        <tr>
+          <td><strong>스펠카드 보상/처벌</strong></td>
+          <td>○ 상세 설명</td>
+          <td>○ 구현됨</td>
+          <td>◎/△ 양면적</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">핵심 차별점으로 인식. 다만 처벌 비대칭(처벌>보상) 불만 일부 존재</td>
+        </tr>
+        <tr>
+          <td><strong>낮-밤 템포</strong></td>
+          <td>○ 간접 언급</td>
+          <td>○ 행동기반 시간</td>
+          <td>◎ 접근성 찬사</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">낮의 여유 + 밤의 긴장 + 일시정지 안전장치. 비게이머(엄마 세대)까지 유입</td>
+        </tr>
+        <tr>
+          <td><strong>음악/BGM</strong></td>
+          <td>○ 섹션5 강조</td>
+          <td>◎ 다이나믹 BGM</td>
+          <td>◎ "beyond godly"</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">손님 수에 따른 음악 격화가 게임플레이 정보로 기능. 30곡+ 어레인지</td>
+        </tr>
+        <tr>
+          <td><strong>치유/정서적 안식</strong></td>
+          <td>✕ 미언급</td>
+          <td>○ 인연 시스템 창발</td>
+          <td>◎ 극강 긍정</td>
+          <td><span class="verdict hidden">숨은 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅 미의도. 저압 루프 + 캐릭터 친밀감이 자연발생적 치유 가치 생성</td>
+        </tr>
+        <tr>
+          <td><strong>IP 입문 게이트웨이</strong></td>
+          <td>✕ 미언급</td>
+          <td>○ 캐릭터 노트북</td>
+          <td>◎ 전 언어 확인</td>
+          <td><span class="verdict hidden">숨은 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">"이 게임으로 동방 팬이 됐다" — 비팬→팬 전환의 역방향 유입</td>
+        </tr>
+        <tr>
+          <td><strong>후반부 콘텐츠 깊이</strong></td>
+          <td>△ "더 많은 놀라움"</td>
+          <td>✕ 머니싱크 부재</td>
+          <td>✕ 1위 불만</td>
+          <td><span class="verdict weakness">실행 실패</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">부채 상환 후 목표 소멸. 돈 쓸 곳 없음. "무정한 돈 벌기 기계"</td>
+        </tr>
+        <tr>
+          <td><strong>채집 파트</strong></td>
+          <td>○ "낮에 수집"</td>
+          <td>△ 결정론적</td>
+          <td>✕ "서프라이즈 없음"</td>
+          <td><span class="verdict weakness">실행 미흡</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">밤 영업 대비 현저히 낮은 몰입. 변동성/이벤트 부재</td>
+        </tr>
+        <tr>
+          <td><strong>리듬 미니게임</strong></td>
+          <td>△ 간접("음악과 사랑")</td>
+          <td>○ 강제 구현</td>
+          <td>✕ 양극화</td>
+          <td><span class="verdict weakness">실행 실패</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">선택 불가 + 실패 패널티 = 불필요한 마찰. 게임 이탈의 직접 트리거</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- STEP 05 -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 05</span>
+    <h2 class="section-title">비즈니스 구조</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-3 fade-up">
+    <div class="card biz-stat">
+      <div class="card-label">추정 매출</div>
+      <div class="biz-num gold">$2.1~4.2M</div>
+      <div class="biz-calc">50~100만 × $5.99 × 0.7(Steam)</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="card-label">가격당 플레이타임</div>
+      <div class="biz-num green">3.55h/$</div>
+      <div class="biz-calc">21.3h ÷ $5.99</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="card-label">수익 모델</div>
+      <div class="biz-num purple">Base + DLC</div>
+      <div class="biz-calc">$5.99 본편 + 다수 DLC 확장</div>
+    </div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-title">비즈니스 분석</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--text)">Twitch:</strong> 수집 시점(2026-03-20) 기준 라이브 스트리머 0명, 시청자 0명. 2021년 출시 게임으로 스트리밍 수명은 종료된 상태. 그러나 78.3%의 중국어 리뷰 비율을 고려하면, 빌리빌리(B站) 등 중국 플랫폼에서의 콘텐츠 소비가 주력이었을 것으로 추정.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--text)">CheapShark:</strong> 최저가 $3.23 (2025-05-20 기록). Deal Rating 4.1/10. 비교적 온건한 할인 전략으로, 가격 자체가 이미 $5.99로 낮아 대폭 할인의 필요성이 적다.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong style="color:var(--text)">OpenCritic:</strong> 데이터 없음. 전문 매체 리뷰가 부재한 동인/인디 게임이지만, 98.6% 긍정률과 50~100만 소유자는 전문 매체 없이도 커뮤니티 입소문만으로 상업적 성공을 달성한 사례.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      <strong style="color:var(--text)">수익 확장 가능성:</strong><br>
+      • <strong>DLC 파이프라인:</strong> 이미 다수 DLC 출시. 낮은 본편 가격이 "감탄 → DLC 자발 구매" 퍼널을 구동하는 핵심 전략.<br>
+      • <strong>모바일 포팅:</strong> Unity 엔진 + 캐주얼 게임성. 중국 모바일 시장에서의 확장 잠재력 극대.<br>
+      • <strong>IP 확장:</strong> 동방 프로젝트 내 다른 캐릭터/지역을 배경으로 한 시리즈 확장 가능.<br>
+      • <strong>한국어/영어 시장 미개척:</strong> 리뷰 비율 4.5% + 11.8%로 중국 대비 유입이 적음. 번역 품질 개선 + 영어권 마케팅이 성장 레버.
+    </p>
+  </div>
+</section>
+
+<!-- 결론 -->
+<section class="conclusion">
+  <div class="conclusion-text fade-up">
+    이 게임이 98.6%라는 경이적 긍정률을 달성한 구조적 원인은,<br>
+    <strong>"경영 시뮬"이라는 이성적 외피</strong> 안에<br>
+    <strong>"캐릭터 인연"이라는 감성적 핵심</strong>을 심어,<br>
+    <em>확정 보상(매출 성장)</em>과 <em>가변 보상(희귀 손님 스펠카드)</em>이<br>
+    하루 단위 저장이라는 <strong>"한판만 더" 메커니즘</strong> 위에서<br>
+    교차하는 이중 도파민 구조를 만들었기 때문이다.<br><br>
+    그리고 이 모든 것이 <strong>$5.99</strong>라는 가격에 담겨 있다.
+  </div>
+  <p style="position:relative;font-size:.82rem;color:var(--text-faint);max-width:700px;margin:1.5rem auto 0;text-align:center;line-height:1.8">
+    태그 데이터가 이를 증명한다: 서사/캐릭터 축(2,639)이 경영/경제 축(2,252)을 압도하며, 유저들은 이 게임을 "이자카야 경영"이 아닌 "50명의 캐릭터와의 관계"로 인식한다. Pixel Graphics(599)가 1위 태그인 것은 이 관계를 감싸는 비주얼의 따뜻함이 경험 전체를 정의한다는 의미다.
+  </p>
+</section>
+
+</div>
+
+<footer class="footer">
+  <p>Steam Game Insight Report · Generated 2026-03-20 · Data: SteamSpy + Steam Reviews API + IGDB + RAWG + HLTB + CheapShark + PCGamingWiki + Wikidata · 31,111 reviews analyzed</p>
+  <details style="margin-top:.8rem;font-size:.78rem;color:var(--text-faint)">
+    <summary>에이전트 분석 상세 (7개 에이전트, 총 ~425K 토큰, ~936초)</summary>
+    <table style="width:100%;margin-top:.5rem;font-size:.75rem;border-collapse:collapse">
+      <tr style="border-bottom:1px solid var(--border)">
+        <th style="padding:.4rem;text-align:left">에이전트</th><th>모델</th><th>구역</th><th>리뷰수</th>
+        <th>입력~</th><th>출력~</th><th>시간</th><th>핵심 발견</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.4rem">Main-Deep</td><td>opus</td><td>TOP 100 (전 언어)</td><td>100</td>
+        <td>32K</td><td>10K</td><td>224s</td><td>성공5, 약점5, 인용10, 루프3</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.4rem">CN-Positive</td><td>sonnet</td><td>schinese·긍정</td><td>200</td>
+        <td>28K</td><td>5K</td><td>157s</td><td>패턴5, 특이점2, 루프2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.4rem">CN-Negative</td><td>sonnet</td><td>schinese·부정</td><td>122</td>
+        <td>20K</td><td>5K</td><td>161s</td><td>패턴5, 특이점2, 루프2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.4rem">EN-Positive</td><td>sonnet</td><td>english·긍정</td><td>200</td>
+        <td>26K</td><td>5K</td><td>116s</td><td>패턴5, 특이점2, 루프2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.4rem">EN-Negative</td><td>sonnet</td><td>english·부정</td><td>29</td>
+        <td>7K</td><td>4K</td><td>76s</td><td>패턴5, 특이점2, 루프2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.4rem">KR-Positive</td><td>sonnet</td><td>koreana·긍정</td><td>200</td>
+        <td>24K</td><td>5K</td><td>158s</td><td>패턴5, 특이점2, 루프2</td>
+      </tr>
+      <tr>
+        <td style="padding:.4rem">KR-Negative</td><td>sonnet</td><td>koreana·부정</td><td>11</td>
+        <td>5K</td><td>3K</td><td>44s</td><td>패턴3, 특이점2</td>
+      </tr>
+    </table>
+  </details>
+</footer>
+
+</body>
+</html>
