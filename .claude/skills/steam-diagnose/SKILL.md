@@ -84,6 +84,27 @@ GROUP BY session_id
 ORDER BY session_id DESC LIMIT 5;
 ```
 
+**스킬 실행 에러 (유형별)**
+```sql
+SELECT skill_name, error_type, count(*) as cnt
+FROM skill_errors WHERE resolved = 0
+GROUP BY skill_name, error_type ORDER BY cnt DESC;
+```
+
+**반복 스킬 에러 패턴**
+```sql
+SELECT error_type, error_message, count(*) as cnt,
+       group_concat(DISTINCT fix_applied) as fixes
+FROM skill_errors WHERE resolved = 0
+GROUP BY error_type, error_message HAVING cnt >= 2;
+```
+
+**최근 스킬 에러 (최신 10건)**
+```sql
+SELECT skill_name, error_type, error_message, fix_applied, created_at
+FROM skill_errors ORDER BY created_at DESC LIMIT 10;
+```
+
 ### Step 2: 진단 리포트 생성
 
 수집한 데이터를 분석하여 사용자에게 리포트를 제공한다. 다음 항목을 포함한다:
@@ -137,6 +158,28 @@ SET last_cursor = NULL, reviews_collected = 0, reviews_done = 0
 WHERE appid = ? AND version = ?;
 ```
 
+#### skill_error (스킬 실행 에러)
+- **진단**: `skill_errors` 테이블에서 미해결 에러 조회
+- **수정 전략**:
+  - `encoding` 반복 → 해당 스킬의 Python 코드에 `sys.stdout.reconfigure(encoding='utf-8')` 추가 권장
+  - `sql` 반복 → DB 스키마와 쿼리 불일치 확인, 스킬의 SQL 수정
+  - `import` → 패키지 설치 확인
+  - `parse` → 데이터 구조 변경 확인
+  - `api` → 외부 API 상태 확인, 재시도 또는 fallback
+- **해결 처리**:
+```python
+import sys
+sys.path.insert(0, "<project-root>/steam-crawler/src")
+from steam_crawler.skill_error_logger import resolve_skill_error
+
+resolve_skill_error(
+    db_path="<project-root>/data/steam.db",
+    error_id=<id>,
+    resolution="code_fixed",  # code_fixed | workaround | skip
+    fix_applied="<수정 내용>"
+)
+```
+
 ### Step 4: 코드 수정 적용
 
 진단 결과에 따라 코드를 수정해야 할 때:
@@ -186,6 +229,17 @@ resolution 값 예시:
 |------|------|--------|----------|
 | rate_limited | 2 | 낮음 | 자동 학습 중, 조치 불필요 |
 | parse_error | 1 | 높음 | API 응답 변경 감지, 파서 수정 필요 |
+```
+
+진단 리포트에 스킬 에러 섹션도 포함한다:
+
+```
+## 스킬 에러 분석
+
+| 스킬 | 유형 | 건수 | 최근 수정 |
+|------|------|------|----------|
+| steam-insight | encoding | 3 | PYTHONIOENCODING=utf-8 |
+| steam-query | sql | 1 | 컬럼명 수정 |
 ```
 
 ## Proactive Recommendations
