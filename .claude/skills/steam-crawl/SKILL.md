@@ -77,6 +77,7 @@ steam-crawler collect --appids 526870,427520 --max-reviews 100
 
 ```python
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, "<project-root>/steam-crawler/src")
 
 from dotenv import load_dotenv
@@ -294,6 +295,7 @@ Bash로 Python 코드 실행 시 에러가 발생하면, 수정 시도 전에 �
 
 ```python
 import sys
+sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, "<project-root>/steam-crawler/src")
 from steam_crawler.skill_error_logger import log_skill_error
 
