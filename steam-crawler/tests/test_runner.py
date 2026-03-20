@@ -239,3 +239,43 @@ def test_runner_calls_step1d_step1e(db_conn, monkeypatch):
     row = db_conn.execute("SELECT igdb_id, rawg_id FROM games WHERE appid=730").fetchone()
     assert row["igdb_id"] == 1942
     assert row["rawg_id"] == 3328
+
+
+def test_appids_runs_full_pipeline(tmp_path):
+    """query_type='appids'로 전체 파이프라인(step1~step1l, step2, step3)이 실행된다."""
+    from unittest.mock import patch
+    from steam_crawler.db.schema import init_db
+    from steam_crawler.pipeline.runner import run_pipeline
+
+    conn = init_db(str(tmp_path / "test.db"))
+
+    with patch("steam_crawler.pipeline.runner.run_step1") as mock_s1, \
+         patch("steam_crawler.pipeline.runner.run_step1b") as mock_s1b, \
+         patch("steam_crawler.pipeline.runner.run_step1c") as mock_s1c, \
+         patch("steam_crawler.pipeline.runner.run_step1d") as mock_s1d, \
+         patch("steam_crawler.pipeline.runner.run_step1e") as mock_s1e, \
+         patch("steam_crawler.pipeline.runner.run_step1f") as mock_s1f, \
+         patch("steam_crawler.pipeline.runner.run_step1h") as mock_s1h, \
+         patch("steam_crawler.pipeline.runner.run_step1i") as mock_s1i, \
+         patch("steam_crawler.pipeline.runner.run_step1j") as mock_s1j, \
+         patch("steam_crawler.pipeline.runner.run_step1k") as mock_s1k, \
+         patch("steam_crawler.pipeline.runner.run_step1l") as mock_s1l, \
+         patch("steam_crawler.pipeline.runner.run_step2") as mock_s2, \
+         patch("steam_crawler.pipeline.runner.run_step3") as mock_s3, \
+         patch("steam_crawler.pipeline.runner.get_games_by_version", return_value=[]):
+        mock_s1.return_value = 1
+        mock_s3.return_value = 0
+
+        run_pipeline(conn, query_type="appids", query_value="526870",
+                     appids=[526870], max_reviews=100)
+
+        # step1이 query_type="appids"로 호출됨
+        assert mock_s1.call_args[0][1] == "appids"  # positional arg
+
+        # 모든 enrichment step이 호출됨
+        for mock_step in [mock_s1b, mock_s1c, mock_s1d, mock_s1e, mock_s1f,
+                          mock_s1h, mock_s1i, mock_s1j, mock_s1k, mock_s1l,
+                          mock_s2, mock_s3]:
+            mock_step.assert_called_once()
+
+    conn.close()
