@@ -246,6 +246,59 @@ def test_get_games_by_version_appids_filter(db_conn):
     assert len(result) == 2
 
 
+def test_get_games_by_version_appids_ignores_source_tag(db_conn):
+    """appids filter should find games regardless of their source_tag.
+
+    This is the core fix for the --appids source_tag mismatch bug:
+    games collected via 'tag:Roguelike' must be found when source_tag=None + appids=[...].
+    """
+    from steam_crawler.db.repository import upsert_game, get_games_by_version
+
+    upsert_game(db_conn, GameSummary(appid=100, name="GameA", positive=500, negative=10, source_tag="tag:Roguelike"), version=0)
+    upsert_game(db_conn, GameSummary(appid=200, name="GameB", positive=300, negative=10, source_tag="genre:RPG"), version=0)
+
+    # source_tag=None (appids query) + appids filter → should find both despite different source_tags
+    result = get_games_by_version(db_conn, source_tag=None, appids=[100, 200])
+    returned_ids = {g["appid"] for g in result}
+    assert returned_ids == {100, 200}
+
+    # With mismatched source_tag + appids → should return nothing (AND logic)
+    result = get_games_by_version(db_conn, source_tag="appids:100,200", appids=[100, 200])
+    assert len(result) == 0
+
+
+def test_get_games_needing_enrichment_appids_filter(db_conn):
+    """get_games_needing_enrichment with appids should restrict to those games."""
+    from steam_crawler.db.repository import get_games_needing_enrichment
+
+    _insert_game(db_conn, appid=100, name="GameA")
+    _insert_game(db_conn, appid=200, name="GameB")
+    _insert_game(db_conn, appid=300, name="GameC")
+
+    games = get_games_needing_enrichment(db_conn, source="igdb", appids=[100, 300])
+    appids = [g["appid"] for g in games]
+    assert 100 in appids
+    assert 300 in appids
+    assert 200 not in appids
+
+
+def test_get_games_needing_enrichment_appids_ignores_source_tag(db_conn):
+    """appids filter on enrichment should work even when source_tag is None.
+
+    Games with source_tag='tag:X' must be found when source_tag=None + appids=[...].
+    """
+    from steam_crawler.db.repository import upsert_game, get_games_needing_enrichment
+
+    upsert_game(db_conn, GameSummary(appid=100, name="GameA", positive=500, negative=10, source_tag="tag:Roguelike"), version=0)
+    upsert_game(db_conn, GameSummary(appid=200, name="GameB", positive=300, negative=10, source_tag="genre:RPG"), version=0)
+
+    # source_tag=None + appids → should find games needing IGDB enrichment
+    games = get_games_needing_enrichment(db_conn, source="igdb", source_tag=None, appids=[100, 200])
+    appids = [g["appid"] for g in games]
+    assert 100 in appids
+    assert 200 in appids
+
+
 def test_get_games_by_version_appids_none_returns_all(db_conn):
     """appids=None should return all games (backward compat)."""
     from steam_crawler.db.repository import upsert_game, get_games_by_version
