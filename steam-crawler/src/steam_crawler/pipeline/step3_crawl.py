@@ -253,7 +253,6 @@ def run_step3(
                         break
                     insert_reviews_batch(conn, reviews, version=version)
                     actual_count = _count_reviews(conn, appid)
-                    total_collected = actual_count
                     update_collection_status(
                         conn, appid=appid, version=version,
                         last_cursor=next_cursor,
@@ -287,6 +286,7 @@ def run_step3(
                     log_reviews_batch_added(
                         conn, version=version, appid=appid, count=actual_count
                     )
+                total_collected += actual_count
                 console.print(f"  -> {actual_count} reviews total ({effective_max} target)")
             except Exception as e:
                 tracker.log_failure(
