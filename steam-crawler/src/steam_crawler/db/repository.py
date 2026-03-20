@@ -559,10 +559,12 @@ def get_games_needing_enrichment(
     source: str,
     source_tag: str | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> list[dict]:
     """Return games that haven't been enriched by the given source.
     source: 'igdb' or 'rawg'. Excludes id=-1 (unmatchable).
     If lock_owner is provided, excludes games locked by a different owner.
+    If appids is provided, restricts to those specific games.
     """
     id_col_map = {
         "igdb": "igdb_id",
@@ -577,24 +579,32 @@ def get_games_needing_enrichment(
     id_col = id_col_map[source]
     now = datetime.now(timezone.utc).isoformat()
 
+    # Build optional appids filter
+    appid_clause = ""
+    appid_params: list = []
+    if appids is not None:
+        placeholders = ",".join("?" * len(appids))
+        appid_clause = f" AND g.appid IN ({placeholders})"
+        appid_params = list(appids)
+
     if lock_owner is not None:
         if source_tag:
             rows = conn.execute(
                 f"""SELECT g.appid, g.name FROM games g
                     LEFT JOIN crawl_locks cl
                       ON g.appid = cl.appid AND cl.expires_at >= ? AND cl.owner != ?
-                    WHERE g.{id_col} IS NULL AND g.source_tag = ? AND cl.appid IS NULL
+                    WHERE g.{id_col} IS NULL AND g.source_tag = ? AND cl.appid IS NULL{appid_clause}
                     ORDER BY g.positive DESC""",
-                (now, lock_owner, source_tag),
+                (now, lock_owner, source_tag, *appid_params),
             ).fetchall()
         else:
             rows = conn.execute(
                 f"""SELECT g.appid, g.name FROM games g
                     LEFT JOIN crawl_locks cl
                       ON g.appid = cl.appid AND cl.expires_at >= ? AND cl.owner != ?
-                    WHERE g.{id_col} IS NULL AND cl.appid IS NULL
+                    WHERE g.{id_col} IS NULL AND cl.appid IS NULL{appid_clause}
                     ORDER BY g.positive DESC""",
-                (now, lock_owner),
+                (now, lock_owner, *appid_params),
             ).fetchall()
     else:
         if source_tag:
@@ -603,8 +613,15 @@ def get_games_needing_enrichment(
                 (source_tag,),
             ).fetchall()
         else:
-            rows = conn.execute(
-                f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) ORDER BY positive DESC"
+            if appids is not None:
+                placeholders = ",".join("?" * len(appids))
+                rows = conn.execute(
+                    f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) AND appid IN ({placeholders}) ORDER BY positive DESC",
+                    tuple(appids),
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    f"SELECT appid, name FROM games WHERE ({id_col} IS NULL) ORDER BY positive DESC"
             ).fetchall()
     return [dict(r) for r in rows]
 

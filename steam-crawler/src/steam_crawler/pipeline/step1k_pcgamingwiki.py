@@ -23,6 +23,7 @@ def run_step1k(
     pcgw_client: PCGamingWikiClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with PCGamingWiki technical data. Returns count enriched."""
     client = pcgw_client or PCGamingWikiClient(
@@ -30,7 +31,7 @@ def run_step1k(
     )
     tracker = failure_tracker or FailureTracker()
     games = get_games_needing_enrichment(
-        conn, source="pcgamingwiki", source_tag=source_tag, lock_owner=lock_owner
+        conn, source="pcgamingwiki", source_tag=source_tag, lock_owner=lock_owner, appids=appids,
     )
     enriched = 0
 

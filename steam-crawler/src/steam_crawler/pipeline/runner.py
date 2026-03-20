@@ -47,9 +47,15 @@ console = Console()
 
 
 def build_source_tag(query_type: str, query_value: str | None) -> str | None:
-    """Build a source_tag string from query parameters."""
+    """Build a source_tag string from query parameters.
+
+    Returns None for 'appids' queries — existing games keep their original
+    source_tag, so filtering by appid list is used instead.
+    """
     if query_type == "top100":
         return "top100"
+    if query_type == "appids":
+        return None
     return f"{query_type}:{query_value}" if query_value else None
 
 
@@ -172,7 +178,7 @@ def run_pipeline(
             )
 
             # Acquire per-game locks after step1 discovers games
-            all_games = get_games_by_version(conn, source_tag=source_tag)
+            all_games = get_games_by_version(conn, source_tag=source_tag, appids=appids)
             skipped = 0
             for g in all_games:
                 if acquire_crawl_lock(conn, g["appid"], owner=lock_owner):
@@ -186,7 +192,7 @@ def run_pipeline(
 
             run_step1b(
                 conn, version, source_tag=source_tag, steamspy_client=spy_client,
-                lock_owner=lock_owner,
+                lock_owner=lock_owner, appids=appids,
             )
 
             # Validate source_tag against actual tags after enrichment
@@ -206,7 +212,7 @@ def run_pipeline(
 
             run_step1c(
                 conn, version, source_tag=source_tag, store_client=store_client,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
 
             # Step 1d: IGDB enrichment (optional, needs env vars)
@@ -215,7 +221,7 @@ def run_pipeline(
             run_step1d(
                 conn, version, source_tag=source_tag,
                 client_id=igdb_cid, client_secret=igdb_csec,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
 
             # Step 1e: RAWG enrichment (optional, needs env var)
@@ -223,26 +229,26 @@ def run_pipeline(
             run_step1e(
                 conn, version, source_tag=source_tag,
                 api_key=rawg_key,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
 
             # Step 1f: Twitch streaming data (optional, uses same Twitch creds as IGDB)
             run_step1f(
                 conn, version, source_tag=source_tag,
                 client_id=igdb_cid, client_secret=igdb_csec,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
 
             # Step 1h: HowLongToBeat completion times (no auth needed)
             run_step1h(
                 conn, version, source_tag=source_tag,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
 
             # Step 1i: CheapShark deal/price data (no auth needed)
             run_step1i(
                 conn, version, source_tag=source_tag,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
 
             # Step 1j: OpenCritic critic scores (optional, needs RAPIDAPI_KEY)
@@ -250,19 +256,19 @@ def run_pipeline(
             run_step1j(
                 conn, version, source_tag=source_tag,
                 rapidapi_key=rapidapi_key,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
 
             # Step 1k: PCGamingWiki technical data (no auth needed)
             run_step1k(
                 conn, version, source_tag=source_tag,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
 
             # Step 1l: Wikidata structured design data (no auth needed)
             run_step1l(
                 conn, version, source_tag=source_tag,
-                failure_tracker=tracker, lock_owner=lock_owner,
+                failure_tracker=tracker, lock_owner=lock_owner, appids=appids,
             )
         if step is None or step == 2:
             run_step2(
@@ -272,6 +278,7 @@ def run_pipeline(
                 reviews_client=rev_client,
                 failure_tracker=tracker,
                 lock_owner=lock_owner,
+                appids=appids,
             )
         if step is None or step == 3:
             reviews_total = run_step3(

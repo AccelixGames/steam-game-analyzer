@@ -25,6 +25,7 @@ def run_step1f(
     twitch_client: TwitchClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with Twitch streaming data. Returns count enriched."""
     if client_id is None and twitch_client is None:
@@ -36,7 +37,7 @@ def run_step1f(
     )
     tracker = failure_tracker or FailureTracker()
     games = get_games_needing_enrichment(
-        conn, source="twitch", source_tag=source_tag, lock_owner=lock_owner
+        conn, source="twitch", source_tag=source_tag, lock_owner=lock_owner, appids=appids,
     )
     enriched = 0
 

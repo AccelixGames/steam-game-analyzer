@@ -24,6 +24,7 @@ def run_step2(
     reviews_client: SteamReviewsClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Scan review summaries for all games and update stats.
 
@@ -31,7 +32,7 @@ def run_step2(
     """
     client = reviews_client or SteamReviewsClient()
     tracker = failure_tracker or FailureTracker()
-    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)
+    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner, appids=appids)
     scanned = 0
     try:
         for game_row in games:

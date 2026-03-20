@@ -25,6 +25,7 @@ def run_step1j(
     opencritic_client: OpenCriticClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with OpenCritic scores + individual reviews. Returns count enriched."""
     if rapidapi_key is None and opencritic_client is None:
@@ -37,7 +38,7 @@ def run_step1j(
     )
     tracker = failure_tracker or FailureTracker()
     games = get_games_needing_enrichment(
-        conn, source="opencritic", source_tag=source_tag, lock_owner=lock_owner
+        conn, source="opencritic", source_tag=source_tag, lock_owner=lock_owner, appids=appids,
     )
     enriched = 0
 

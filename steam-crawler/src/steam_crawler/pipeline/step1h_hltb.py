@@ -23,6 +23,7 @@ def run_step1h(
     hltb_client: HLTBClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with HowLongToBeat completion times. Returns count enriched."""
     client = hltb_client or HLTBClient(
@@ -30,7 +31,7 @@ def run_step1h(
     )
     tracker = failure_tracker or FailureTracker()
     games = get_games_needing_enrichment(
-        conn, source="hltb", source_tag=source_tag, lock_owner=lock_owner
+        conn, source="hltb", source_tag=source_tag, lock_owner=lock_owner, appids=appids,
     )
     enriched = 0
 

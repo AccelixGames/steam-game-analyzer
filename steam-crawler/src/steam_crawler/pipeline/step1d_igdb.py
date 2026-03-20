@@ -27,6 +27,7 @@ def run_step1d(
     igdb_client: IGDBClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with IGDB data. Returns count enriched."""
     if client_id is None and igdb_client is None:
@@ -36,7 +37,7 @@ def run_step1d(
     client = igdb_client or IGDBClient(client_id, client_secret)
     tracker = failure_tracker or FailureTracker()
     matcher = GameMatcher()
-    games = get_games_needing_enrichment(conn, source="igdb", source_tag=source_tag, lock_owner=lock_owner)
+    games = get_games_needing_enrichment(conn, source="igdb", source_tag=source_tag, lock_owner=lock_owner, appids=appids)
     enriched = 0
 
     if not games:

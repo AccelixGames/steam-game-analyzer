@@ -19,6 +19,7 @@ def run_step1b(
     steamspy_client: SteamSpyClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with detailed tag data from SteamSpy appdetails.
 
@@ -26,7 +27,7 @@ def run_step1b(
     """
     client = steamspy_client or SteamSpyClient()
     tracker = failure_tracker or FailureTracker()
-    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)
+    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner, appids=appids)
     enriched = 0
     try:
         for game_row in games:

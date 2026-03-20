@@ -23,6 +23,7 @@ def run_step1i(
     cheapshark_client: CheapSharkClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with CheapShark deal ratings. Returns count enriched."""
     client = cheapshark_client or CheapSharkClient(
@@ -30,7 +31,7 @@ def run_step1i(
     )
     tracker = failure_tracker or FailureTracker()
     games = get_games_needing_enrichment(
-        conn, source="cheapshark", source_tag=source_tag, lock_owner=lock_owner
+        conn, source="cheapshark", source_tag=source_tag, lock_owner=lock_owner, appids=appids,
     )
     enriched = 0
 

@@ -24,6 +24,7 @@ def run_step1e(
     rawg_client: RAWGClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with RAWG data. Returns count enriched."""
     if api_key is None and rawg_client is None:
@@ -33,7 +34,7 @@ def run_step1e(
     client = rawg_client or RAWGClient(api_key=api_key)
     tracker = failure_tracker or FailureTracker()
     matcher = GameMatcher()
-    games = get_games_needing_enrichment(conn, source="rawg", source_tag=source_tag, lock_owner=lock_owner)
+    games = get_games_needing_enrichment(conn, source="rawg", source_tag=source_tag, lock_owner=lock_owner, appids=appids)
     enriched = 0
 
     if not games:

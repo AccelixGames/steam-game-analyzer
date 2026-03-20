@@ -24,6 +24,7 @@ def run_step1l(
     wikidata_client: WikidataClient | None = None,
     failure_tracker: FailureTracker | None = None,
     lock_owner: str | None = None,
+    appids: list[int] | None = None,
 ) -> int:
     """Enrich games with Wikidata claims. Returns count enriched."""
     client = wikidata_client or WikidataClient(
@@ -31,7 +32,7 @@ def run_step1l(
     )
     tracker = failure_tracker or FailureTracker()
     games = get_games_needing_enrichment(
-        conn, source="wikidata", source_tag=source_tag, lock_owner=lock_owner
+        conn, source="wikidata", source_tag=source_tag, lock_owner=lock_owner, appids=appids,
     )
     enriched = 0
 
