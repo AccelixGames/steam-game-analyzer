@@ -87,6 +87,35 @@
     "_file_hash": "0f1d49da76fb5e3bfacdd519e2f1f635"
   },
   {
+    "slug": "satisfactory",
+    "name": "Satisfactory",
+    "name_ko": null,
+    "appid": 526870,
+    "positive_rate": 97.5,
+    "review_score": "Overwhelmingly Positive",
+    "owners": "10M~20M",
+    "price": "$27.99",
+    "avg_playtime": "98.3h",
+    "review_count": 153682,
+    "tags": [
+      "Base-Building",
+      "Automation",
+      "Open World",
+      "Multiplayer",
+      "Crafting"
+    ],
+    "genres": [
+      "Adventure",
+      "Indie",
+      "Simulation",
+      "Strategy"
+    ],
+    "date": "2026-03-20",
+    "modified": "2026-03-20 03:49",
+    "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/header.jpg?t=1749717464",
+    "_file_hash": "210af66b426517d4d7b1d92a383f7790"
+  },
+  {
     "slug": "schedule-i",
     "name": "Schedule I",
     "name_ko": null,
