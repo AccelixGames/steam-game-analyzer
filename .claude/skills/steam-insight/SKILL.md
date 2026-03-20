@@ -473,7 +473,7 @@ FROM games WHERE appid = ?;
 
 ## 출력 형식: HTML 보고서
 
-분석 결과는 **단일 HTML 파일**로 `docs/insights/{game-slug}.html`에 생성한다.
+분석 결과는 **단일 HTML 파일**로 `docs/insights/reports/{game-slug}.html`에 생성한다.
 
 ### 템플릿
 
@@ -503,7 +503,7 @@ SELECT name_ko FROM games WHERE appid = ?;
 
 ### 파일 경로 규칙
 - 게임 이름을 kebab-case로 변환: "TCG Card Shop Simulator" → `tcg-card-shop-simulator.html`
-- 저장 위치: `<project-root>/docs/insights/`
+- 저장 위치: `<project-root>/docs/insights/reports/`
 
 ### HTML 보고서 구조
 
@@ -664,14 +664,24 @@ SELECT count(*) FROM reviews WHERE appid = ?;
 
 ## Error Logging (필수)
 
-Bash로 Python 코드 실행 시 에러가 발생하면, 수정 시도 전에 반드시 기록한다:
+**에러 발생 시 반드시 아래 순서를 따른다. 순서를 건너뛰지 않는다.**
+
+### 순서: 기록 → 수정 → 해결
+
+1. **즉시 기록** — 에러가 발생하면 수정을 시도하기 전에 `log_skill_error()`를 호출한다
+2. **수정 시도** — 기록 후 원인을 분석하고 수정한다
+3. **해결 처리** — 수정이 성공하면 `resolve_skill_error()`로 해결 마킹한다
+
+> **금지**: 에러 발생 → 바로 수정 → 기록 생략. 이렇게 하면 반복 패턴을 추적할 수 없다.
+
+### Step 1: 기록
 
 ```python
 import sys
 sys.path.insert(0, "<project-root>/steam-crawler/src")
 from steam_crawler.skill_error_logger import log_skill_error
 
-log_skill_error(
+error_id = log_skill_error(
     db_path="<project-root>/data/steam.db",
     skill_name="steam-insight",
     error_type="<type>",
@@ -679,11 +689,24 @@ log_skill_error(
     traceback="<traceback if available>",
     command="<code that caused error>",
     context={"appid": 286160, "step": "2B-igdb-keywords"},
-    fix_applied="<fix description, if applied>"
+    fix_applied=None  # 아직 수정 전이므로 None
 )
 ```
 
-error_type 분류:
+### Step 2: 수정 후 해결 처리
+
+```python
+from steam_crawler.skill_error_logger import resolve_skill_error
+
+resolve_skill_error(
+    db_path="<project-root>/data/steam.db",
+    error_id=error_id,
+    resolution="code_fixed",  # code_fixed | workaround | skip
+    fix_applied="<수정 내용>"
+)
+```
+
+### error_type 분류
 - `encoding` — 인코딩 에러 (cp949, utf-8 등)
 - `sql` — SQL 에러 (missing column, syntax 등)
 - `import` — 모듈 import 실패
@@ -707,7 +730,7 @@ error_type 분류:
 
 ## 보고서 생성 후 작업
 
-보고서 HTML을 `docs/insights/`에 생성하거나 갱신한 후, 반드시 다음을 실행한다:
+보고서 HTML을 `docs/insights/reports/`에 생성하거나 갱신한 후, 반드시 다음을 실행한다:
 
 ```bash
 python scripts/build_index.py
