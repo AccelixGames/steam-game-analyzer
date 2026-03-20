@@ -1,4 +1,4 @@
-import pytest
+from unittest.mock import MagicMock, patch
 
 MOCK_FIRST_PAGE = {
     "success": 1,
@@ -35,21 +35,29 @@ MOCK_FIRST_PAGE = {
 MOCK_EMPTY_PAGE = {"success": 1, "reviews": [], "cursor": "AoMFQFQ3YCAAAAAFP+6dmQAAAAB3gvzABg=="}
 
 
-def test_fetch_review_summary(httpx_mock):
+def _mock_response(json_data, status_code=200):
+    resp = MagicMock()
+    resp.status_code = status_code
+    resp.json.return_value = json_data
+    resp.raise_for_status = MagicMock()
+    return resp
+
+
+def test_fetch_review_summary():
     from steam_crawler.api.steam_reviews import SteamReviewsClient
-    httpx_mock.add_response(json=MOCK_FIRST_PAGE)
     client = SteamReviewsClient()
-    summary = client.fetch_summary(appid=730)
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_FIRST_PAGE)):
+        summary = client.fetch_summary(appid=730)
     assert summary.total_positive == 5000
     assert summary.total_negative == 500
     assert summary.review_score_desc == "Very Positive"
 
 
-def test_fetch_reviews_page(httpx_mock):
+def test_fetch_reviews_page():
     from steam_crawler.api.steam_reviews import SteamReviewsClient
-    httpx_mock.add_response(json=MOCK_FIRST_PAGE)
     client = SteamReviewsClient()
-    reviews, next_cursor, has_more = client.fetch_reviews_page(appid=730, cursor="*")
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_FIRST_PAGE)):
+        reviews, next_cursor, has_more = client.fetch_reviews_page(appid=730, cursor="*")
     assert len(reviews) == 2
     assert reviews[0].recommendation_id == "r1"
     assert reviews[0].appid == 730
@@ -57,23 +65,27 @@ def test_fetch_reviews_page(httpx_mock):
     assert has_more is True
 
 
-def test_fetch_reviews_page_empty_means_done(httpx_mock):
+def test_fetch_reviews_page_empty_means_done():
     from steam_crawler.api.steam_reviews import SteamReviewsClient
-    httpx_mock.add_response(json=MOCK_EMPTY_PAGE)
     client = SteamReviewsClient()
-    reviews, next_cursor, has_more = client.fetch_reviews_page(appid=730, cursor="somecursor")
+    with patch.object(client._client, "get", return_value=_mock_response(MOCK_EMPTY_PAGE)):
+        reviews, next_cursor, has_more = client.fetch_reviews_page(appid=730, cursor="somecursor")
     assert len(reviews) == 0
     assert has_more is False
 
 
-def test_reviews_client_uses_correct_params(httpx_mock):
+def test_reviews_client_uses_correct_params():
     from steam_crawler.api.steam_reviews import SteamReviewsClient
-    httpx_mock.add_response(json=MOCK_FIRST_PAGE)
     client = SteamReviewsClient()
-    client.fetch_reviews_page(appid=730, cursor="*", language="korean", review_type="positive")
-    request = httpx_mock.get_request()
-    assert "filter=recent" in str(request.url)
-    assert "purchase_type=all" in str(request.url)
-    assert "num_per_page=80" in str(request.url)
-    assert "language=korean" in str(request.url)
-    assert "review_type=positive" in str(request.url)
+    mock_resp = _mock_response(MOCK_FIRST_PAGE)
+    with patch.object(client._client, "get", return_value=mock_resp) as mock_get:
+        client.fetch_reviews_page(appid=730, cursor="*", language="korean", review_type="positive")
+    # Verify the params passed to get()
+    mock_get.assert_called_once()
+    call_kwargs = mock_get.call_args
+    params = call_kwargs[1].get("params") if call_kwargs[1] else call_kwargs[0][1]
+    assert params["filter"] == "recent"
+    assert params["purchase_type"] == "all"
+    assert params["num_per_page"] == "80"
+    assert params["language"] == "korean"
+    assert params["review_type"] == "positive"

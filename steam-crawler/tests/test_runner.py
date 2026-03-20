@@ -1,4 +1,5 @@
 import json
+from unittest.mock import MagicMock, patch
 
 
 MOCK_TAG_RESPONSE = {
@@ -70,22 +71,57 @@ MOCK_REVIEWS = {
 MOCK_EMPTY = {"success": 1, "reviews": [], "cursor": "next=="}
 
 
-def test_run_pipeline_full(httpx_mock, db_conn):
+def _mock_response(json_data, status_code=200):
+    resp = MagicMock()
+    resp.status_code = status_code
+    resp.json.return_value = json_data
+    resp.raise_for_status = MagicMock()
+    resp.text = json.dumps(json_data)
+    return resp
+
+
+def _make_get_side_effect(responses):
+    """Create a side_effect function from a list of response data dicts."""
+    call_counter = {"i": 0}
+    mock_responses = [_mock_response(r) for r in responses]
+
+    def side_effect(*args, **kwargs):
+        idx = call_counter["i"]
+        call_counter["i"] += 1
+        if idx < len(mock_responses):
+            return mock_responses[idx]
+        # Return empty response as fallback
+        return _mock_response({"success": 1, "reviews": [], "cursor": "*"})
+
+    return side_effect
+
+
+def test_run_pipeline_full(db_conn, monkeypatch):
+    monkeypatch.delenv("TWITCH_CLIENT_ID", raising=False)
+    monkeypatch.delenv("TWITCH_CLIENT_SECRET", raising=False)
+    monkeypatch.delenv("RAWG_API_KEY", raising=False)
     from steam_crawler.pipeline.runner import run_pipeline
 
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
-    httpx_mock.add_response(json=MOCK_APPDETAILS)
-    httpx_mock.add_response(json=MOCK_SUMMARY)
-    httpx_mock.add_response(json=MOCK_REVIEWS)
-    httpx_mock.add_response(json=MOCK_EMPTY)
-    run_pipeline(
-        db_conn,
-        query_type="tag",
-        query_value="FPS",
-        limit=1,
-        top_n=1,
-        max_reviews=10,
-    )
+    get_responses = [
+        MOCK_TAG_RESPONSE,      # step1: fetch by tag
+        MOCK_APPDETAILS,        # step1b: app details
+        # step1c: store EN + KO (these are also GET calls)
+        {"730": {"success": True, "data": {"short_description": "FPS", "screenshots": [], "movies": []}}},
+        {"730": {"success": True, "data": {"short_description": "FPS", "screenshots": [], "movies": []}}},
+        MOCK_SUMMARY,           # step2: review summary
+        MOCK_REVIEWS,           # step3: reviews page 1
+        MOCK_EMPTY,             # step3: reviews page 2 (empty)
+    ]
+
+    with patch("curl_cffi.requests.Session.get", side_effect=_make_get_side_effect(get_responses)):
+        run_pipeline(
+            db_conn,
+            query_type="tag",
+            query_value="FPS",
+            limit=1,
+            top_n=1,
+            max_reviews=10,
+        )
     ver = db_conn.execute(
         "SELECT * FROM data_versions WHERE version=1"
     ).fetchone()
@@ -94,7 +130,10 @@ def test_run_pipeline_full(httpx_mock, db_conn):
     assert len(stats) >= 2
 
 
-def test_run_pipeline_uses_learned_delays(httpx_mock, db_conn):
+def test_run_pipeline_uses_learned_delays(db_conn, monkeypatch):
+    monkeypatch.delenv("TWITCH_CLIENT_ID", raising=False)
+    monkeypatch.delenv("TWITCH_CLIENT_SECRET", raising=False)
+    monkeypatch.delenv("RAWG_API_KEY", raising=False)
     from steam_crawler.api.rate_limiter import AdaptiveRateLimiter, save_rate_stats
     from steam_crawler.db.repository import create_version
     from steam_crawler.pipeline.runner import run_pipeline
@@ -103,20 +142,140 @@ def test_run_pipeline_uses_learned_delays(httpx_mock, db_conn):
     rl = AdaptiveRateLimiter(api_name="steamspy", default_delay_ms=800)
     save_rate_stats(db_conn, rl, session_id=prev_ver)
 
-    httpx_mock.add_response(json=MOCK_TAG_RESPONSE)
-    httpx_mock.add_response(json=MOCK_APPDETAILS)
-    httpx_mock.add_response(json=MOCK_SUMMARY)
-    httpx_mock.add_response(json=MOCK_REVIEWS)
-    httpx_mock.add_response(json=MOCK_EMPTY)
-    run_pipeline(
-        db_conn,
-        query_type="tag",
-        query_value="FPS",
-        limit=1,
-        top_n=1,
-        max_reviews=10,
-    )
+    get_responses = [
+        MOCK_TAG_RESPONSE,
+        MOCK_APPDETAILS,
+        {"730": {"success": True, "data": {"short_description": "FPS", "screenshots": [], "movies": []}}},
+        {"730": {"success": True, "data": {"short_description": "FPS", "screenshots": [], "movies": []}}},
+        MOCK_SUMMARY,
+        MOCK_REVIEWS,
+        MOCK_EMPTY,
+    ]
+
+    with patch("curl_cffi.requests.Session.get", side_effect=_make_get_side_effect(get_responses)):
+        run_pipeline(
+            db_conn,
+            query_type="tag",
+            query_value="FPS",
+            limit=1,
+            top_n=1,
+            max_reviews=10,
+        )
     stats = db_conn.execute(
         "SELECT optimal_delay_ms FROM rate_limit_stats WHERE api_name='steamspy' ORDER BY id DESC LIMIT 1"
     ).fetchone()
     assert stats is not None
+
+
+def test_runner_calls_step1d_step1e(db_conn, monkeypatch):
+    """Runner calls step1d and step1e when env vars are set."""
+    monkeypatch.setenv("TWITCH_CLIENT_ID", "test_cid")
+    monkeypatch.setenv("TWITCH_CLIENT_SECRET", "test_csec")
+    monkeypatch.setenv("RAWG_API_KEY", "test_key")
+
+    get_responses = [
+        # Step1 (SteamSpy tag)
+        {"730": {"appid": 730, "name": "CS2", "positive": 7000000, "negative": 1000000,
+                 "owners": "50M", "average_forever": 30000, "price": "0", "score_rank": "",
+                 "userscore": 0, "developer": "Valve", "publisher": "Valve"}},
+        # Step1b (app details)
+        {"appid": 730, "name": "CS2", "positive": 7000000, "negative": 1000000,
+         "owners": "50M", "average_forever": 30000, "price": "0", "score_rank": "",
+         "tags": {"FPS": 90000}, "genre": "Action"},
+        # Step1c (store EN)
+        {"730": {"success": True, "data": {
+            "short_description": "Tactical FPS", "header_image": "img.jpg",
+            "screenshots": [], "movies": [],
+        }}},
+        # Step1c (store KO)
+        {"730": {"success": True, "data": {
+            "short_description": "FPS", "screenshots": [], "movies": [],
+        }}},
+        # Step1e (RAWG search) -- RAWG uses BaseClient.get -> Session.get
+        {"count": 1, "results": [
+            {"id": 3328, "name": "CS2", "metacritic": 83, "rating": 4.2},
+        ]},
+        # Step1e (RAWG details)
+        {"id": 3328, "name": "CS2", "description_raw": "Detailed", "metacritic": 83, "rating": 4.2},
+    ]
+
+    post_responses = [
+        # Step1d IGDB auth
+        {"access_token": "tok", "expires_in": 5000, "token_type": "bearer"},
+        # Step1d IGDB external_games lookup
+        [{"id": 999, "game": 1942, "uid": "730"}],
+        # Step1d IGDB fetch_game_details
+        [{"id": 1942, "name": "CS2", "summary": "A FPS", "themes": [], "keywords": []}],
+        # Step1f Twitch auth
+        {"access_token": "tok2", "expires_in": 5000, "token_type": "bearer"},
+    ]
+
+    get_counter = {"i": 0}
+    get_mocks = [_mock_response(r) for r in get_responses]
+
+    def get_side_effect(*args, **kwargs):
+        idx = get_counter["i"]
+        get_counter["i"] += 1
+        if idx < len(get_mocks):
+            return get_mocks[idx]
+        # Twitch get calls for step1f -- return empty data
+        return _mock_response({"data": []})
+
+    post_counter = {"i": 0}
+    post_mocks = [_mock_response(r) for r in post_responses]
+
+    def post_side_effect(*args, **kwargs):
+        idx = post_counter["i"]
+        post_counter["i"] += 1
+        if idx < len(post_mocks):
+            return post_mocks[idx]
+        return _mock_response({})
+
+    from steam_crawler.pipeline.runner import run_pipeline
+    with patch("curl_cffi.requests.Session.get", side_effect=get_side_effect), \
+         patch("curl_cffi.requests.Session.post", side_effect=post_side_effect):
+        run_pipeline(db_conn, query_type="tag", query_value="FPS", limit=1, top_n=0, step=1)
+
+    row = db_conn.execute("SELECT igdb_id, rawg_id FROM games WHERE appid=730").fetchone()
+    assert row["igdb_id"] == 1942
+    assert row["rawg_id"] == 3328
+
+
+def test_appids_runs_full_pipeline(tmp_path):
+    """query_type='appids'로 전체 파이프라인(step1~step1l, step2, step3)이 실행된다."""
+    from unittest.mock import patch
+    from steam_crawler.db.schema import init_db
+    from steam_crawler.pipeline.runner import run_pipeline
+
+    conn = init_db(str(tmp_path / "test.db"))
+
+    with patch("steam_crawler.pipeline.runner.run_step1") as mock_s1, \
+         patch("steam_crawler.pipeline.runner.run_step1b") as mock_s1b, \
+         patch("steam_crawler.pipeline.runner.run_step1c") as mock_s1c, \
+         patch("steam_crawler.pipeline.runner.run_step1d") as mock_s1d, \
+         patch("steam_crawler.pipeline.runner.run_step1e") as mock_s1e, \
+         patch("steam_crawler.pipeline.runner.run_step1f") as mock_s1f, \
+         patch("steam_crawler.pipeline.runner.run_step1h") as mock_s1h, \
+         patch("steam_crawler.pipeline.runner.run_step1i") as mock_s1i, \
+         patch("steam_crawler.pipeline.runner.run_step1j") as mock_s1j, \
+         patch("steam_crawler.pipeline.runner.run_step1k") as mock_s1k, \
+         patch("steam_crawler.pipeline.runner.run_step1l") as mock_s1l, \
+         patch("steam_crawler.pipeline.runner.run_step2") as mock_s2, \
+         patch("steam_crawler.pipeline.runner.run_step3") as mock_s3, \
+         patch("steam_crawler.pipeline.runner.get_games_by_version", return_value=[]):
+        mock_s1.return_value = 1
+        mock_s3.return_value = 0
+
+        run_pipeline(conn, query_type="appids", query_value="526870",
+                     appids=[526870], max_reviews=100)
+
+        # step1이 query_type="appids"로 호출됨
+        assert mock_s1.call_args[0][1] == "appids"  # positional arg
+
+        # 모든 enrichment step이 호출됨
+        for mock_step in [mock_s1b, mock_s1c, mock_s1d, mock_s1e, mock_s1f,
+                          mock_s1h, mock_s1i, mock_s1j, mock_s1k, mock_s1l,
+                          mock_s2, mock_s3]:
+            mock_step.assert_called_once()
+
+    conn.close()

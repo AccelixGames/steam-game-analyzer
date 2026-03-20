@@ -7,6 +7,7 @@ SCHEMA_SQL = """
 CREATE TABLE IF NOT EXISTS games (
     appid          INTEGER PRIMARY KEY,
     name           TEXT NOT NULL,
+    name_ko        TEXT,
     positive       INTEGER,
     negative       INTEGER,
     owners         TEXT,
@@ -18,7 +19,17 @@ CREATE TABLE IF NOT EXISTS games (
     review_score   TEXT,
     short_description_en TEXT,
     short_description_ko TEXT,
+    detailed_description_en TEXT,
+    detailed_description_ko TEXT,
     header_image   TEXT,
+    igdb_id          INTEGER,
+    igdb_summary     TEXT,
+    igdb_storyline   TEXT,
+    igdb_rating      REAL,
+    rawg_id          INTEGER,
+    rawg_description TEXT,
+    rawg_rating      REAL,
+    metacritic_score INTEGER,
     source_tag     TEXT,
     first_seen_ver INTEGER,
     updated_at     TIMESTAMP
@@ -152,6 +163,41 @@ CREATE TABLE IF NOT EXISTS game_media (
 
 CREATE INDEX IF NOT EXISTS idx_game_media_appid ON game_media(appid);
 
+CREATE TABLE IF NOT EXISTS theme_catalog (
+    id   INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS game_themes (
+    appid    INTEGER NOT NULL,
+    theme_id INTEGER NOT NULL,
+    source   TEXT NOT NULL DEFAULT 'igdb',
+    PRIMARY KEY (appid, theme_id),
+    FOREIGN KEY (appid) REFERENCES games(appid),
+    FOREIGN KEY (theme_id) REFERENCES theme_catalog(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_themes_theme ON game_themes(theme_id);
+
+CREATE TABLE IF NOT EXISTS keyword_catalog (
+    id   INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS game_keywords (
+    appid      INTEGER NOT NULL,
+    keyword_id INTEGER NOT NULL,
+    source     TEXT NOT NULL DEFAULT 'igdb',
+    PRIMARY KEY (appid, keyword_id),
+    FOREIGN KEY (appid) REFERENCES games(appid),
+    FOREIGN KEY (keyword_id) REFERENCES keyword_catalog(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_game_keywords_keyword ON game_keywords(keyword_id);
+
+CREATE INDEX IF NOT EXISTS idx_games_igdb_id ON games(igdb_id);
+CREATE INDEX IF NOT EXISTS idx_games_rawg_id ON games(rawg_id);
+
 CREATE TABLE IF NOT EXISTS game_collection_status (
     appid           INTEGER,
     version         INTEGER REFERENCES data_versions(version),
@@ -166,6 +212,108 @@ CREATE TABLE IF NOT EXISTS game_collection_status (
     updated_at      TIMESTAMP,
     PRIMARY KEY (appid, version)
 );
+
+CREATE TABLE IF NOT EXISTS crawl_locks (
+    appid       INTEGER PRIMARY KEY,
+    locked_at   TIMESTAMP NOT NULL,
+    expires_at  TIMESTAMP NOT NULL,
+    owner       TEXT
+);
+
+CREATE TABLE IF NOT EXISTS external_reviews (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    appid         INTEGER REFERENCES games(appid),
+    source        TEXT NOT NULL,
+    source_id     TEXT,
+    title         TEXT,
+    score         REAL,
+    author        TEXT,
+    outlet        TEXT,
+    url           TEXT,
+    snippet       TEXT,
+    view_count    INTEGER,
+    like_ratio    REAL,
+    published_at  TIMESTAMP,
+    fetched_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(appid, source, source_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_ext_reviews_appid ON external_reviews(appid);
+CREATE INDEX IF NOT EXISTS idx_ext_reviews_source ON external_reviews(source);
+
+CREATE TABLE IF NOT EXISTS game_wikidata_claims (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    appid       INTEGER NOT NULL REFERENCES games(appid),
+    claim_type  TEXT NOT NULL,
+    name        TEXT NOT NULL,
+    wikidata_id TEXT,
+    property_id TEXT,
+    extra       TEXT,
+    fetched_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(appid, claim_type, wikidata_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_wdc_appid ON game_wikidata_claims(appid);
+CREATE INDEX IF NOT EXISTS idx_wdc_type ON game_wikidata_claims(claim_type);
+CREATE INDEX IF NOT EXISTS idx_wdc_name ON game_wikidata_claims(name);
+
+CREATE TABLE IF NOT EXISTS skill_errors (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    skill_name      TEXT NOT NULL,
+    error_type      TEXT NOT NULL,
+    error_message   TEXT NOT NULL,
+    traceback       TEXT,
+    command         TEXT,
+    context         TEXT,
+    fix_applied     TEXT,
+    resolved        INTEGER DEFAULT 0,
+    resolution      TEXT,
+    created_at      TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_skill_errors_unresolved
+    ON skill_errors(resolved) WHERE resolved = 0;
+CREATE INDEX IF NOT EXISTS idx_skill_errors_skill
+    ON skill_errors(skill_name);
+"""
+
+VIEWS_SQL = """
+-- valid_reviews: 정성 분석용 필터링된 리뷰 View
+-- 100자 이상 (한국어: 50자) OR 플레이타임 50시간(3000분) 이상, ASCII art 제거, 게임별 중복 1건
+-- 주의: 부정 보강 후 reviews 테이블 COUNT로 전체 긍/부정 비율 계산 금지 → games.steam_positive/steam_negative 사용
+CREATE VIEW IF NOT EXISTS valid_reviews AS
+WITH filtered AS (
+    SELECT *
+    FROM reviews
+    WHERE review_text IS NOT NULL
+      AND trim(review_text) != ''
+      AND review_text NOT LIKE '%⣿%'
+      AND review_text NOT LIKE '%█%'
+      AND review_text NOT LIKE '%▀%'
+      AND (
+        CASE
+          WHEN language = 'koreana' THEN length(review_text) >= 50
+          ELSE length(review_text) >= 100
+        END
+        OR playtime_at_review >= 3000  -- 50시간 (분 단위)
+      )
+),
+deduped AS (
+    SELECT *,
+        ROW_NUMBER() OVER (
+            PARTITION BY appid, review_text
+            ORDER BY weighted_vote_score DESC, votes_up DESC
+        ) AS rn
+    FROM filtered
+)
+SELECT recommendation_id, appid, language, review_text,
+       voted_up, playtime_forever, playtime_at_review,
+       early_access, steam_purchase, received_for_free,
+       dev_response, timestamp_created, votes_up, votes_funny,
+       weighted_vote_score, comment_count, author_steamid,
+       author_num_reviews, author_playtime_forever,
+       collected_ver, collected_at
+FROM deduped WHERE rn = 1;
 """
 
 
@@ -179,4 +327,71 @@ def init_db(db_path: str) -> sqlite3.Connection:
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
     conn.executescript(SCHEMA_SQL)
+    conn.executescript(VIEWS_SQL)
+    _migrate(conn)
     return conn
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Add columns that may be missing in older databases."""
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(games)").fetchall()}
+    migrations = [
+        ("name_ko", "TEXT"),
+        ("detailed_description_en", "TEXT"),
+        ("detailed_description_ko", "TEXT"),
+        # RAWG retention proxy
+        ("rawg_ratings_count", "INTEGER"),
+        ("rawg_added", "INTEGER"),
+        ("rawg_status_yet", "INTEGER"),
+        ("rawg_status_owned", "INTEGER"),
+        ("rawg_status_beaten", "INTEGER"),
+        ("rawg_status_toplay", "INTEGER"),
+        ("rawg_status_dropped", "INTEGER"),
+        ("rawg_status_playing", "INTEGER"),
+        ("rawg_exceptional_pct", "REAL"),
+        ("rawg_recommended_pct", "REAL"),
+        ("rawg_meh_pct", "REAL"),
+        ("rawg_skip_pct", "REAL"),
+        # Twitch streaming
+        ("twitch_game_id", "TEXT"),
+        ("twitch_stream_count", "INTEGER"),
+        ("twitch_viewer_count", "INTEGER"),
+        ("twitch_top_language", "TEXT"),
+        ("twitch_lang_distribution", "TEXT"),
+        ("twitch_fetched_at", "TIMESTAMP"),
+        # HowLongToBeat
+        ("hltb_id", "INTEGER"),
+        ("hltb_main_story", "REAL"),
+        ("hltb_main_extra", "REAL"),
+        ("hltb_completionist", "REAL"),
+        # CheapShark
+        ("cheapshark_deal_rating", "REAL"),
+        ("cheapshark_lowest_price", "REAL"),
+        ("cheapshark_lowest_price_date", "TEXT"),
+        # OpenCritic
+        ("opencritic_id", "INTEGER"),
+        ("opencritic_score", "REAL"),
+        ("opencritic_pct_recommend", "REAL"),
+        ("opencritic_tier", "TEXT"),
+        ("opencritic_review_count", "INTEGER"),
+        # Wikidata
+        ("wikidata_id", "TEXT"),
+        ("wikidata_fetched_at", "TIMESTAMP"),
+        # PCGamingWiki
+        ("pcgw_engine", "TEXT"),
+        ("pcgw_has_ultrawide", "INTEGER"),
+        ("pcgw_has_hdr", "INTEGER"),
+        ("pcgw_has_controller", "INTEGER"),
+        ("pcgw_graphics_api", "TEXT"),
+    ]
+    for col, col_type in migrations:
+        if col not in existing:
+            conn.execute(f"ALTER TABLE games ADD COLUMN {col} {col_type}")
+    conn.commit()
+    # Indexes on migrated columns
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_games_opencritic_id ON games(opencritic_id)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_games_hltb_id ON games(hltb_id)")
+    # View 재생성 (정의 변경 시 기존 View 교체)
+    conn.execute("DROP VIEW IF EXISTS valid_reviews")
+    conn.executescript(VIEWS_SQL)
+    conn.commit()

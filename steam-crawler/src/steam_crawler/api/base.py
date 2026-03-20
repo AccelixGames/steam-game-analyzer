@@ -1,9 +1,9 @@
-"""Base HTTP client with rate limiting and failure tracking integration."""
+"""Base HTTP client with rate limiting and TLS fingerprint impersonation."""
 
 from __future__ import annotations
 
 import time
-import httpx
+from curl_cffi.requests import Session, Response
 
 from steam_crawler.api.rate_limiter import AdaptiveRateLimiter
 
@@ -13,17 +13,18 @@ class BaseClient:
         self,
         rate_limiter: AdaptiveRateLimiter | None = None,
         timeout: float = 10.0,
+        impersonate: str = "chrome",
     ):
-        self._client = httpx.Client(timeout=timeout)
+        self._client = Session(timeout=timeout, impersonate=impersonate)
         self._rate_limiter = rate_limiter
 
-    def get(self, url: str, params: dict | None = None) -> httpx.Response:
+    def get(self, url: str, params: dict | None = None, headers: dict | None = None) -> Response:
         """Make a GET request with rate limiting and retry on 429/5xx."""
         if self._rate_limiter:
             self._rate_limiter.wait()
 
         start = time.monotonic()
-        response = self._client.get(url, params=params)
+        response = self._client.get(url, params=params, headers=headers)
         elapsed_ms = (time.monotonic() - start) * 1000
 
         if self._rate_limiter:
@@ -36,7 +37,7 @@ class BaseClient:
                         self._rate_limiter.record_server_error()
                     time.sleep(delay_ms / 1000)
                     start = time.monotonic()
-                    response = self._client.get(url, params=params)
+                    response = self._client.get(url, params=params, headers=headers)
                     elapsed_ms = (time.monotonic() - start) * 1000
                     if response.status_code < 400:
                         break

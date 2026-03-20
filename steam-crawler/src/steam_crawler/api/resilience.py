@@ -17,6 +17,9 @@ FAILURE_TYPES = (
     "cursor_invalid",
     "data_quality",
     "empty_response",
+    "match_failed",
+    "match_ambiguous",
+    "auth_failed",
     "unknown",
 )
 

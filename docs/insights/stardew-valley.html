@@ -1,0 +1,1183 @@
+<!--
+  Steam Game Insight Report
+  Stardew Valley (413150)
+  Generated 2026-03-19
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stardew Valley — 기획 인사이트 보고서</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0c0e14;
+    --bg-card: #141620;
+    --bg-card-hover: #191c28;
+    --bg-accent: #1a1d2a;
+    --border: #252838;
+    --border-strong: #363a50;
+    --text: #e8e8f0;
+    --text-dim: #9a9ab4;
+    --text-faint: #686880;
+    --accent-gold: #f0c040;
+    --accent-gold-dim: #b89830;
+    --accent-green: #3ed88a;
+    --accent-red: #f05868;
+    --accent-blue: #4c94f0;
+    --accent-purple: #a46cf0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 1.8;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 3rem 3rem;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 20%, rgba(240,192,64,0.08), transparent),
+      radial-gradient(ellipse 60% 50% at 70% 80%, rgba(160,96,240,0.06), transparent),
+      linear-gradient(180deg, transparent 40%, var(--bg-deep));
+    z-index: 1;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/header.jpg?t=1754692865') center/cover no-repeat;
+    filter: brightness(0.3) saturate(0.6);
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-top-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .steam-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .45rem 1.2rem;
+    background: rgba(27,40,56,0.8);
+    border: 1px solid rgba(102,192,244,0.3);
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #66c0f4;
+    text-decoration: none;
+    letter-spacing: .03em;
+    backdrop-filter: blur(10px);
+    transition: all .2s;
+  }
+  .steam-link:hover {
+    background: rgba(27,40,56,0.95);
+    border-color: #66c0f4;
+    color: #fff;
+  }
+  .steam-link svg { width: 16px; height: 16px; fill: currentColor; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem 1rem;
+    background: rgba(240,192,64,0.15);
+    border: 1px solid rgba(240,192,64,0.3);
+    border-radius: 100px;
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--accent-gold);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    max-width: 600px;
+    line-height: 1.8;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .hero-stat { display: flex; flex-direction: column; }
+  .hero-stat .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .hero-stat .num.gold { color: var(--accent-gold); }
+  .hero-stat .num.green { color: var(--accent-green); }
+  .hero-stat .label { font-size: .75rem; color: var(--text-dim); margin-top: .2rem; }
+
+  /* ── Layout ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  section {
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-of-type { border-bottom: none; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    background: rgba(240,192,64,0.1);
+    border: 1px solid rgba(240,192,64,0.2);
+    padding: .3rem .7rem;
+    border-radius: 4px;
+    letter-spacing: .08em;
+  }
+  .section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .card-label {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--accent-gold-dim);
+    margin-bottom: 1rem;
+    padding-bottom: .6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .8rem; }
+
+  /* ── Core Loop ── */
+  .loop-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 2.5rem 1rem;
+    background: var(--bg-accent);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .loop-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    min-width: 120px;
+    text-align: center;
+    transition: all .2s;
+  }
+  .loop-node:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+  .loop-icon { font-size: 1.8rem; }
+  .loop-label { font-size: .8rem; font-weight: 700; }
+  .loop-sub { font-size: .65rem; color: var(--text-dim); }
+  .loop-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-gold-dim);
+    font-size: 1.2rem;
+  }
+
+  /* ── Tags ── */
+  .tag-grid { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.5rem; }
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .4rem 1rem;
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    transition: all .2s;
+  }
+  .tag-pill:hover { border-color: var(--accent-gold); }
+  .tag-pill .vote {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .65rem;
+    color: var(--text-faint);
+  }
+  .tag-pill.pillar-genre { border-left: 3px solid var(--accent-blue); }
+  .tag-pill.pillar-mood { border-left: 3px solid var(--accent-purple); }
+  .tag-pill.pillar-platform { border-left: 3px solid var(--accent-green); }
+
+  /* ── Triangulation ── */
+  .tri-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .tri-table th {
+    background: var(--bg-accent);
+    padding: 1rem 1.2rem;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-dim);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .tri-table td {
+    padding: .9rem 1.2rem;
+    font-size: .85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: top;
+  }
+  .tri-table tr:last-child td { border-bottom: none; }
+  .tri-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .2rem .6rem;
+    border-radius: 4px;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+  }
+  .verdict.success { background: rgba(64,208,128,0.12); color: var(--accent-green); }
+  .verdict.weakness { background: rgba(240,80,96,0.12); color: var(--accent-red); }
+  .verdict.hidden { background: rgba(160,96,240,0.12); color: var(--accent-purple); }
+  .verdict.marketing { background: rgba(240,192,64,0.12); color: var(--accent-gold); }
+
+  /* ── Bar Charts ── */
+  .bar-chart { margin: 1.5rem 0; }
+  .bar-row { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; }
+  .bar-label {
+    font-size: .82rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+    min-width: 90px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bar-track {
+    flex: 1;
+    height: 32px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: .8rem;
+    font-size: .75rem;
+    font-weight: 700;
+    color: #fff;
+    min-width: fit-content;
+    transition: width .8s cubic-bezier(.22,1,.36,1);
+  }
+  .bar-fill.green { background: var(--accent-green); }
+  .bar-fill.gold { background: var(--accent-gold); color: #1a1d2a; }
+  .bar-fill.red { background: var(--accent-red); }
+  .bar-fill.blue { background: var(--accent-blue); }
+  .bar-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    color: var(--text-dim);
+    min-width: 70px;
+  }
+
+  /* ── Quotes ── */
+  .quote-block {
+    position: relative;
+    padding: 1.5rem 1.8rem 1.5rem 2rem;
+    margin: 1.2rem 0;
+    background: var(--bg-accent);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-gold);
+  }
+  .quote-block.negative { border-left-color: var(--accent-red); }
+  .quote-text {
+    font-size: .9rem;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.9;
+  }
+  .quote-meta {
+    margin-top: .8rem;
+    font-size: .75rem;
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .quote-translation {
+    margin-top: .6rem;
+    font-size: .84rem;
+    color: var(--text-dim);
+    font-style: normal;
+    padding: .6rem .8rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 4px;
+    border-left: 2px solid rgba(255,255,255,0.08);
+  }
+
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .sys-card {
+    padding: 1rem;
+    background: var(--bg-accent);
+    border-radius: 8px;
+  }
+  .sys-card strong { color: var(--accent-gold); }
+  .sys-card.alt strong { color: var(--accent-purple); }
+  .sys-card p { font-size: .8rem; color: var(--text-dim); margin-top: .3rem; }
+
+  /* ── Biz Stats ── */
+  .biz-stat {
+    text-align: center;
+  }
+  .biz-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .biz-num.gold { color: var(--accent-gold); }
+  .biz-num.green { color: var(--accent-green); }
+  .biz-num.purple { color: var(--accent-purple); }
+  .biz-calc {
+    font-size: .75rem;
+    color: var(--text-faint);
+    margin-top: .3rem;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .hero { padding: 2rem 1.5rem; }
+  }
+
+  /* ── Conclusion ── */
+  .conclusion { text-align: center; padding: 5rem 2rem; position: relative; }
+  .conclusion::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(240,192,64,0.06), transparent 70%);
+  }
+  .conclusion-text {
+    position: relative;
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #fff;
+  }
+  .conclusion-text strong { color: var(--accent-gold); }
+  .conclusion-text em { color: var(--text-dim); font-style: italic; }
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: .72rem;
+    color: var(--text-faint);
+    border-top: 1px solid var(--border);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .6s ease-out both; }
+  .fade-up:nth-child(2) { animation-delay: .1s; }
+  .fade-up:nth-child(3) { animation-delay: .2s; }
+  .fade-up:nth-child(4) { animation-delay: .3s; }
+</style>
+</head>
+<body>
+
+<!-- ━━━ HERO ━━━ -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content fade-up">
+    <div class="hero-top-bar">
+      <a class="steam-link" href="https://store.steampowered.com/app/413150/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 256 259"><path d="M128 0C57.3 0 0 52.6 0 117.5c0 28.5 11.3 54.7 29.8 75.2L0 259l66.3-29.5c18.6 9.8 39.9 15.4 62.7 15.4C198.7 245 256 192.4 256 127.5S198.7 0 128 0z"/></svg>
+        Steam Store
+      </a>
+      <div class="hero-badge">Steam Game Insight Report</div>
+    </div>
+    <h1>Stardew Valley</h1>
+    <p class="hero-subtitle">"농장 시뮬레이터"라는 소박한 외피 안에 로맨스, 전투, 제작, 커뮤니티를 겹겹이 쌓아 올린 레이어드 디자인의 정석 — "600MB 안에 꿈꿔온 삶이 담겨 있다"</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num gold">98.4%</span>
+        <span class="label">긍정률 (Overwhelmingly Positive)</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">2,000~5,000만</span>
+        <span class="label">소유자 수</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num green">$14.99</span>
+        <span class="label">가격</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">75.7h</span>
+        <span class="label">평균 플레이타임</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ━━━ STEP 01: 마케팅 포지셔닝 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 01</span>
+    <h2 class="section-title">마케팅 포지셔닝 — 개발사의 의도</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card fade-up">
+      <div class="card-label">English Description</div>
+      <p>You've inherited your <strong>grandfather's old farm plot</strong> in Stardew Valley. Armed with hand-me-down tools and a few coins, you set out to begin your <strong>new life</strong>. Can you learn to <strong>live off the land</strong> and turn these overgrown fields into a <strong>thriving home</strong>?</p>
+    </div>
+    <div class="card fade-up">
+      <div class="card-label">한국어 설명</div>
+      <p>(한국어 설명 없음 — 영어 설명과 동일)</p>
+    </div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label">마케팅 키워드 분석</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      Short description은 놀라울 정도로 <strong>미니멀</strong>하다. "farm", "land", "home"이라는 3개의 핵심어만으로 게임의 전체를 설명하려 한다.
+      detailed_description은 <strong>NULL</strong>(미등록)로 — Steam 스토어 페이지에서 별도의 장문 설명을 제공하지 않는다는 뜻이다.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin-bottom:1rem">
+      <strong>의도적 생략:</strong> 로맨스(12+ 결혼 후보), 전투(광산 120층), 낚시, 크래프팅, 멀티플레이어 — 이 모든 핵심 시스템이 마케팅에서 <strong>단 한 마디도</strong> 언급되지 않는다.
+      이는 "농장"이라는 친숙한 입구를 통해 유저를 끌어들인 뒤, 게임 내에서 다층적 경험을 발견하게 하려는 전략이다.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      <strong>내러티브 프레이밍:</strong> "grandfather's old farm" = 감정적 유산, "new life" = 도피 판타지, "thriving home" = 성취 약속.
+      기능이 아닌 <strong>감정</strong>을 판매하는 마케팅이며, 이것이 10년간 일관된 소구력을 유지한 이유다.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ STEP 02: 메커니즘 실체 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 02</span>
+    <h2 class="section-title">메커니즘 실체 — 실제 구현</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label">Core Loop Diagram — 2중 루프 구조</div>
+
+    <!-- 외부 루프 (성장) -->
+    <div style="border:1px dashed var(--accent-gold-dim);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
+      <div style="font-size:.7rem;font-weight:700;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">외부 루프 — 시즌/연간 성장</div>
+
+      <!-- 내부 루프 (일일) -->
+      <div class="loop-diagram" style="margin-bottom:1rem;border-color:var(--accent-blue);position:relative">
+        <div style="position:absolute;top:.5rem;left:1rem;font-size:.65rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.08em">내부 루프 — 일일 운영</div>
+        <div class="loop-node">
+          <div class="loop-icon">🌱</div>
+          <div class="loop-label">파종/관수</div>
+          <div class="loop-sub">작물 심기 & 물주기</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">⛏️</div>
+          <div class="loop-label">탐험</div>
+          <div class="loop-sub">광산/낚시/채집</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🤝</div>
+          <div class="loop-label">사회활동</div>
+          <div class="loop-sub">NPC 대화 & 선물</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">💰</div>
+          <div class="loop-label">수확/판매</div>
+          <div class="loop-sub">수확물 출하</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">😴</div>
+          <div class="loop-label">취침</div>
+          <div class="loop-sub">하루 종료</div>
+        </div>
+        <span class="loop-arrow" style="opacity:.4">↩</span>
+      </div>
+
+      <!-- 외부 루프 노드 -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap">
+        <div class="loop-node">
+          <div class="loop-icon">📦</div>
+          <div class="loop-label">골드 축적</div>
+          <div class="loop-sub">시즌 수확 수익</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🏠</div>
+          <div class="loop-label">농장/도구 업그레이드</div>
+          <div class="loop-sub">스프링클러, 집 확장</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🌳</div>
+          <div class="loop-label">신규 영역 해금</div>
+          <div class="loop-sub">사막, 진저 아일랜드</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">💑</div>
+          <div class="loop-label">관계 심화</div>
+          <div class="loop-sub">결혼, 아이, 이벤트</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🎪</div>
+          <div class="loop-label">커뮤니티 센터</div>
+          <div class="loop-sub">번들 완성 목표</div>
+        </div>
+        <span class="loop-arrow" style="opacity:.4">↩</span>
+      </div>
+    </div>
+
+    <!-- 핵심 텐션 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+      <div style="padding:1rem;background:rgba(64,208,128,0.06);border:1px solid rgba(64,208,128,0.15);border-radius:8px">
+        <strong style="color:var(--accent-green);font-size:.8rem">확정 보상</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">작물 수확 (계절별 보장), 도구 업그레이드, 농장 확장, 우정 하트 축적, 커뮤니티 센터 번들 진행</p>
+      </div>
+      <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
+        <strong style="color:var(--accent-gold);font-size:.8rem">가변 보상</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">광산 RNG (보석, 지오드), 희귀 물고기 낚시, 채집 스폰, 여행 상인 인벤토리, 카지노 미니게임</p>
+      </div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">
+      Stardew Valley의 핵심 텐션은 <strong>목가적 농업 노동(확정)</strong>과 <strong>광산 탐험/낚시(가변)</strong>의 교차에 있다.
+      대부분의 농장 시뮬레이터가 "심고-기르고-수확"의 단선적 루프에 머무는 반면,
+      Stardew Valley는 광산 120층의 전투 시스템이라는 <strong>아드레날린 배출구</strong>를 제공하여
+      목가적 표면과 대비되는 긴장감을 만든다. 이 이중 구조가 75.7시간이라는 평균 플레이타임의 구조적 원인이다.
+    </p>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label">IGDB / RAWG 기반 시스템 분석</div>
+    <div class="card-title">마케팅이 말하지 않은 시스템들</div>
+    <div class="grid-3" style="margin-top:1rem">
+      <div class="sys-card">
+        <strong>전투/광산 시스템</strong>
+        <p>120층 광산 + 해골 동굴. 검 전투, 몬스터 처치, 광물/보석 채굴. 마케팅에서 완전히 생략된 핵심 시스템.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>연애/결혼 시스템</strong>
+        <p>12명 이상의 결혼 후보 NPC. 선물 호감도, 데이트 이벤트, 결혼, 출산까지 — Dating Sim 태그 2,824표.</p>
+      </div>
+      <div class="sys-card">
+        <strong>크래프팅/건축</strong>
+        <p>수백 가지 제작 레시피. 스프링클러, 기계, 장식품 등 농장 자동화 및 인테리어 디자인 시스템.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>낚시 미니게임</strong>
+        <p>스킬 기반 낚시 미니게임. 전설 물고기 5종, 계절/날씨/시간대별 출현 — 독립적 서브시스템.</p>
+      </div>
+      <div class="sys-card">
+        <strong>멀티플레이어 Co-op</strong>
+        <p>최대 4인 협동 플레이 (1.3 업데이트). Multiplayer 태그 3위(7,278표) — 마케팅 미언급.</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>축제/시즌 이벤트</strong>
+        <p>계절별 마을 축제, 미니게임, 특별 보상. 밤/낮 주기 + 4계절 시스템이 리듬감 제공.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━ STEP 03: 유저 경험 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 03</span>
+    <h2 class="section-title">유저 경험 — 실제 반응</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- 태그 -->
+  <div class="card fade-up">
+    <div class="card-label">태그 프로필 — 유저가 인식한 정체성</div>
+    <div class="tag-grid">
+      <span class="tag-pill pillar-genre">Farming Sim <span class="vote">7935</span></span>
+      <span class="tag-pill pillar-platform">Pixel Graphics <span class="vote">7389</span></span>
+      <span class="tag-pill pillar-genre">Multiplayer <span class="vote">7278</span></span>
+      <span class="tag-pill pillar-genre">Life Sim <span class="vote">7246</span></span>
+      <span class="tag-pill pillar-genre">RPG <span class="vote">6530</span></span>
+      <span class="tag-pill pillar-mood">Relaxing <span class="vote">6286</span></span>
+      <span class="tag-pill pillar-genre">Agriculture <span class="vote">5335</span></span>
+      <span class="tag-pill pillar-genre">Simulation <span class="vote">5307</span></span>
+      <span class="tag-pill pillar-genre">Crafting <span class="vote">4480</span></span>
+      <span class="tag-pill pillar-genre">Sandbox <span class="vote">4378</span></span>
+      <span class="tag-pill pillar-platform">Indie <span class="vote">4324</span></span>
+      <span class="tag-pill pillar-genre">Building <span class="vote">3620</span></span>
+      <span class="tag-pill pillar-platform">Singleplayer <span class="vote">3359</span></span>
+      <span class="tag-pill pillar-mood">Casual <span class="vote">3356</span></span>
+      <span class="tag-pill pillar-genre">Open World <span class="vote">3328</span></span>
+      <span class="tag-pill pillar-platform">2D <span class="vote">2997</span></span>
+      <span class="tag-pill pillar-genre">Dating Sim <span class="vote">2824</span></span>
+      <span class="tag-pill pillar-mood">Cute <span class="vote">2814</span></span>
+      <span class="tag-pill pillar-mood">Great Soundtrack <span class="vote">2561</span></span>
+      <span class="tag-pill pillar-genre">Fishing <span class="vote">2287</span></span>
+    </div>
+    <p style="font-size:.78rem;color:var(--text-dim)">
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-blue);border-radius:2px;margin-right:4px"></span>장르/메커니즘 축 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-purple);border-radius:2px;margin-right:4px"></span>분위기/감성 축 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-green);border-radius:2px;margin-right:4px"></span>플랫폼/접근성 축
+    </p>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-top:1rem">
+      태그 분포의 가장 주목할 점은 <strong>단일 태그가 압도하지 않는다</strong>는 것이다.
+      1위 Farming Sim(7,935)과 2위 Pixel Graphics(7,389)의 차이는 고작 7%.
+      상위 5개 태그가 5,307~7,935 범위에 고르게 분포하며, 이는 유저들이 이 게임을
+      "농장 게임"이 아닌 <strong>"농장 + 생활 + RPG + 멀티 + 릴랙싱"의 복합체</strong>로 인식하고 있음을 증명한다.
+    </p>
+  </div>
+
+  <!-- 태그 수평 바 차트 -->
+  <div class="card fade-up">
+    <div class="card-label">태그 투표수 분포</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">Farming Sim</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:100%">7935</div></div>
+        <span class="bar-value">7,935</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Pixel Graphics</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:93.1%">7389</div></div>
+        <span class="bar-value">7,389</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Multiplayer</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:91.7%">7278</div></div>
+        <span class="bar-value">7,278</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Life Sim</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:91.3%">7246</div></div>
+        <span class="bar-value">7,246</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">RPG</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:82.3%">6530</div></div>
+        <span class="bar-value">6,530</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Relaxing</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:79.2%">6286</div></div>
+        <span class="bar-value">6,286</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Agriculture</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:67.2%">5335</div></div>
+        <span class="bar-value">5,335</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Simulation</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:66.9%">5307</div></div>
+        <span class="bar-value">5,307</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Crafting</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:56.5%">4480</div></div>
+        <span class="bar-value">4,480</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Sandbox</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:55.2%">4378</div></div>
+        <span class="bar-value">4,378</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Indie</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:54.5%">4324</div></div>
+        <span class="bar-value">4,324</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Building</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:45.6%">3620</div></div>
+        <span class="bar-value">3,620</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Singleplayer</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:42.3%">3359</div></div>
+        <span class="bar-value">3,359</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Casual</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:42.3%">3356</div></div>
+        <span class="bar-value">3,356</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Open World</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:41.9%">3328</div></div>
+        <span class="bar-value">3,328</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">2D</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:37.8%">2997</div></div>
+        <span class="bar-value">2,997</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Dating Sim</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:35.6%">2824</div></div>
+        <span class="bar-value">2,824</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Cute</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:35.5%">2814</div></div>
+        <span class="bar-value">2,814</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Great Soundtrack</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:32.3%">2561</div></div>
+        <span class="bar-value">2,561</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Fishing</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:28.8%">2287</div></div>
+        <span class="bar-value">2,287</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기획 축 분류 테이블 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 축 분류 (Pillar Analysis)</div>
+    <table class="tri-table">
+      <thead>
+        <tr>
+          <th style="width:15%">기획 축</th>
+          <th>포함 태그</th>
+          <th style="width:12%">합산 투표</th>
+          <th style="width:10%">비중</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>농업/생활</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Farming Sim, Life Sim, Agriculture, Fishing</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">22,803</span></td>
+          <td><span class="verdict success">지배적</span></td>
+        </tr>
+        <tr>
+          <td><strong>제작/경영</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Simulation, Crafting, Building, Sandbox</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">17,785</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>분위기/감성</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Relaxing, Casual, Cute, Great Soundtrack</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">15,017</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>비주얼</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Pixel Graphics, 2D, Indie</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">14,710</span></td>
+          <td><span class="verdict marketing">맥락</span></td>
+        </tr>
+        <tr>
+          <td><strong>사회/로맨스</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Multiplayer, Dating Sim, Singleplayer</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">13,461</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>RPG/성장</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">RPG, Open World</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">9,858</span></td>
+          <td><span class="verdict marketing">보조</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 플레이타임별 긍정률 -->
+  <div class="card fade-up">
+    <div class="card-label">플레이타임별 긍정률 — 리텐션 곡선</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">&lt; 1h</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:100%">100.0%</div>
+        </div>
+        <span class="bar-value">7명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">1-10h</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:94.2%">94.2%</div>
+        </div>
+        <span class="bar-value">139명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">10-50h</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:98.6%">98.6%</div>
+        </div>
+        <span class="bar-value">290명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">50-100h</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:99.0%">99.0%</div>
+        </div>
+        <span class="bar-value">194명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">100h+</span>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:97.8%">97.8%</div>
+        </div>
+        <span class="bar-value">408명</span>
+      </div>
+    </div>
+    <p style="font-size:.85rem;color:var(--text-dim)">
+      전 구간 <strong>94% 이상</strong>의 경이적인 긍정률. 특히 주목할 점은 100h+ 구간에서도 97.8%를 유지한다는 것이다.
+      일반적으로 장시간 플레이어는 콘텐츠 고갈로 부정 비율이 높아지지만, Stardew Valley는 <strong>역U자가 아닌 평탄 곡선</strong>을 보인다.
+      HLTB 데이터(main 53.4h, extra 94.6h, completionist 171.2h)와 평균 플레이타임(75.7h)을 교차하면,
+      대부분의 플레이어가 메인 스토리를 넘어 추가 콘텐츠까지 자발적으로 진행하고 있음을 확인할 수 있다.
+      RAWG 이탈률 11.0%(일반 20~30% 대비)는 이 구조적 리텐션을 외부 데이터로 삼각 검증해준다.
+    </p>
+  </div>
+
+  <!-- 언어별 분포 -->
+  <div class="card fade-up">
+    <div class="card-label">언어별 리뷰 분포 — 시장 도달</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">English</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:100%">429</div></div>
+        <span class="bar-value">98.8%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">中文简体</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:55.2%">237</div></div>
+        <span class="bar-value">94.9%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Русский</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:16.1%">69</div></div>
+        <span class="bar-value">94.2%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Español</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:15.9%">68</div></div>
+        <span class="bar-value">100%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Português-BR</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:15.9%">68</div></div>
+        <span class="bar-value">100%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Türkçe</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:9.1%">39</div></div>
+        <span class="bar-value">100%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">한국어</span>
+        <div class="bar-track"><div class="bar-fill gold" style="width:5.8%">25</div></div>
+        <span class="bar-value">96.0%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Español-LATAM</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:5.1%">22</div></div>
+        <span class="bar-value">100%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Français</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:3.5%">15</div></div>
+        <span class="bar-value">100%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Deutsch</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:3.3%">14</div></div>
+        <span class="bar-value">100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기획 성공 포인트 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 성공 포인트</div>
+
+    <div class="card-title">A. 레이어드 디자인 — "600MB 안의 꿈꿔온 삶"</div>
+    <div class="quote-block">
+      <div class="quote-text">"Can't believe Stardew Valley is already 10 years old. 600mb+ is such a small file size, just a few mins to download. But at the same time, its also huge enough to contain the life I've always dreamed of."</div>
+      <div class="quote-meta">english · 455h · +44 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      이 리뷰는 Stardew Valley 기획의 핵심을 정확히 짚는다. 물리적 용량(600MB)과 경험적 깊이("삶")의 대비는
+      이 게임이 기술적 스펙이 아닌 <strong>디자인 밀도</strong>로 승부하는 작품임을 보여준다.
+      농업, 로맨스, 전투, 낚시, 크래프팅이 하나의 일일 루프 안에서 자연스럽게 교차하는 구조가
+      "작은 파일 안의 거대한 세계"라는 인상을 만든다.
+    </p>
+
+    <div class="card-title">B. 감정적 안식처 — "삶을 구해준 게임"</div>
+    <div class="quote-block">
+      <div class="quote-text">"Happy 10th Anniversary... Thank you for saving my life. Over the past six years, during countless dark moments..."</div>
+      <div class="quote-meta">english · 15h · +29 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      Stardew Valley는 단순한 게임을 넘어 <strong>감정적 안식처</strong>로 기능한다.
+      Relaxing(6,286) + Casual(3,356) + Cute(2,814) = 12,456표의 감성 축 태그가 이를 증명한다.
+      시간 압박 없는 디자인, 따뜻한 픽셀 아트, 비폭력적 일상의 반복이 만드는 "치유 루프"는
+      코어 게이머뿐 아니라 비게이머층까지 끌어들이는 보편적 소구력의 원천이다.
+    </p>
+
+    <div class="card-title">C. 1인 개발의 품질 — "한 사람이 만들었다는 것이 경이롭다"</div>
+    <div class="quote-block">
+      <div class="quote-text">"The gold Standard of Cozy Gaming. It is genuinely mind-blowing to think that Stardew Valley was created by just one person."</div>
+      <div class="quote-meta">english · 168h · +44 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      ConcernedApe(Eric Barone) 1인 개발이라는 사실이 유저들에게 <strong>존경심 기반의 충성도</strong>를 형성한다.
+      10년간 모든 업데이트가 무료(1.1~1.7)라는 사실과 결합되어,
+      $14.99라는 가격이 "게임 구매"가 아닌 "창작자 지원"으로 인식되는 구조를 만들었다.
+      이것이 DLC 없이도 $200M~$520M 추정 매출을 달성한 비즈니스 구조의 정서적 기반이다.
+    </p>
+
+    <div class="card-title">D. 관계의 게임 — "함께한 기억이 세이브 파일에 남아있다"</div>
+    <div class="quote-block">
+      <div class="quote-text">"硬盘里的星露谷存档，已经静静躺了一年"</div>
+      <div class="quote-meta">schinese · 89h · +206 helpful</div>
+      <div class="quote-translation">하드디스크에 있는 스타듀밸리 세이브 파일이 1년째 조용히 놓여 있다... 파트너와 함께 플레이한 기억이 담긴 세이브를 열 수 없다는 이야기.</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      중국어권에서 가장 많은 추천(+206)을 받은 리뷰. 게임 내 관계(NPC 로맨스)와 게임 밖 관계(실제 파트너와의 Co-op)가
+      중첩되는 <strong>이중 감정 구조</strong>가 Stardew Valley의 숨겨진 강점이다.
+      Multiplayer(7,278) + Dating Sim(2,824) 태그 조합은 이 게임이 "혼자 하는 농장"이 아닌
+      "누군가와 함께하는 삶"으로 인식됨을 보여준다.
+    </p>
+  </div>
+
+  <!-- 기획 약점 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 약점</div>
+
+    <div class="card-title">A. 1.7 업데이트 Clint 결혼 후보 추가 — 문화적 충돌</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"这是一部完美的游戏，在作者决定把令人作呕的克林特作为可结婚的对象之前"</div>
+      <div class="quote-meta">schinese · 277h · +81 helpful</div>
+      <div class="quote-translation">이것은 완벽한 게임이었다 — 개발자가 역겨운 클린트를 결혼 가능 캐릭터로 만들기 전까지. 여성 후보는 모두 아름다운데 남성 후보는 "구원이 필요한 남자들"이라며 젠더 불균형을 지적.</div>
+    </div>
+    <div class="quote-block negative">
+      <div class="quote-text">"谁想和克林特结婚了"</div>
+      <div class="quote-meta">schinese · 347h · +25 helpful</div>
+      <div class="quote-translation">누가 클린트랑 결혼하고 싶어?</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      거의 모든 부정 리뷰가 1.7 업데이트의 Clint 결혼 후보 추가에 집중되어 있다.
+      이것은 <strong>핵심 게임플레이 불만이 아닌 문화적 충돌</strong>이다 — 중년 남성 NPC를 로맨스 대상으로 추가한 결정이
+      중국어권 커뮤니티에서 특히 강한 반발을 일으켰다. 서양 커뮤니티에서는 비교적 중립적 반응.
+      이는 1인 개발자의 창작적 비전과 국제적 대규모 커뮤니티의 기대 사이에서 발생하는
+      <strong>"문화적 터치스톤 딜레마"</strong>를 보여준다 — 게임이 문화 현상이 되면,
+      모든 디자인 결정이 문화적 렌즈를 통해 증폭 해석된다.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ STEP 04: 삼각 검증 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 04</span>
+    <h2 class="section-title">삼각 검증 — Triangulation</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="fade-up" style="overflow-x:auto">
+    <table class="tri-table">
+      <thead>
+        <tr>
+          <th style="width:18%">기획 요소</th>
+          <th style="width:15%">마케팅</th>
+          <th style="width:15%">구현</th>
+          <th style="width:15%">유저 반응</th>
+          <th style="width:12%">판정</th>
+          <th>증거</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>농업/수확</strong></td>
+          <td>○ "live off the land"</td>
+          <td>◎ 깊은 계절별 작물 시스템</td>
+          <td>◎ #1 태그 (7,935)</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅 약속 = 구현 = 유저 인식 완벽 일치. Farming Sim 1위 태그.</td>
+        </tr>
+        <tr>
+          <td><strong>사회/로맨스</strong></td>
+          <td>△ Short desc 미언급</td>
+          <td>◎ 12+ 캐릭터, 결혼, 출산</td>
+          <td>◎ Dating Sim (2,824) + 감성 리뷰</td>
+          <td><span class="verdict hidden">숨겨진 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅에 없지만 유저가 자발적으로 발견. 중국어 감성 리뷰 +206 helpful.</td>
+        </tr>
+        <tr>
+          <td><strong>릴랙싱/힐링</strong></td>
+          <td>△ 톤으로 암시</td>
+          <td>◎ 시간 압박 없음, 아늑한 미학</td>
+          <td>◎ Relaxing (6,286), Cute (2,814)</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">"삶을 구해준 게임" 리뷰가 감정적 안식처 기능을 증명.</td>
+        </tr>
+        <tr>
+          <td><strong>크래프팅/건축</strong></td>
+          <td>✕ 미언급</td>
+          <td>◎ 광범위한 제작 시스템</td>
+          <td>◎ Crafting (4,480), Building (3,620)</td>
+          <td><span class="verdict hidden">숨겨진 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅 제로이나 태그 합산 8,100표. 유저가 핵심 축으로 인식.</td>
+        </tr>
+        <tr>
+          <td><strong>광산/전투</strong></td>
+          <td>✕ 미언급</td>
+          <td>○ 존재하나 부차적</td>
+          <td>○ 상위 태그에 미등장</td>
+          <td><span class="verdict marketing">숨겨진 시스템</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">IGDB keywords에 mining, sword, monsters 존재. 태그에는 미반영.</td>
+        </tr>
+        <tr>
+          <td><strong>멀티플레이어</strong></td>
+          <td>✕ 미언급</td>
+          <td>◎ 4인 Co-op 추가</td>
+          <td>◎ #3 태그 (7,278)</td>
+          <td><span class="verdict hidden">커뮤니티 부상</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">1.3 업데이트로 추가. 마케팅 없이 태그 3위 달성 = 유저 주도 확산.</td>
+        </tr>
+        <tr>
+          <td><strong>Clint 결혼 (1.7)</strong></td>
+          <td>✕</td>
+          <td>○ 추가됨</td>
+          <td>✕ 중국어권 반발</td>
+          <td><span class="verdict weakness">실행 실패</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">부정 리뷰 대부분이 이 이슈에 집중. 문화적 충돌 사례.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ━━━ STEP 05: 비즈니스 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 05</span>
+    <h2 class="section-title">비즈니스 구조</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-3 fade-up">
+    <div class="card biz-stat">
+      <div class="card-label">추정 매출</div>
+      <div class="biz-num gold">$200M~$520M</div>
+      <div class="biz-calc">20M~50M owners x $14.99 x 0.7</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="card-label">가격당 플레이타임</div>
+      <div class="biz-num green">5.05h/$</div>
+      <div class="biz-calc">75.7h / $14.99</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="card-label">수익 모델</div>
+      <div class="biz-num purple">Premium</div>
+      <div class="biz-calc">$14.99 일회 구매, DLC/MTX 없음</div>
+    </div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-title">수익 확장 가능성</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      <strong>순수 프리미엄 모델의 극한:</strong> 10년간 DLC 제로, 마이크로트랜잭션 제로, 모든 업데이트 무료(1.1→1.6→1.7).
+      이 모델이 $200M 이상의 매출을 만든 것은 산업적 이례 사례다.<br><br>
+      <strong>가격 자신감:</strong> CheapShark 최저가 $5.99(2019년 60% 할인)이나 현재 deal_rating=0.0 — 할인 없이도 판매되는 가격 자신감.<br><br>
+      <strong>확장 경로:</strong> (1) Haunted Chocolatier — ConcernedApe의 차기 신작, 같은 엔진(MonoGame) 기반 (2) 모바일/콘솔 포트 완료 — 터치스크린 입력 지원 (3) 콘솔 물리 에디션 판매.
+      기존 IP를 통한 DLC/시즌패스가 아닌 <strong>"새로운 게임"으로의 확장</strong>을 선택한 것은 1인 개발자 브랜드 전략과 일치한다.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ 결론 ━━━ -->
+<section class="conclusion">
+  <div class="conclusion-text fade-up">
+    이 게임이 10년간 <strong>98.4%</strong> 긍정률을 유지하는 이유는,<br>
+    "농장 시뮬레이터"라는 소박한 입구 안에<br>
+    로맨스, 전투, 제작, 낚시, 커뮤니티를 <strong>하나의 일일 리듬</strong>으로 직조하여,<br>
+    <em>확정 보상의 안정감</em>과 <em>가변 보상의 발견</em>이<br>
+    매일 교차하는 <strong>레이어드 디자인</strong>을 완성했기 때문이다.
+  </div>
+  <p style="position:relative;font-size:.82rem;color:var(--text-faint);max-width:700px;margin:1.5rem auto 0;text-align:center;line-height:1.8">
+    태그 데이터가 이를 증명한다: 상위 5개 태그가 5,307~7,935 범위에 고르게 분포하며 단일 태그가 압도하지 않는다.
+    6개 기획 축이 모두 9,800 이상의 합산 투표를 기록한 <strong>균형(Balance)</strong>이
+    886K 리뷰, 11.0% 이탈률, 75.7h 평균 플레이타임이라는 경이적 수치의 구조적 원인이다.
+  </p>
+</section>
+
+</div>
+
+<footer class="footer">
+  Steam Game Insight Report · Generated 2026-03-19 · Data: SteamSpy + Steam Reviews API + IGDB + RAWG + HLTB + CheapShark + PCGamingWiki + Twitch + Wikidata · 1,038 reviews analyzed
+</footer>
+
+</body>
+</html>

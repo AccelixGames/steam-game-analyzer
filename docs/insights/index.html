@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steam Game Insight Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0c0e14;
+    --bg-card: #141620;
+    --bg-card-hover: #191c28;
+    --bg-accent: #1a1d2a;
+    --border: #252838;
+    --border-strong: #363a50;
+    --text: #e8e8f0;
+    --text-dim: #9a9ab4;
+    --text-faint: #686880;
+    --accent-gold: #f0c040;
+    --accent-gold-dim: #b89830;
+    --accent-green: #3ed88a;
+    --accent-red: #f05868;
+    --accent-blue: #4c94f0;
+    --accent-purple: #a46cf0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    text-align: center;
+    padding: 48px 24px 24px;
+  }
+  .site-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .site-header h1 span {
+    color: var(--accent-gold);
+  }
+  .report-count {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── Toolbar (sticky) ── */
+  .toolbar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-deep);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+  }
+  .toolbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box input:focus {
+    border-color: var(--accent-gold-dim);
+  }
+  .search-box input::placeholder {
+    color: var(--text-faint);
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-faint);
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  /* ── Dropdown ── */
+  .dropdown {
+    position: relative;
+  }
+  .dropdown-btn {
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.2s;
+  }
+  .dropdown-btn:hover {
+    border-color: var(--border-strong);
+  }
+  .dropdown-btn.active {
+    border-color: var(--accent-gold-dim);
+    color: var(--accent-gold);
+  }
+  .dropdown-chevron {
+    font-size: 10px;
+    opacity: 0.6;
+  }
+  .dropdown-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 220px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 8px 0;
+    z-index: 200;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .dropdown-panel.open {
+    display: block;
+  }
+  .dropdown-panel label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .dropdown-panel label:hover {
+    background: var(--bg-accent);
+    color: var(--text);
+  }
+  .dropdown-panel input[type="checkbox"] {
+    accent-color: var(--accent-gold);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+
+  /* Sort dropdown is single-select */
+  .dropdown-panel.sort-panel label {
+    padding: 8px 14px;
+  }
+  .dropdown-panel.sort-panel label.selected {
+    color: var(--accent-gold);
+    background: var(--bg-accent);
+  }
+
+  /* ── Active filters ── */
+  .active-filters {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 8px 24px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .active-filters:empty {
+    display: none;
+  }
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: var(--bg-accent);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: default;
+  }
+  .filter-pill-remove {
+    cursor: pointer;
+    color: var(--text-faint);
+    font-size: 14px;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .filter-pill-remove:hover {
+    color: var(--accent-red);
+  }
+
+  /* ── Card Grid ── */
+  .card-grid {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .card:hover {
+    border-color: var(--accent-gold-dim);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(240, 192, 64, 0.08);
+  }
+  .card-img-wrap {
+    width: 100%;
+    aspect-ratio: 460 / 215;
+    overflow: hidden;
+    background: var(--bg-accent);
+    position: relative;
+  }
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .card-date-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: rgba(0,0,0,0.7);
+    color: var(--text-dim);
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 7px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    z-index: 1;
+  }
+  .card-img-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--text-faint);
+    padding: 12px;
+    text-align: center;
+    word-break: break-word;
+  }
+  .card-body {
+    padding: 14px 16px 16px;
+  }
+  .card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .card-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    flex: 1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .card-rate {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 20px;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+  .card-rate.green { color: var(--accent-green); }
+  .card-rate.gold { color: var(--accent-gold); }
+  .card-rate.red { color: var(--accent-red); }
+
+  .card-mid-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 8px;
+    gap: 8px;
+  }
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex: 1;
+  }
+  .tag-pill {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .tag-pill:nth-child(3n+1) {
+    background: rgba(76, 148, 240, 0.15);
+    color: var(--accent-blue);
+  }
+  .tag-pill:nth-child(3n+2) {
+    background: rgba(164, 108, 240, 0.15);
+    color: var(--accent-purple);
+  }
+  .tag-pill:nth-child(3n) {
+    background: rgba(62, 216, 138, 0.15);
+    color: var(--accent-green);
+  }
+  .card-review-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .card-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 10px 0;
+  }
+  .card-bottom-row {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .card-bottom-row .sep {
+    color: var(--text-faint);
+  }
+
+  /* ── Empty / Error states ── */
+  .state-message {
+    text-align: center;
+    padding: 80px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .state-message p {
+    font-size: 16px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+  .state-message button {
+    padding: 8px 20px;
+    background: var(--bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    color: var(--accent-gold);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.2s;
+  }
+  .state-message button:hover {
+    background: var(--bg-card-hover);
+  }
+
+  /* ── Sentinel / loading ── */
+  .sentinel {
+    height: 1px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .loading-indicator {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-faint);
+    font-size: 13px;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .toolbar { flex-wrap: wrap; }
+    .search-box { flex-basis: 100%; min-width: 0; }
+    .site-header { padding: 32px 16px 16px; }
+    .site-header h1 { font-size: 22px; }
+    .card-grid { padding: 0 12px; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .toolbar-wrap { padding: 10px 12px; }
+    .active-filters { padding: 8px 12px 0; }
+
+    /* Filter buttons: equal width row */
+    .toolbar .dropdown { flex: 1; }
+    .toolbar .dropdown-btn { width: 100%; justify-content: center; }
+
+    /* Dropdown panels: fixed to viewport width */
+    .dropdown { position: static; }
+    .dropdown-panel { left: 0; right: 0; min-width: 0; max-width: none; position: absolute; }
+
+    /* Touch feedback */
+    .card:active { transform: scale(0.98); border-color: var(--accent-gold-dim); }
+    .dropdown-btn:active { background: var(--bg-accent); }
+
+    /* Card bottom row: smaller text */
+    .card-bottom-row { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Steam Game <span>Insight</span> Library</h1>
+  <div class="report-count" id="reportCount"></div>
+</header>
+
+<div class="toolbar-wrap">
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="searchInput" placeholder="게임 이름, appid, Steam URL 검색..." autocomplete="off">
+    </div>
+    <div class="dropdown" id="genreDropdown">
+      <button class="dropdown-btn" type="button">장르 <span class="dropdown-chevron">&#9662;</span></button>
+      <div class="dropdown-panel" id="genrePanel"></div>
+    </div>
+    <div class="dropdown" id="tagDropdown">
+      <button class="dropdown-btn" type="button">태그 <span class="dropdown-chevron">&#9662;</span></button>
+      <div class="dropdown-panel" id="tagPanel"></div>
+    </div>
+    <div class="dropdown" id="sortDropdown">
+      <button class="dropdown-btn" type="button">정렬 <span class="dropdown-chevron">&#9662;</span></button>
+      <div class="dropdown-panel sort-panel" id="sortPanel"></div>
+    </div>
+  </div>
+  <div class="active-filters" id="activeFilters"></div>
+</div>
+
+<div class="card-grid" id="cardGrid"></div>
+<div class="state-message" id="stateMessage" style="display:none"></div>
+<div class="loading-indicator" id="loadingIndicator" style="display:none"></div>
+<div class="sentinel" id="sentinel"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── State ──
+  var allReports = [];
+  var synonyms = {};
+  var filteredReports = [];
+  var displayedCount = 0;
+  var PAGE_SIZE = 30;
+  var fuseInstance = null;
+  var fuseAvailable = false;
+  var searchDebounceTimer = null;
+
+  var selectedGenres = new Set();
+  var selectedTags = new Set();
+  var currentSort = 'positive_rate';
+
+  var sortOptions = [
+    { key: 'positive_rate', label: '긍정률순' },
+    { key: 'review_count', label: '리뷰수순' },
+    { key: 'modified', label: '최신순' },
+    { key: 'name', label: '이름순' }
+  ];
+
+  // ── DOM refs ──
+  var cardGrid = document.getElementById('cardGrid');
+  var stateMessage = document.getElementById('stateMessage');
+  var reportCountEl = document.getElementById('reportCount');
+  var searchInput = document.getElementById('searchInput');
+  var activeFiltersEl = document.getElementById('activeFilters');
+  var loadingIndicator = document.getElementById('loadingIndicator');
+  var sentinel = document.getElementById('sentinel');
+
+  var genrePanel = document.getElementById('genrePanel');
+  var tagPanel = document.getElementById('tagPanel');
+  var sortPanel = document.getElementById('sortPanel');
+
+  // ── Helpers ──
+  function formatNumber(n) {
+    if (n == null) return null;
+    return n.toLocaleString('ko-KR');
+  }
+
+  function rateColorClass(rate) {
+    if (rate >= 90) return 'green';
+    if (rate >= 70) return 'gold';
+    return 'red';
+  }
+
+  // ── Data Loading ──
+  function loadData() {
+    var reportsOk = false;
+    var synonymsOk = false;
+
+    Promise.all([
+      fetch('./reports.json').then(function(r) {
+        if (!r.ok) throw new Error('reports fetch failed');
+        return r.json();
+      }),
+      fetch('./synonyms.json').then(function(r) {
+        if (!r.ok) throw new Error('synonyms fetch failed');
+        return r.json();
+      }).catch(function() { return {}; })
+    ]).then(function(results) {
+      allReports = results[0];
+      synonyms = results[1];
+      initApp();
+    }).catch(function() {
+      showError('보고서 데이터를 불러올 수 없습니다');
+    });
+  }
+
+  function showError(msg) {
+    stateMessage.style.display = '';
+    while (stateMessage.firstChild) stateMessage.removeChild(stateMessage.firstChild);
+    var p = document.createElement('p');
+    p.textContent = msg;
+    stateMessage.appendChild(p);
+  }
+
+  function showEmpty() {
+    stateMessage.style.display = '';
+    while (stateMessage.firstChild) stateMessage.removeChild(stateMessage.firstChild);
+    var p = document.createElement('p');
+    p.textContent = '일치하는 보고서가 없습니다';
+    stateMessage.appendChild(p);
+    var btn = document.createElement('button');
+    btn.textContent = '필터 초기화';
+    btn.addEventListener('click', resetAll);
+    stateMessage.appendChild(btn);
+  }
+
+  // ── Init ──
+  function initApp() {
+    populateDropdowns();
+    buildSortPanel();
+    initFuse();
+    applyFilters();
+    setupIntersectionObserver();
+  }
+
+  // ── Fuse.js ──
+  function initFuse() {
+    if (typeof Fuse === 'undefined') {
+      fuseAvailable = false;
+      return;
+    }
+    fuseAvailable = true;
+    var keys = ['name', 'name_ko', 'appid', 'tags', 'genres'];
+    var index = Fuse.createIndex(keys, allReports);
+    fuseInstance = new Fuse(allReports, {
+      keys: keys,
+      threshold: 0.4,
+      includeScore: true,
+      useExtendedSearch: false
+    }, index);
+  }
+
+  // ── Dropdowns ──
+  function populateDropdowns() {
+    var genreSet = new Set();
+    var tagSet = new Set();
+    allReports.forEach(function(r) {
+      (r.genres || []).forEach(function(g) { genreSet.add(g); });
+      (r.tags || []).forEach(function(t) { tagSet.add(t); });
+    });
+
+    var genres = Array.from(genreSet).sort();
+    var tags = Array.from(tagSet).sort();
+
+    genres.forEach(function(g) {
+      var label = document.createElement('label');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = g;
+      cb.addEventListener('change', function() {
+        if (cb.checked) selectedGenres.add(g);
+        else selectedGenres.delete(g);
+        updateDropdownBtnState('genreDropdown', selectedGenres.size > 0);
+        applyFilters();
+      });
+      label.appendChild(cb);
+      var span = document.createElement('span');
+      span.textContent = g;
+      label.appendChild(span);
+      genrePanel.appendChild(label);
+    });
+
+    tags.forEach(function(t) {
+      var label = document.createElement('label');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = t;
+      cb.addEventListener('change', function() {
+        if (cb.checked) selectedTags.add(t);
+        else selectedTags.delete(t);
+        updateDropdownBtnState('tagDropdown', selectedTags.size > 0);
+        applyFilters();
+      });
+      label.appendChild(cb);
+      var span = document.createElement('span');
+      span.textContent = t;
+      label.appendChild(span);
+      tagPanel.appendChild(label);
+    });
+  }
+
+  function buildSortPanel() {
+    sortOptions.forEach(function(opt) {
+      var label = document.createElement('label');
+      if (opt.key === currentSort) label.className = 'selected';
+      label.textContent = opt.label;
+      label.dataset.sort = opt.key;
+      label.addEventListener('click', function() {
+        currentSort = opt.key;
+        // Update selected state
+        var labels = sortPanel.querySelectorAll('label');
+        for (var i = 0; i < labels.length; i++) {
+          labels[i].className = labels[i].dataset.sort === currentSort ? 'selected' : '';
+        }
+        applyFilters();
+        closePanelById('sortPanel');
+      });
+      sortPanel.appendChild(label);
+    });
+  }
+
+  function updateDropdownBtnState(dropdownId, isActive) {
+    var dd = document.getElementById(dropdownId);
+    var btn = dd.querySelector('.dropdown-btn');
+    if (isActive) btn.classList.add('active');
+    else btn.classList.remove('active');
+  }
+
+  // Dropdown toggle
+  document.querySelectorAll('.dropdown-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var panel = btn.nextElementSibling;
+      var wasOpen = panel.classList.contains('open');
+      closeAllPanels();
+      if (!wasOpen) panel.classList.add('open');
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.dropdown')) closeAllPanels();
+  });
+
+  function closeAllPanels() {
+    document.querySelectorAll('.dropdown-panel').forEach(function(p) {
+      p.classList.remove('open');
+    });
+  }
+
+  function closePanelById(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+
+  // ── Search ──
+  searchInput.addEventListener('input', function() {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(applyFilters, 200);
+  });
+
+  function getSearchResults(query) {
+    if (!query) return null; // null means no search filter
+
+    // Check for Steam URL with appid
+    var urlMatch = query.match(/app\/(\d+)/);
+    if (urlMatch) {
+      var appid = parseInt(urlMatch[1], 10);
+      return allReports.filter(function(r) { return r.appid === appid; });
+    }
+
+    // Pure digits = appid
+    if (/^\d+$/.test(query.trim())) {
+      var appid2 = parseInt(query.trim(), 10);
+      return allReports.filter(function(r) { return r.appid === appid2; });
+    }
+
+    // Expand via synonyms
+    var expandedTerms = [query];
+    Object.keys(synonyms).forEach(function(ko) {
+      if (query.toLowerCase().indexOf(ko.toLowerCase()) !== -1) {
+        synonyms[ko].forEach(function(en) {
+          expandedTerms.push(en);
+        });
+      }
+    });
+    // Also check if the query matches any synonym value
+    Object.keys(synonyms).forEach(function(ko) {
+      synonyms[ko].forEach(function(en) {
+        if (query.toLowerCase().indexOf(en.toLowerCase()) !== -1) {
+          expandedTerms.push(ko);
+        }
+      });
+    });
+
+    if (fuseAvailable && fuseInstance) {
+      var allResults = new Map();
+      expandedTerms.forEach(function(term) {
+        var results = fuseInstance.search(term);
+        results.forEach(function(r) {
+          if (!allResults.has(r.item.slug)) {
+            allResults.set(r.item.slug, r.item);
+          }
+        });
+      });
+      return Array.from(allResults.values());
+    }
+
+    // Fallback: simple includes
+    var lq = query.toLowerCase();
+    return allReports.filter(function(r) {
+      var haystack = [
+        r.name, r.name_ko || '', String(r.appid),
+        (r.tags || []).join(' '),
+        (r.genres || []).join(' ')
+      ].join(' ').toLowerCase();
+
+      for (var i = 0; i < expandedTerms.length; i++) {
+        if (haystack.indexOf(expandedTerms[i].toLowerCase()) !== -1) return true;
+      }
+      return false;
+    });
+  }
+
+  // ── Filter + Sort ──
+  function applyFilters() {
+    var query = searchInput.value.trim();
+    var searchResults = getSearchResults(query);
+
+    var base = searchResults !== null ? searchResults : allReports;
+
+    filteredReports = base.filter(function(r) {
+      if (selectedGenres.size > 0) {
+        var hasGenre = false;
+        selectedGenres.forEach(function(g) {
+          if ((r.genres || []).indexOf(g) !== -1) hasGenre = true;
+        });
+        if (!hasGenre) return false;
+      }
+      if (selectedTags.size > 0) {
+        var hasTag = false;
+        selectedTags.forEach(function(t) {
+          if ((r.tags || []).indexOf(t) !== -1) hasTag = true;
+        });
+        if (!hasTag) return false;
+      }
+      return true;
+    });
+
+    // Sort
+    filteredReports.sort(function(a, b) {
+      switch (currentSort) {
+        case 'positive_rate':
+          return (b.positive_rate || 0) - (a.positive_rate || 0);
+        case 'review_count':
+          return (b.review_count || 0) - (a.review_count || 0);
+        case 'modified':
+          return (b.modified || '').localeCompare(a.modified || '');
+        case 'name':
+          return (a.name || '').localeCompare(b.name || '');
+        default:
+          return 0;
+      }
+    });
+
+    displayedCount = 0;
+    while (cardGrid.firstChild) cardGrid.removeChild(cardGrid.firstChild);
+    stateMessage.style.display = 'none';
+
+    updateReportCount();
+    renderActiveFilters();
+
+    if (filteredReports.length === 0) {
+      showEmpty();
+    } else {
+      loadMoreCards();
+    }
+  }
+
+  function updateReportCount() {
+    var total = allReports.length;
+    var filtered = filteredReports.length;
+    if (filtered === total) {
+      reportCountEl.textContent = total + '개 보고서';
+    } else {
+      reportCountEl.textContent = filtered + ' / ' + total + '개 보고서';
+    }
+  }
+
+  // ── Active Filters Pills ──
+  function renderActiveFilters() {
+    while (activeFiltersEl.firstChild) activeFiltersEl.removeChild(activeFiltersEl.firstChild);
+
+    selectedGenres.forEach(function(g) {
+      activeFiltersEl.appendChild(createFilterPill('장르: ' + g, function() {
+        selectedGenres.delete(g);
+        uncheckInPanel(genrePanel, g);
+        updateDropdownBtnState('genreDropdown', selectedGenres.size > 0);
+        applyFilters();
+      }));
+    });
+
+    selectedTags.forEach(function(t) {
+      activeFiltersEl.appendChild(createFilterPill('태그: ' + t, function() {
+        selectedTags.delete(t);
+        uncheckInPanel(tagPanel, t);
+        updateDropdownBtnState('tagDropdown', selectedTags.size > 0);
+        applyFilters();
+      }));
+    });
+  }
+
+  function createFilterPill(text, onRemove) {
+    var pill = document.createElement('span');
+    pill.className = 'filter-pill';
+    var label = document.createElement('span');
+    label.textContent = text;
+    pill.appendChild(label);
+    var x = document.createElement('span');
+    x.className = 'filter-pill-remove';
+    x.textContent = '\u00d7';
+    x.addEventListener('click', onRemove);
+    pill.appendChild(x);
+    return pill;
+  }
+
+  function uncheckInPanel(panel, value) {
+    var inputs = panel.querySelectorAll('input[type="checkbox"]');
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].value === value) {
+        inputs[i].checked = false;
+        break;
+      }
+    }
+  }
+
+  function resetAll() {
+    searchInput.value = '';
+    selectedGenres.clear();
+    selectedTags.clear();
+    currentSort = 'positive_rate';
+
+    // Reset checkbox states
+    var cbs = document.querySelectorAll('.dropdown-panel input[type="checkbox"]');
+    for (var i = 0; i < cbs.length; i++) cbs[i].checked = false;
+
+    // Reset sort selection
+    var sortLabels = sortPanel.querySelectorAll('label');
+    for (var j = 0; j < sortLabels.length; j++) {
+      sortLabels[j].className = sortLabels[j].dataset.sort === 'positive_rate' ? 'selected' : '';
+    }
+
+    updateDropdownBtnState('genreDropdown', false);
+    updateDropdownBtnState('tagDropdown', false);
+    applyFilters();
+  }
+
+  // ── Card Rendering ──
+  function createCard(report) {
+    var a = document.createElement('a');
+    a.className = 'card';
+    a.href = './' + report.slug + '.html';
+    a.target = '_blank';
+    a.rel = 'noopener';
+
+    // Image
+    var imgWrap = document.createElement('div');
+    imgWrap.className = 'card-img-wrap';
+
+    var headerUrl = report.header_image ||
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/' + report.appid + '/header.jpg';
+
+    var img = document.createElement('img');
+    img.className = 'card-img';
+    img.alt = report.name;
+    img.loading = 'lazy';
+    img.src = headerUrl;
+    img.addEventListener('error', function() {
+      // Replace with fallback
+      while (imgWrap.firstChild) imgWrap.removeChild(imgWrap.firstChild);
+      var fb = document.createElement('div');
+      fb.className = 'card-img-fallback';
+      fb.textContent = report.name;
+      imgWrap.appendChild(fb);
+    });
+    imgWrap.appendChild(img);
+
+    // Date badge (top-left)
+    if (report.modified || report.date) {
+      var dateBadge = document.createElement('div');
+      dateBadge.className = 'card-date-badge';
+      dateBadge.textContent = report.modified || report.date;
+      imgWrap.appendChild(dateBadge);
+    }
+
+    a.appendChild(imgWrap);
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'card-body';
+
+    // Top row: name + rate
+    var topRow = document.createElement('div');
+    topRow.className = 'card-top-row';
+
+    var nameEl = document.createElement('div');
+    nameEl.className = 'card-name';
+    nameEl.textContent = report.name;
+    topRow.appendChild(nameEl);
+
+    if (report.positive_rate != null) {
+      var rateEl = document.createElement('div');
+      rateEl.className = 'card-rate ' + rateColorClass(report.positive_rate);
+      rateEl.textContent = report.positive_rate + '%';
+      topRow.appendChild(rateEl);
+    }
+    body.appendChild(topRow);
+
+    // Mid row: tags + review count
+    var midRow = document.createElement('div');
+    midRow.className = 'card-mid-row';
+
+    var tagsWrap = document.createElement('div');
+    tagsWrap.className = 'card-tags';
+    var tags = (report.tags || []).slice(0, 3);
+    tags.forEach(function(tag) {
+      var pill = document.createElement('span');
+      pill.className = 'tag-pill';
+      pill.textContent = tag;
+      tagsWrap.appendChild(pill);
+    });
+    midRow.appendChild(tagsWrap);
+
+    if (report.review_count != null) {
+      var countEl = document.createElement('div');
+      countEl.className = 'card-review-count';
+      countEl.textContent = formatNumber(report.review_count) + '건';
+      midRow.appendChild(countEl);
+    }
+    body.appendChild(midRow);
+
+    // Divider
+    var hr = document.createElement('hr');
+    hr.className = 'card-divider';
+    body.appendChild(hr);
+
+    // Bottom row: owners, price, playtime
+    var bottomRow = document.createElement('div');
+    bottomRow.className = 'card-bottom-row';
+
+    var parts = [];
+    if (report.owners) parts.push(report.owners);
+    if (report.price) parts.push(report.price);
+    if (report.avg_playtime) parts.push(report.avg_playtime);
+
+    parts.forEach(function(part, idx) {
+      if (idx > 0) {
+        var sep = document.createElement('span');
+        sep.className = 'sep';
+        sep.textContent = '\u00b7';
+        bottomRow.appendChild(sep);
+      }
+      var span = document.createElement('span');
+      span.textContent = part;
+      bottomRow.appendChild(span);
+    });
+    body.appendChild(bottomRow);
+
+    a.appendChild(body);
+    return a;
+  }
+
+  function loadMoreCards() {
+    var end = Math.min(displayedCount + PAGE_SIZE, filteredReports.length);
+    for (var i = displayedCount; i < end; i++) {
+      cardGrid.appendChild(createCard(filteredReports[i]));
+    }
+    displayedCount = end;
+
+    // Show/hide loading indicator
+    if (displayedCount < filteredReports.length) {
+      loadingIndicator.style.display = '';
+      loadingIndicator.textContent = '불러오는 중...';
+    } else {
+      loadingIndicator.style.display = 'none';
+    }
+  }
+
+  // ── Infinite Scroll ──
+  function setupIntersectionObserver() {
+    if (!('IntersectionObserver' in window)) return;
+    var observer = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting && displayedCount < filteredReports.length) {
+        loadMoreCards();
+      }
+    }, { rootMargin: '200px' });
+    observer.observe(sentinel);
+  }
+
+  // ── Load Fuse.js then init ──
+  var fuseScript = document.createElement('script');
+  fuseScript.src = 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0';
+  fuseScript.onload = function() { loadData(); };
+  fuseScript.onerror = function() {
+    fuseAvailable = false;
+    loadData();
+  };
+  document.head.appendChild(fuseScript);
+})();
+</script>
+</body>
+</html>

@@ -32,6 +32,14 @@ def run_step1(
             games = client.fetch_by_genre(query_value, limit=limit)
         elif query_type == "top100":
             games = client.fetch_top100(limit=limit)
+        elif query_type == "appids":
+            appid_list = [int(a.strip()) for a in query_value.split(",")]
+            source_tag = f"appids:{query_value}"
+            games = []
+            for appid in appid_list:
+                game = client.fetch_app_details(appid)
+                game.source_tag = source_tag
+                games.append(game)
         else:
             raise ValueError(f"Unknown query_type: {query_type}")
 

@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import sqlite3
 
-import httpx
 from rich.console import Console
 
 from steam_crawler.api.resilience import FailureTracker
@@ -24,6 +23,7 @@ def run_step2(
     source_tag: str | None = None,
     reviews_client: SteamReviewsClient | None = None,
     failure_tracker: FailureTracker | None = None,
+    lock_owner: str | None = None,
 ) -> int:
     """Scan review summaries for all games and update stats.
 
@@ -31,7 +31,7 @@ def run_step2(
     """
     client = reviews_client or SteamReviewsClient()
     tracker = failure_tracker or FailureTracker()
-    games = get_games_by_version(conn, source_tag=source_tag)
+    games = get_games_by_version(conn, source_tag=source_tag, lock_owner=lock_owner)
     scanned = 0
     try:
         for game_row in games:
@@ -39,24 +39,14 @@ def run_step2(
             try:
                 summary = client.fetch_summary(appid)
 
-                # Check SteamSpy vs Steam API data quality (10% deviation)
+                # Log SteamSpy vs Steam API deviation (info only, SteamSpy is estimates)
                 spy_positive = game_row.get("positive")
                 if spy_positive and spy_positive > 0:
                     deviation = abs(summary.total_positive - spy_positive) / spy_positive
-                    if deviation > 0.1:
-                        tracker.log_failure(
-                            conn=conn,
-                            session_id=version,
-                            api_name="steam_reviews_summary",
-                            appid=appid,
-                            step="step2",
-                            http_status=200,
-                            error_type="data_quality",
-                            error_message=(
-                                f"SteamSpy positive={spy_positive} vs "
-                                f"Steam API positive={summary.total_positive} "
-                                f"(deviation={deviation:.1%})"
-                            ),
+                    if deviation > 0.5:
+                        console.print(
+                            f"  [dim]SteamSpy estimate differs: {spy_positive} vs "
+                            f"Steam API {summary.total_positive} ({deviation:.0%})[/dim]"
                         )
 
                 old_positive = game_row.get("steam_positive")
@@ -83,7 +73,7 @@ def run_step2(
                 tracker.log_failure(
                     conn=conn, session_id=version, api_name="steam_reviews_summary",
                     appid=appid, step="step2", error_message=str(e),
-                    error_type="connection_error" if isinstance(e, httpx.ConnectError) else None,
+                    error_type="connection_error" if isinstance(e, (ConnectionError, OSError)) else None,
                     http_status=getattr(e, 'response', {}).get('status_code') if hasattr(e, 'response') else None,
                 )
                 console.print(f"  [red]Error for appid={appid}: {e}[/red]")

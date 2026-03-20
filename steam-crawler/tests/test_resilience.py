@@ -88,3 +88,21 @@ def test_session_summary(db_conn):
     assert summary["total"] == 3
     assert summary["resolved"] == 1
     assert summary["by_type"]["rate_limited"] == 2
+
+
+def test_classify_match_failed():
+    from steam_crawler.api.resilience import FailureTracker
+    t = FailureTracker()
+    assert t.classify(error_type="match_failed") == "match_failed"
+
+
+def test_classify_match_ambiguous():
+    from steam_crawler.api.resilience import FailureTracker
+    t = FailureTracker()
+    assert t.classify(error_type="match_ambiguous") == "match_ambiguous"
+
+
+def test_classify_auth_failed():
+    from steam_crawler.api.resilience import FailureTracker
+    t = FailureTracker()
+    assert t.classify(error_type="auth_failed") == "auth_failed"

@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factorio — 기획 인사이트 보고서</title>
+<meta name="report:appid" content="427520">
+<meta name="report:game_name" content="Factorio">
+<meta name="report:name_ko" content="">
+<meta name="report:positive_rate" content="98.3%">
+<meta name="report:review_score" content="Overwhelmingly Positive">
+<meta name="report:owners" content="5,000,000 .. 10,000,000">
+<meta name="report:price" content="$35.00">
+<meta name="report:avg_playtime" content="176.9h">
+<meta name="report:review_count" content="10001">
+<meta name="report:tags" content="Automation,Base-Building,Resource Management,Sandbox,Crafting">
+<meta name="report:genres" content="Casual,Indie,Simulation,Strategy">
+<meta name="report:date" content="2026-03-20">
+<meta name="report:modified" content="2026-03-20">
+<meta name="report:header_image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/427520/header.jpg?t=1763986204">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0c0e14;
+    --bg-card: #141620;
+    --bg-card-hover: #191c28;
+    --bg-accent: #1a1d2a;
+    --border: #252838;
+    --border-strong: #363a50;
+    --text: #e8e8f0;
+    --text-dim: #9a9ab4;
+    --text-faint: #686880;
+    --accent-gold: #f0c040;
+    --accent-gold-dim: #b89830;
+    --accent-green: #3ed88a;
+    --accent-red: #f05868;
+    --accent-blue: #4c94f0;
+    --accent-purple: #a46cf0;
+    --accent-orange: #f09040;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    line-height: 1.8;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 3rem 3rem;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 20%, rgba(240,192,64,0.08), transparent),
+      radial-gradient(ellipse 60% 50% at 70% 80%, rgba(160,96,240,0.06), transparent),
+      linear-gradient(180deg, transparent 40%, var(--bg-deep));
+    z-index: 1;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/427520/header.jpg?t=1763986204') center/cover no-repeat;
+    filter: brightness(0.3) saturate(0.6);
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-top-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .steam-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .45rem 1.2rem;
+    background: rgba(27,40,56,0.8);
+    border: 1px solid rgba(102,192,244,0.3);
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #66c0f4;
+    text-decoration: none;
+    letter-spacing: .03em;
+    backdrop-filter: blur(10px);
+    transition: all .2s;
+  }
+  .steam-link:hover {
+    background: rgba(27,40,56,0.95);
+    border-color: #66c0f4;
+    color: #fff;
+  }
+  .steam-link svg { width: 16px; height: 16px; fill: currentColor; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem 1rem;
+    background: rgba(240,192,64,0.15);
+    border: 1px solid rgba(240,192,64,0.3);
+    border-radius: 100px;
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--accent-gold);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    max-width: 600px;
+    line-height: 1.8;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .hero-stat { display: flex; flex-direction: column; }
+  .hero-stat .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .hero-stat .num.gold { color: var(--accent-gold); }
+  .hero-stat .num.green { color: var(--accent-green); }
+  .hero-stat .label { font-size: .75rem; color: var(--text-dim); margin-top: .2rem; }
+
+  /* ── Layout ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  section {
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-of-type { border-bottom: none; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    background: rgba(240,192,64,0.1);
+    border: 1px solid rgba(240,192,64,0.2);
+    padding: .3rem .7rem;
+    border-radius: 4px;
+    letter-spacing: .08em;
+  }
+  .section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .card-label {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--accent-gold-dim);
+    margin-bottom: 1rem;
+    padding-bottom: .6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .8rem; }
+
+  /* ── Core Loop ── */
+  .loop-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 2.5rem 1rem;
+    background: var(--bg-accent);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .loop-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    min-width: 120px;
+    text-align: center;
+    transition: all .2s;
+  }
+  .loop-node:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+  .loop-icon { font-size: 1.8rem; }
+  .loop-label { font-size: .8rem; font-weight: 700; }
+  .loop-sub { font-size: .65rem; color: var(--text-dim); }
+  .loop-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-gold-dim);
+    font-size: 1.2rem;
+  }
+
+  /* ── Tags ── */
+  .tag-grid { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.5rem; }
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .4rem 1rem;
+    border-radius: 100px;
+    font-size: .78rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    transition: all .2s;
+  }
+  .tag-pill:hover { border-color: var(--accent-gold); }
+  .tag-pill .vote {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .65rem;
+    color: var(--text-faint);
+  }
+  .tag-pill.pillar-genre { border-left: 3px solid var(--accent-blue); }
+  .tag-pill.pillar-mood { border-left: 3px solid var(--accent-purple); }
+  .tag-pill.pillar-platform { border-left: 3px solid var(--accent-green); }
+
+  /* ── Triangulation ── */
+  .tri-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .tri-table th {
+    background: var(--bg-accent);
+    padding: 1rem 1.2rem;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-dim);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .tri-table td {
+    padding: .9rem 1.2rem;
+    font-size: .85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: top;
+  }
+  .tri-table tr:last-child td { border-bottom: none; }
+  .tri-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .2rem .6rem;
+    border-radius: 4px;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+  }
+  .verdict.success { background: rgba(64,208,128,0.12); color: var(--accent-green); }
+  .verdict.weakness { background: rgba(240,80,96,0.12); color: var(--accent-red); }
+  .verdict.hidden { background: rgba(160,96,240,0.12); color: var(--accent-purple); }
+  .verdict.marketing { background: rgba(240,192,64,0.12); color: var(--accent-gold); }
+  .verdict.emergent { background: rgba(240,144,64,0.12); color: var(--accent-orange); }
+
+  /* ── Bar Charts ── */
+  .bar-chart { margin: 1.5rem 0; }
+  .bar-row { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; }
+  .bar-label {
+    font-size: .82rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+    min-width: 110px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bar-track {
+    flex: 1;
+    height: 32px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: .8rem;
+    font-size: .75rem;
+    font-weight: 700;
+    color: #fff;
+    min-width: fit-content;
+    transition: width .8s cubic-bezier(.22,1,.36,1);
+  }
+  .bar-fill.green { background: var(--accent-green); }
+  .bar-fill.gold { background: var(--accent-gold); color: #1a1d2a; }
+  .bar-fill.red { background: var(--accent-red); }
+  .bar-fill.blue { background: var(--accent-blue); }
+  .bar-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    color: var(--text-dim);
+    min-width: 70px;
+  }
+
+  /* ── Quotes ── */
+  .quote-block {
+    position: relative;
+    padding: 1.5rem 1.8rem 1.5rem 2rem;
+    margin: 1.2rem 0;
+    background: var(--bg-accent);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-gold);
+  }
+  .quote-block.negative { border-left-color: var(--accent-red); }
+  .quote-text {
+    font-size: .9rem;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.9;
+  }
+  .quote-meta {
+    margin-top: .8rem;
+    font-size: .75rem;
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .quote-translation {
+    margin-top: .6rem;
+    font-size: .84rem;
+    color: var(--text-dim);
+    font-style: normal;
+    padding: .6rem .8rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 4px;
+    border-left: 2px solid rgba(255,255,255,0.08);
+  }
+
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .sys-card {
+    padding: 1rem;
+    background: var(--bg-accent);
+    border-radius: 8px;
+  }
+  .sys-card strong { color: var(--accent-gold); }
+  .sys-card.alt strong { color: var(--accent-purple); }
+  .sys-card p { font-size: .8rem; color: var(--text-dim); margin-top: .3rem; }
+
+  /* ── Biz Stats ── */
+  .biz-stat { text-align: center; }
+  .biz-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .biz-num.gold { color: var(--accent-gold); }
+  .biz-num.green { color: var(--accent-green); }
+  .biz-num.purple { color: var(--accent-purple); }
+  .biz-calc {
+    font-size: .75rem;
+    color: var(--text-faint);
+    margin-top: .3rem;
+  }
+
+  /* ── Triple Loop Diagram ── */
+  .triple-loop-wrap {
+    position: relative;
+    padding: 2rem 1rem;
+    background: var(--bg-accent);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .loop-tier-label {
+    font-size: .65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: .8rem;
+    padding-left: .5rem;
+  }
+  .loop-tier-inner { color: var(--accent-blue); }
+  .loop-tier-mid { color: var(--accent-orange); margin-top: 1rem; }
+  .loop-tier-outer { color: var(--accent-gold); margin-top: 1rem; }
+  .loop-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 1.5rem .5rem;
+    border-radius: 10px;
+  }
+  .loop-row.inner { border: 1px solid rgba(76,148,240,0.3); background: rgba(76,148,240,0.04); }
+  .loop-row.mid { border: 1px dashed rgba(240,144,64,0.4); background: rgba(240,144,64,0.03); }
+  .loop-row.outer { border: 1px dashed rgba(240,192,64,0.3); }
+
+  /* ── User Evidence Badge ── */
+  .evidence-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .6rem;
+    font-weight: 600;
+    color: var(--accent-green);
+    background: rgba(62,216,138,0.1);
+    border: 1px solid rgba(62,216,138,0.2);
+    border-radius: 3px;
+    padding: .15rem .4rem;
+    margin-top: .3rem;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .hero { padding: 2rem 1.5rem; }
+    .bar-label { min-width: 70px; font-size: .72rem; }
+  }
+
+  /* ── Conclusion ── */
+  .conclusion { text-align: center; padding: 5rem 2rem; position: relative; }
+  .conclusion::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(240,192,64,0.06), transparent 70%);
+  }
+  .conclusion-text {
+    position: relative;
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #fff;
+  }
+  .conclusion-text strong { color: var(--accent-gold); }
+  .conclusion-text em { color: var(--text-dim); font-style: italic; }
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: .72rem;
+    color: var(--text-faint);
+    border-top: 1px solid var(--border);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .6s ease-out both; }
+  .fade-up:nth-child(2) { animation-delay: .1s; }
+  .fade-up:nth-child(3) { animation-delay: .2s; }
+  .fade-up:nth-child(4) { animation-delay: .3s; }
+
+  /* Factorio-specific: conveyor stripe accent */
+  .conveyor-stripe {
+    height: 3px;
+    background: repeating-linear-gradient(90deg, var(--accent-gold) 0, var(--accent-gold) 12px, transparent 12px, transparent 18px);
+    margin: 2rem 0;
+    opacity: .4;
+  }
+</style>
+</head>
+<body>
+
+<!-- ━━━ HERO ━━━ -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content fade-up">
+    <div class="hero-top-bar">
+      <a class="steam-link" href="https://store.steampowered.com/app/427520/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 256 259"><path d="M128 0C57.3 0 0 52.6 0 117.5c0 28.5 11.3 54.7 29.8 75.2L0 259l66.3-29.5c18.6 9.8 39.9 15.4 62.7 15.4C198.7 245 256 192.4 256 127.5S198.7 0 128 0z"/></svg>
+        Steam Store
+      </a>
+      <div class="hero-badge">Steam Game Insight Report</div>
+    </div>
+    <h1>Factorio</h1>
+    <p class="hero-subtitle">"공장은 커져야 한다" &mdash; 명시적 지시 없이도 끝없이 자기 증식하는 목표 구조가 수만 시간의 플레이를 만들어낸 자동화 시뮬레이션의 정점. 유저 스스로 "디지털 헤로인"이라 부르며, 그것을 칭찬이라 여긴다.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num gold">98.3%</span>
+        <span class="label">긍정률 (Overwhelmingly Positive)</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">5M~10M</span>
+        <span class="label">소유자 수</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num green">$35.00</span>
+        <span class="label">가격</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">176.9h</span>
+        <span class="label">평균 플레이타임</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ━━━ STEP 01: 마케팅 포지셔닝 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 01</span>
+    <h2 class="section-title">마케팅 포지셔닝 — 개발사의 의도</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card fade-up">
+      <div class="card-label">English Description</div>
+      <p>Factorio is a game about <strong>building and creating automated factories</strong> to produce items of <strong>increasing complexity</strong>, within an <strong>infinite 2D world</strong>. Use your imagination to design your factory, combine simple elements into ingenious structures, and finally protect it from the creatures who don't really like you.</p>
+    </div>
+    <div class="card fade-up">
+      <div class="card-label">한국어 설명</div>
+      <p>Factorio는 무한한 2D 세상에서 <strong>복잡성이 증가하는</strong> 아이템을 생산하기 위해 <strong>자동화 공장을 만드는</strong> 게임입니다. 당신의 상상력으로 공장을 설계, 독창적인 방법으로 간단한 요소를 결합하고 마지막엔 당신을 좋아하지 않는 생물들로부터 공장을 지키세요.</p>
+    </div>
+  </div>
+  <div class="card fade-up">
+    <div class="card-label">마케팅 키워드 분석</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.9;margin-bottom:1rem">
+      한 줄 피치에서 가장 강조하는 동사는 <strong>"building"</strong>과 <strong>"creating"</strong>이며, 핵심 형용사는 <strong>"automated"</strong>와 <strong>"increasing complexity"</strong>다. "infinite 2D world"로 규모감을 암시하지만, 실제로 무한한 것은 세계가 아니라 <em>최적화의 깊이</em>다. 이것이 마케팅의 가장 흥미로운 언더셀(undersell) 포인트다.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.9;margin-bottom:1rem">
+      <strong>전체 피치(detailed_description) 섹션 구조</strong>: ① 자원 채굴 → ② 기술 연구 → ③ 인프라 구축 → ④ 자동화 → ⑤ 적 전투 순서로 소개한다. 자동화가 4번째인 반면, 유저 태그에서는 Automation이 압도적 1위(4,756표)라는 점이 주목할 만하다. 개발사는 "건설 → 전투"라는 전통적 시뮬레이션 프레임으로 소개했지만, 유저는 <strong>자동화 자체를 게임의 핵심 정체성</strong>으로 인식한다.
+    </p>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.9">
+      <strong>short vs detailed 갭</strong>: 한 줄 피치에서 완전히 빠진 요소들 — 멀티플레이어, 모딩, 열차 시스템, 회로 논리 네트워크. 이 중 모딩(1,347표)과 멀티플레이어(2,171표)는 유저들이 핵심 태그로 인식하는 숨은 셀링포인트다. 또한 한국어 설명은 "독창적인 방법으로"라는 창의성 강조가 영문의 "ingenious structures"보다 덜 구체적이다.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ STEP 02: 메커니즘 실체 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 02</span>
+    <h2 class="section-title">메커니즘 실체 — 실제 구현</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- Core Loop -->
+  <div class="card fade-up">
+    <div class="card-label">Core Loop Diagram — 3중 루프 구조</div>
+
+    <div class="triple-loop-wrap">
+      <!-- 외부 루프 -->
+      <div class="loop-tier-label loop-tier-outer">외부 루프 — 기술 진화 &amp; 스케일링</div>
+      <div class="loop-row outer" style="padding:1rem .5rem .5rem">
+        <div class="loop-node">
+          <div class="loop-icon">🔬</div>
+          <div class="loop-label">기술 연구</div>
+          <div class="loop-sub">새 레시피 해금</div>
+          <div class="evidence-badge">유저 증언 확인</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">📐</div>
+          <div class="loop-label">공장 재설계</div>
+          <div class="loop-sub">기존 라인 전면 철거</div>
+          <div class="evidence-badge">유저 증언 확인</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🚂</div>
+          <div class="loop-label">인프라 확장</div>
+          <div class="loop-sub">열차망, 로봇 물류</div>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-node">
+          <div class="loop-icon">🏗️</div>
+          <div class="loop-label">역할 전환</div>
+          <div class="loop-sub">노동자 → 설계자 → 아키텍트</div>
+          <div class="evidence-badge">유저 증언 확인</div>
+        </div>
+        <span class="loop-arrow" style="opacity:.4">↩</span>
+
+        <!-- 중간 루프 (디버깅) -->
+        <div style="width:100%;margin-top:1rem">
+          <div class="loop-tier-label loop-tier-mid">중간 루프 — 디버깅 &amp; 최적화 (리뷰에서 발견)</div>
+          <div class="loop-row mid">
+            <div class="loop-node">
+              <div class="loop-icon">⚠️</div>
+              <div class="loop-label">병목 발견</div>
+              <div class="loop-sub">시각적 피드백: 벨트 정체</div>
+            </div>
+            <span class="loop-arrow">→</span>
+            <div class="loop-node">
+              <div class="loop-icon">🔍</div>
+              <div class="loop-label">원인 추적</div>
+              <div class="loop-sub">연쇄 의존성 탐색</div>
+            </div>
+            <span class="loop-arrow">→</span>
+            <div class="loop-node">
+              <div class="loop-icon">🔧</div>
+              <div class="loop-label">수정</div>
+              <div class="loop-sub">한 곳 수정 → 3곳 새 문제</div>
+            </div>
+            <span class="loop-arrow">→</span>
+            <div class="loop-node">
+              <div class="loop-icon">💡</div>
+              <div class="loop-label">도파민</div>
+              <div class="loop-sub">문제 해결의 쾌감</div>
+              <div class="evidence-badge">유저 증언 확인</div>
+            </div>
+            <span class="loop-arrow" style="opacity:.4">↩</span>
+          </div>
+        </div>
+
+        <!-- 내부 루프 -->
+        <div style="width:100%;margin-top:1rem">
+          <div class="loop-tier-label loop-tier-inner">내부 루프 — 자원 순환</div>
+          <div class="loop-row inner">
+            <div class="loop-node">
+              <div class="loop-icon">⛏️</div>
+              <div class="loop-label">자원 채굴</div>
+              <div class="loop-sub">철, 구리, 석유</div>
+            </div>
+            <span class="loop-arrow">→</span>
+            <div class="loop-node">
+              <div class="loop-icon">🏭</div>
+              <div class="loop-label">제조</div>
+              <div class="loop-sub">조립기 자동 생산</div>
+            </div>
+            <span class="loop-arrow">→</span>
+            <div class="loop-node">
+              <div class="loop-icon">📦</div>
+              <div class="loop-label">운송</div>
+              <div class="loop-sub">벨트, 삽입기, 열차</div>
+              <div class="evidence-badge">유저 증언 확인</div>
+            </div>
+            <span class="loop-arrow">→</span>
+            <div class="loop-node">
+              <div class="loop-icon">🧪</div>
+              <div class="loop-label">연구 투입</div>
+              <div class="loop-sub">사이언스 팩 소비</div>
+            </div>
+            <span class="loop-arrow" style="opacity:.4">↩</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 핵심 텐션 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+      <div style="padding:1rem;background:rgba(64,208,128,0.06);border:1px solid rgba(64,208,128,0.15);border-radius:8px">
+        <strong style="color:var(--accent-green);font-size:.8rem">확정 보상</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">기술 해금, 생산량 증가, 열차망 완성, 로켓 발사 — 진행 지표가 명확히 상승하는 성취감. "공장이 커지는 것"을 눈으로 확인하는 시각적 보상.</p>
+      </div>
+      <div style="padding:1rem;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.15);border-radius:8px">
+        <strong style="color:var(--accent-gold);font-size:.8rem">가변 보상</strong>
+        <p style="font-size:.78rem;color:var(--text-dim);margin-top:.3rem">최적화의 "유레카 순간" — 3시간 동안 찾던 병목을 발견하는 도파민. 디버깅 루프에서 "한 곳 수정 → 3곳 새 문제"가 만드는 예측 불가능한 도전.</p>
+      </div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem;line-height:1.8">
+      <strong>기획적 의미</strong>: Factorio의 코어 루프는 원래 2중(내부+외부)으로 설계되었으나, 리뷰 분석에서 <strong>디버깅/최적화 중간 루프</strong>의 존재가 발견되었다. 독일어 리뷰어가 산업 공학 용어("정상 가동 → 장애 → 전면 정지 → 원인 분석 → 재가동")로 정확히 묘사한 이 루프는, 공장이 복잡해질수록 한 변경의 연쇄 효과가 새로운 문제를 만들어내는 <strong>창발적 복잡성(emergent complexity)</strong>에서 비롯된다. 자동화가 진행될수록 플레이어는 "노동자"에서 "디버거"로, 다시 "아키텍트"로 역할이 전환되며, 이 나선형 전환이 기술 해금마다 반복된다.
+    </p>
+  </div>
+
+  <!-- 제3자 분석 -->
+  <div class="card fade-up">
+    <div class="card-label">제3자 소스 교차 분석</div>
+
+    <!-- IGDB/RAWG/Wikidata -->
+    <div class="card-title">IGDB &middot; RAWG &middot; Wikidata 교차 검증</div>
+    <div style="overflow-x:auto;margin:1rem 0">
+      <table class="tri-table">
+        <thead>
+          <tr><th>소스</th><th>분류/키워드</th><th>교차 분석</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>IGDB Themes</strong></td>
+            <td style="font-size:.8rem;color:var(--text-dim)">Science fiction, Survival, Sandbox</td>
+            <td style="font-size:.8rem;color:var(--text-dim)">Steam 태그와 일치. SF는 마케팅에서 약하게 강조되나 실제 세계관의 핵심</td>
+          </tr>
+          <tr>
+            <td><strong>IGDB Keywords</strong></td>
+            <td style="font-size:.8rem;color:var(--text-dim)">aliens, crafting, automation, resource gathering, mod support, steam cloud</td>
+            <td style="font-size:.8rem;color:var(--text-dim)"><strong>automation</strong>이 IGDB에서도 독립 키워드로 인정됨. 3개 소스(Steam/IGDB/Wikidata) 모두 확인</td>
+          </tr>
+          <tr>
+            <td><strong>Wikidata Genre</strong></td>
+            <td style="font-size:.8rem;color:var(--text-dim)">action, construction &amp; management simulation, RTS, sandbox, survival, SF</td>
+            <td style="font-size:.8rem;color:var(--text-dim)">Wikidata만 <strong>RTS</strong>와 <strong>action game</strong>으로 분류 — 전투 요소의 장르적 위상이 Steam 태그보다 높게 평가됨</td>
+          </tr>
+          <tr>
+            <td><strong>Wikidata Nominated</strong></td>
+            <td style="font-size:.8rem;color:var(--text-dim)">Steam Award: Haunts My Dreams, Most Fun with a Machine, Sit Back and Relax</td>
+            <td style="font-size:.8rem;color:var(--text-dim)">"꿈에 나오는 게임"과 "기계와 함께하는 재미" — 유저 투표 어워드가 중독성과 자동화를 동시에 인정</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- RAWG 리텐션 -->
+    <div class="card-title" style="margin-top:2rem">RAWG 리텐션 프록시</div>
+    <div class="grid-3" style="margin:1rem 0">
+      <div class="sys-card">
+        <strong>드롭률 10.7%</strong>
+        <p>386 / 3,623 — 극히 낮은 이탈. 10명 중 9명이 게임을 계속 보유/플레이</p>
+      </div>
+      <div class="sys-card">
+        <strong>클리어률 36.7%</strong>
+        <p>321 / (2400+167+321) — 로켓 발사 기준. 나머지 63%는 무한 샌드박스 모드</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>Exceptional 61.4%</strong>
+        <p>RAWG 4단계 평가 중 최고 등급이 과반 — Skip 6.1%는 무시 수준</p>
+      </div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);line-height:1.8">
+      <strong>Steam 긍정률(98.3%) vs RAWG 평가 교차</strong>: RAWG에서 Exceptional 61%, Recommended 26%로 합산 87%. Steam 긍정률이 더 높은 이유는, Steam의 이진 분류(추천/비추천)가 "추천이되 exceptional은 아닌" 유저를 긍정 쪽으로 끌어올리기 때문. Meh 7%는 "재미있지만 내 취향은 아닌" 유저로 추정.
+    </p>
+
+    <!-- HowLongToBeat -->
+    <div class="card-title" style="margin-top:2rem">HowLongToBeat — 기획 밀도</div>
+    <div class="grid-3" style="margin:1rem 0">
+      <div class="sys-card">
+        <strong>Main Story: 50.1h</strong>
+        <p>로켓 발사까지의 최단 경로</p>
+      </div>
+      <div class="sys-card">
+        <strong>Main + Extra: 92.7h</strong>
+        <p>DLC, 모드 없이 탐험 포함</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>Completionist: 217.6h</strong>
+        <p>Main:Comp = 1:4.3 비율 — 반복 콘텐츠 무거움</p>
+      </div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);line-height:1.8">
+      Main 50h vs 평균 플레이타임 177h → 유저가 메인스토리의 <strong>3.5배</strong>를 플레이하는 엔드게임 루프 존재. Completionist 218h조차 실제 평균에 못 미친다는 사실은, HLTB의 측정 범위를 넘어서는 무한 리플레이 가치를 시사한다. 11,684시간 유저가 "아직도 최고의 게임"이라 리뷰하는 것이 이를 증명.
+    </p>
+  </div>
+
+  <!-- 마케팅 미언급 시스템 -->
+  <div class="card fade-up">
+    <div class="card-label">IGDB / RAWG / Wikidata 기반 시스템 분석</div>
+    <div class="card-title">마케팅이 말하지 않은 시스템들</div>
+    <div class="grid-3" style="margin-top:1rem">
+      <div class="sys-card">
+        <strong>회로 논리 네트워크</strong>
+        <p>Turing-complete 수준의 논리 회로로 공장 조건부 제어. 프로그래머 유저의 엔드게임</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>열차 시그널 시스템</strong>
+        <p>Steam 태그 "Trains"(1,296표)가 별도 존재할 만큼 독립적 서브 시스템. 멀티플레이에서 갈등 유발 1위</p>
+      </div>
+      <div class="sys-card">
+        <strong>청사진 공유</strong>
+        <p>"오픈소스 라이브러리와 같다"(러시아 프로그래머 리뷰) — 커뮤니티 설계 자산의 재사용 시스템</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>환경 오염 → 적 진화</strong>
+        <p>공장 확장이 적 강화를 유발하는 네거티브 피드백 루프. IGDB storyline에 명시</p>
+      </div>
+      <div class="sys-card">
+        <strong>Crowdfunding 출신</strong>
+        <p>IGDB keywords에 Indiegogo/Kickstarter 기록. 커뮤니티 주도 개발의 원점</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>Space Age DLC</strong>
+        <p>다중 행성 물류. 코어 루프를 우주 규모로 확장하되, Gleba 행성의 부패 메커니즘이 호불호를 나눔</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━ STEP 03: 유저 경험 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 03</span>
+    <h2 class="section-title">유저 경험 — 실제 반응</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- 태그 -->
+  <div class="card fade-up">
+    <div class="card-label">태그 프로필 — 유저가 인식한 정체성</div>
+    <div class="tag-grid">
+      <span class="tag-pill pillar-genre">Automation <span class="vote">4756</span></span>
+      <span class="tag-pill pillar-genre">Base-Building <span class="vote">4387</span></span>
+      <span class="tag-pill pillar-genre">Resource Management <span class="vote">3753</span></span>
+      <span class="tag-pill pillar-genre">Sandbox <span class="vote">3073</span></span>
+      <span class="tag-pill pillar-genre">Crafting <span class="vote">2766</span></span>
+      <span class="tag-pill pillar-genre">Strategy <span class="vote">2297</span></span>
+      <span class="tag-pill pillar-platform">Multiplayer <span class="vote">2171</span></span>
+      <span class="tag-pill pillar-genre">Survival <span class="vote">2115</span></span>
+      <span class="tag-pill pillar-genre">Management <span class="vote">1876</span></span>
+      <span class="tag-pill pillar-genre">Open World <span class="vote">1852</span></span>
+      <span class="tag-pill pillar-genre">Building <span class="vote">1647</span></span>
+      <span class="tag-pill pillar-platform">Co-op <span class="vote">1573</span></span>
+      <span class="tag-pill pillar-genre">2D <span class="vote">1456</span></span>
+      <span class="tag-pill pillar-platform">Moddable <span class="vote">1347</span></span>
+      <span class="tag-pill pillar-platform">Singleplayer <span class="vote">1305</span></span>
+      <span class="tag-pill pillar-genre">Trains <span class="vote">1296</span></span>
+      <span class="tag-pill pillar-genre">Simulation <span class="vote">1277</span></span>
+      <span class="tag-pill pillar-mood">Pixel Graphics <span class="vote">1259</span></span>
+      <span class="tag-pill pillar-genre">City Builder <span class="vote">1251</span></span>
+      <span class="tag-pill pillar-mood">Indie <span class="vote">1114</span></span>
+    </div>
+    <p style="font-size:.78rem;color:var(--text-dim)">
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-blue);border-radius:2px;margin-right:4px"></span>장르/메커니즘 축 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-purple);border-radius:2px;margin-right:4px"></span>분위기/감성 축 &nbsp;&nbsp;
+      <span style="display:inline-block;width:10px;height:10px;background:var(--accent-green);border-radius:2px;margin-right:4px"></span>플랫폼/접근성 축
+    </p>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-top:1rem">
+      태그 분포가 <strong>극도로 균등</strong>하다. 1위 Automation(4,756)과 20위 Indie(1,114)의 격차가 4.3배에 불과하며, 상위 10개 태그가 모두 2,000 이상을 기록한다. 이는 Factorio가 단일 정체성이 아닌 <strong>다축 설계가 동시에 작동하는</strong> 게임임을 의미한다 — 자동화이면서 건설이고, 자원 관리이면서 전략이며, 샌드박스이면서 서바이벌이다. 어느 하나의 태그로 정의할 수 없다는 것 자체가 기획적 성공의 증거다.
+    </p>
+  </div>
+
+  <!-- 태그 바 차트 -->
+  <div class="card fade-up">
+    <div class="card-label">태그 투표수 분포</div>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-label">Automation</span><div class="bar-track"><div class="bar-fill gold" style="width:100%">4756</div></div><span class="bar-value">4756</span></div>
+      <div class="bar-row"><span class="bar-label">Base-Building</span><div class="bar-track"><div class="bar-fill blue" style="width:92.2%">4387</div></div><span class="bar-value">4387</span></div>
+      <div class="bar-row"><span class="bar-label">Resource Mgmt</span><div class="bar-track"><div class="bar-fill blue" style="width:78.9%">3753</div></div><span class="bar-value">3753</span></div>
+      <div class="bar-row"><span class="bar-label">Sandbox</span><div class="bar-track"><div class="bar-fill blue" style="width:64.6%">3073</div></div><span class="bar-value">3073</span></div>
+      <div class="bar-row"><span class="bar-label">Crafting</span><div class="bar-track"><div class="bar-fill blue" style="width:58.2%">2766</div></div><span class="bar-value">2766</span></div>
+      <div class="bar-row"><span class="bar-label">Strategy</span><div class="bar-track"><div class="bar-fill blue" style="width:48.3%">2297</div></div><span class="bar-value">2297</span></div>
+      <div class="bar-row"><span class="bar-label">Multiplayer</span><div class="bar-track"><div class="bar-fill green" style="width:45.6%">2171</div></div><span class="bar-value">2171</span></div>
+      <div class="bar-row"><span class="bar-label">Survival</span><div class="bar-track"><div class="bar-fill blue" style="width:44.5%">2115</div></div><span class="bar-value">2115</span></div>
+      <div class="bar-row"><span class="bar-label">Management</span><div class="bar-track"><div class="bar-fill blue" style="width:39.4%">1876</div></div><span class="bar-value">1876</span></div>
+      <div class="bar-row"><span class="bar-label">Open World</span><div class="bar-track"><div class="bar-fill blue" style="width:38.9%">1852</div></div><span class="bar-value">1852</span></div>
+    </div>
+  </div>
+
+  <!-- 기획 축 분류 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 축 분류 (Pillar Analysis)</div>
+    <table class="tri-table">
+      <thead>
+        <tr>
+          <th style="width:15%">기획 축</th>
+          <th>포함 태그</th>
+          <th style="width:12%">합산 투표</th>
+          <th style="width:10%">비중</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>자동화/건설</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Automation, Base-Building, Building, Crafting, City Builder</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">14,807</span></td>
+          <td><span class="verdict success">지배적</span></td>
+        </tr>
+        <tr>
+          <td><strong>자원/전략</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Resource Management, Strategy, Management, Sandbox</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">11,099</span></td>
+          <td><span class="verdict success">지배적</span></td>
+        </tr>
+        <tr>
+          <td><strong>서바이벌/오픈월드</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Survival, Open World</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">3,967</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>플랫폼/접근성</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">Multiplayer, Co-op, Moddable, Singleplayer</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">6,396</span></td>
+          <td><span class="verdict hidden">강력</span></td>
+        </tr>
+        <tr>
+          <td><strong>시각/분위기</strong></td>
+          <td style="font-size:.8rem;color:var(--text-dim)">2D, Pixel Graphics, Indie, Trains, Simulation</td>
+          <td><span style="font-family:'JetBrains Mono';font-weight:700">6,402</span></td>
+          <td><span class="verdict marketing">보조</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:1rem">두 개의 축이 동시에 "지배적"이라는 점이 핵심이다. 자동화/건설(14,807)과 자원/전략(11,099)이 거의 대등한 규모로 공존하며, 서바이벌과 플랫폼 축까지 "강력" 수준이다. <strong>어느 하나의 기획 축이 약하지 않은</strong> 올라운더형 게임.</p>
+  </div>
+
+  <!-- 플레이타임별 긍정률 -->
+  <div class="card fade-up">
+    <div class="card-label">플레이타임별 긍정률 — 리텐션 곡선</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">&lt; 1h</span>
+        <div class="bar-track"><div class="bar-fill gold" style="width:83.1%">83.1%</div></div>
+        <span class="bar-value">65명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">1-10h</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:94.6%">94.6%</div></div>
+        <span class="bar-value">874명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">10-50h</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:98.1%">98.1%</div></div>
+        <span class="bar-value">2,216명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">50-100h</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:99.0%">99.0%</div></div>
+        <span class="bar-value">1,357명</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">100h+</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:98.9%">98.9%</div></div>
+        <span class="bar-value">5,489명</span>
+      </div>
+    </div>
+    <p style="font-size:.85rem;color:var(--text-dim)">
+      <strong>놀라운 리텐션 곡선</strong>: 1시간 미만에서도 83%이며, 10시간 이후부터는 98%를 넘어선다. 100시간 이상 플레이어가 전체의 <strong>55%</strong>를 차지한다는 것은 리뷰 작성자의 과반이 코어 유저임을 의미한다. 가장 주목할 점은 <strong>50-100시간(99.0%)이 100시간+(98.9%)보다 미세하게 높다</strong>는 것 — 극소수의 "수천 시간 플레이 후 부정 전환" 리뷰(가격/DLC/정치적 이유)가 이 역전을 만든다.
+    </p>
+  </div>
+
+  <!-- 언어별 분포 -->
+  <div class="card fade-up">
+    <div class="card-label">언어별 리뷰 분포 — 시장 도달</div>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-label">English</span><div class="bar-track"><div class="bar-fill blue" style="width:100%">5,480</div></div><span class="bar-value">54.8%</span></div>
+      <div class="bar-row"><span class="bar-label">Russian</span><div class="bar-track"><div class="bar-fill blue" style="width:36.8%">2,014</div></div><span class="bar-value">20.1%</span></div>
+      <div class="bar-row"><span class="bar-label">German</span><div class="bar-track"><div class="bar-fill blue" style="width:9.2%">505</div></div><span class="bar-value">5.1%</span></div>
+      <div class="bar-row"><span class="bar-label">S.Chinese</span><div class="bar-track"><div class="bar-fill blue" style="width:5.8%">316</div></div><span class="bar-value">3.2%</span></div>
+      <div class="bar-row"><span class="bar-label">Spanish</span><div class="bar-track"><div class="bar-fill blue" style="width:5.4%">294</div></div><span class="bar-value">2.9%</span></div>
+      <div class="bar-row"><span class="bar-label">Polish</span><div class="bar-track"><div class="bar-fill blue" style="width:3.8%">207</div></div><span class="bar-value">2.1%</span></div>
+      <div class="bar-row"><span class="bar-label">Ukrainian</span><div class="bar-track"><div class="bar-fill blue" style="width:3.6%">197</div></div><span class="bar-value">2.0%</span></div>
+      <div class="bar-row"><span class="bar-label">French</span><div class="bar-track"><div class="bar-fill blue" style="width:3.4%">187</div></div><span class="bar-value">1.9%</span></div>
+      <div class="bar-row"><span class="bar-label">Brazilian</span><div class="bar-track"><div class="bar-fill blue" style="width:2.8%">151</div></div><span class="bar-value">1.5%</span></div>
+      <div class="bar-row"><span class="bar-label">Korean</span><div class="bar-track"><div class="bar-fill gold" style="width:2.4%">134</div></div><span class="bar-value">1.3%</span></div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text-dim);margin-top:.5rem">
+      <strong>Twitch 스트리밍 vs 리뷰 언어 교차</strong>: Twitch에서 en(24), ru(10), de(5) 순서로 리뷰 언어 분포와 일치한다. 흥미로운 점은 스페인어가 리뷰(2.9%)에선 4위이나 Twitch(1채널)에서는 거의 없다는 것 — 히스패닉 시장에서 시청 콘텐츠로서의 매력은 낮지만 직접 플레이 인구는 존재한다.
+    </p>
+  </div>
+
+  <div class="conveyor-stripe"></div>
+
+  <!-- 기획 성공 포인트 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 성공 포인트</div>
+
+    <div class="card-title">A. "The Factory Must Grow" — 자기 증식하는 목표 구조</div>
+    <div class="quote-block">
+      <div class="quote-text">"I'm actually afraid to click 'Play' anymore. You tell yourself you'll just fix one conveyor belt, then you blink, and suddenly the sun is up, the birds are chirping, and you have to drive the kids to school in 20 minutes."</div>
+      <div class="quote-meta">english · 1,726.2h · 276 helpful</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"появился - строишь завод / умер - строишь завод / улетел в космос - строишь завод / прошел игру - строишь завод / строишь завод - строишь завод"</div>
+      <div class="quote-meta">russian · 69.4h · 47 helpful</div>
+      <div class="quote-translation">나타남 → 공장 짓기 / 죽음 → 공장 짓기 / 우주로 감 → 공장 짓기 / 클리어 → 공장 짓기 / 공장 짓기 → 공장 짓기</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      "공장은 커져야 한다"는 개발사가 만든 슬로건이 아니라 <strong>플레이어 커뮤니티가 자생적으로 창조한 집단 만트라</strong>다. 영어("The Factory Must Grow"), 러시아어("ЗАВОД ДОЛЖЕН РАСТИ"), 독일어("Die Fabrik muss wachsen")로 독립적으로 번역되어 각 문화권에서 밈으로 정착했다. 시스템 구조(자원 부족 → 확장 → 새로운 병목 → 재확장)가 끝없이 자기 참조하기 때문에, 별도의 내러티브 없이도 플레이어가 목표를 스스로 생산한다. 이것은 "목표 소진(goal exhaustion)" 문제를 구조적으로 해결한 설계다. 약 55/200(EN), 25/200(RU), 22/115(DE)에서 이 문구가 등장하여, 전 언어권에서 가장 빈도 높은 단일 밈이다.
+    </p>
+
+    <div class="card-title">B. 최적화 강박 — "게임이 시키지 않아도 스스로 하게 되는" 내적 동기</div>
+    <div class="quote-block">
+      <div class="quote-text">"The game never tells you to optimise. It just quietly suggests: 'That could be better.' And suddenly you're calculating ratios like it's your job."</div>
+      <div class="quote-meta">english · 31.5h · 85 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      Factorio는 명시적으로 "최적화하라"고 요구하지 않는다. 대신 병목이 시각적으로 보이도록(벨트 정체, 조립기 대기) 피드백을 설계하여 플레이어의 완벽주의를 자극한다. 이것은 외적 보상(점수, 랭킹) 없이도 작동하는 <strong>내적 동기(intrinsic motivation)</strong> 시스템이다. 독일어 리뷰어가 "3시간 동안 문제를 못 찾다가 갑자기 발견하면 엄청난 도파민이 터진다"고 묘사한 것처럼, 불확실 탐색 → 해결의 간헐적 보상이 슬롯머신과 동일한 심리 원리로 작동한다.
+    </p>
+
+    <div class="card-title">C. 프로그래머/엔지니어 사고와의 구조적 공명</div>
+    <div class="quote-block">
+      <div class="quote-text">"Начну с того, что я программист... Чертежи по своей сути это те самые опен соурс библиотеки."</div>
+      <div class="quote-meta">russian · 366.4h · 43 helpful</div>
+      <div class="quote-translation">나는 프로그래머다. 확장을 고려하지 않고 공장을 지으면 처음부터 다시 해야 한다. 청사진은 본질적으로 오픈소스 라이브러리와 같다.</div>
+    </div>
+    <div class="quote-block">
+      <div class="quote-text">"I leave my job managing equipment at the factory to manage a factory in Factorio... Factorio has reworked the way I approach my job."</div>
+      <div class="quote-meta">english · 202.3h · 19 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      소프트웨어 엔지니어링/산업 관리와 구조적으로 동형(isomorphic)이라는 인식이 다국어 리뷰에서 독립적으로 반복된다. 러시아 프로그래머가 코드로 리뷰를 작성(<code>while(zavodGovno) { 철거; 재건; }</code>)하고, 독일 엔지니어가 산업 공학 용어로 루프를 묘사하며, 영어 유저가 "현실 직장에서의 사고방식을 바꿨다"고 증언한다. 이것은 게임→현실로의 <strong>사고 전이(cognitive transfer)</strong>가 발생한다는 의미다.
+    </p>
+
+    <div class="card-title">D. 모딩 생태계 — 리플레이 가치의 무한 확장</div>
+    <div class="quote-block">
+      <div class="quote-text">"Closing in on 13k hours, never ever launched a rocket... Play with full Angels/Bob suite, but the one I really love is AAI zones and programmable vehicles."</div>
+      <div class="quote-meta">english · 12,767.0h · 55 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      13,000시간 플레이어가 로켓 한 번 안 쏘고도 계속 플레이할 수 있다는 것은, 모딩 시스템이 <strong>무한 콘텐츠 파이프라인</strong> 역할을 한다는 증거다. "Moddable" 태그 1,347표, 리뷰 약 22/200(EN)에서 구체적 모드명(Bob's, Angel's, Krastorio 2, Space Exploration) 언급. 개발사가 게임 내 모드 브라우저까지 제공하여 "커뮤니티가 콘텐츠를 만드는" 모델을 구조적으로 지원한다.
+    </p>
+
+    <div class="card-title">E. 개발 품질에 대한 압도적 신뢰</div>
+    <div class="quote-block">
+      <div class="quote-text">"This game is the definition of a game made by the developers for the developers. Every tiny little issue is fixed quickly and perfectly. I am absolutely blown away by the attention to detail and quality of the game."</div>
+      <div class="quote-meta">english · 11,684.4h · 286 helpful</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      "다른 게임을 플레이할 때 Factorio에 있는 소소한 기능이 없어서 짜증난다"는 반응은 QoL 설계가 <strong>경쟁 해자(competitive moat)</strong>로 작동함을 보여준다. 독일어 리뷰에서는 "AAA 게임이 쓰레기 소프트웨어를 바가지 씌우는 것과 달리 겨우 30유로"라는 업계 반감 프레임이 Factorio 칭찬의 대비 도구로 사용된다. 무할인 정책조차 "이 가격에 이 품질이면 할인이 필요 없다"는 팬 옹호로 전환된다.
+    </p>
+  </div>
+
+  <!-- 기획 약점 -->
+  <div class="card fade-up">
+    <div class="card-label">기획 약점</div>
+
+    <div class="card-title">A. 오일 처리 이후 복잡도 절벽</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"starting with oil processing it got way too complicated and tedious. I have no patience for hours of wiki reading"</div>
+      <div class="quote-meta">english · 부정 리뷰 · 약 9/56건에서 반복</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      복잡도 상승 곡선에 <strong>두 개의 절벽</strong>이 존재한다 — "오일 처리" 단계와 "로켓 빌드" 단계. 이 구간에서 게임 내 안내 없이 외부 리소스(위키)를 강요받는 구조가 이탈을 유발한다. 러시아어 부정 리뷰에서도 "처음 5시간 조작법 이해 불가, 친구 없었으면 환불"이라는 증언이 등장하며, 온보딩의 구조적 약점을 확인한다.
+    </p>
+
+    <div class="card-title">B. 세션 종료 지점의 부재</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"Factorio is a masterclass in catchy gameplay loops, I just don't think that's a good thing. It grabs your attention effortlessly and does nothing with it but eat up your time."</div>
+      <div class="quote-meta">english · 부정 리뷰</div>
+    </div>
+    <div class="quote-block negative">
+      <div class="quote-text">"А как остановиться?"</div>
+      <div class="quote-meta">russian · 4,326.0h · 긍정 리뷰이나 역설적 불만</div>
+      <div class="quote-translation">"어떻게 멈추지?"</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      자연스러운 "쉬어가기 지점(natural stopping point)"이 설계에 거의 없다. 항상 다음 해결할 병목이 존재하는 구조가 무한 세션을 유발하며, EN 부정 12/56(21%), RU 긍정 30~35/200(15~17%)에서 중독/시간 블랙홀 패턴이 나타난다. 리텐션 지표로는 성공이지만, "삶의 파괴자"라는 평판이 잠재적 구매자를 주저하게 만들 수 있다.
+    </p>
+
+    <div class="card-title">C. Space Age DLC 밸런스 불만</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"Space Age did ruin it for me. It added a complexity that is no fun for me anymore."</div>
+      <div class="quote-meta">english · 부정 리뷰 · 7/56건</div>
+    </div>
+    <div class="quote-block negative">
+      <div class="quote-text">"Они отобрали арту — чтобы изучить и построить артилерию — нужно лететь на другую планету."</div>
+      <div class="quote-meta">russian · 부정 리뷰</div>
+      <div class="quote-translation">포병을 연구하려면 다른 행성으로 날아가야 하게 만들어, 기존 기능을 빼앗아갔다.</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      DLC가 기존 바닐라 콘텐츠를 후향적으로 "잠금 처리"하고 행성 이동을 강제하는 구조에 대한 반발. 특히 Gleba 행성의 유기물 부패 메커니즘이 Factorio 핵심 루프(축적과 최적화)와 긴장 관계에 있다. 2,000시간 유저가 "Gleba만은 싫다"고 콕 집어 말하는 것은 코어 팬의 기대와 DLC 방향성 간의 구조적 괴리를 시사한다.
+    </p>
+
+    <div class="card-title">D. 가격 정책 항의 (특히 러시아어권)</div>
+    <div class="quote-block negative">
+      <div class="quote-text">"Game never goes on sale, need to pay an additional 35 to play with my friends who have the DLC."</div>
+      <div class="quote-meta">english · 부정 리뷰 · 14/56건(25%)</div>
+    </div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8;margin:1rem 0">
+      영어 부정 리뷰의 <strong>25%</strong>가 가격 정책(무할인 + DLC 가격 = 본편 가격)을 지적한다. 러시아어에서는 지역 가격 20배 인상에 대한 정치적 항의가 부정 리뷰의 31%를 차지하여, 게임 품질과 무관한 리뷰가 평점을 오염시키고 있다. 다만 CheapShark 데이터에서 최저가 $19.99(2016년 EA 시절)로, 정가 $35 대비 할인 이력이 극히 제한적임을 확인.
+    </p>
+  </div>
+
+  <!-- 문화권별 차이 -->
+  <div class="card fade-up">
+    <div class="card-label">문화권별 차이</div>
+    <div class="grid-3" style="margin-top:1rem">
+      <div class="sys-card">
+        <strong>영어권: 반어적 추천</strong>
+        <p>"Do NOT play this game" 형태의 역설적 부정 리뷰가 밈으로 정착. "autism simulator"라는 자기 동일시 표현도 약 10건 등장</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>러시아어권: 산업 노동 동일시</strong>
+        <p>"공장에서 퇴근하고 와서 공장을 짓는다" 밈. 소비에트 산업화 레퍼런스와 정치적 항의 리뷰가 독특한 문화적 층위를 형성</p>
+      </div>
+      <div class="sys-card">
+        <strong>독일어권: 엔지니어 정밀 분석</strong>
+        <p>산업 공학 용어로 게임 루프를 묘사. "법률 보호 보험부터 가입하라"는 독일 특유의 건조한 제도 유머</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━ STEP 04: 삼각 검증 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 04</span>
+    <h2 class="section-title">삼각 검증 — Triangulation</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="fade-up" style="overflow-x:auto">
+    <table class="tri-table">
+      <thead>
+        <tr>
+          <th style="width:16%">기획 요소</th>
+          <th style="width:14%">마케팅</th>
+          <th style="width:14%">구현</th>
+          <th style="width:14%">유저 반응</th>
+          <th style="width:11%">판정</th>
+          <th>증거</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>자동화 공장 건설</strong></td>
+          <td>○ "automated factories"</td>
+          <td>○ 핵심 코어루프</td>
+          <td>◎ Automation 태그 1위(4,756)</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">3개 소스(Steam/IGDB/Wikidata) 모두 확인. 유저가 마케팅보다 더 강하게 인식</td>
+        </tr>
+        <tr>
+          <td><strong>자원 관리 & 전략</strong></td>
+          <td>○ "mining resources"</td>
+          <td>○ 기술 트리 + 레시피</td>
+          <td>◎ Resource Mgmt 3위(3,753)</td>
+          <td><span class="verdict success">기획 성공</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">"모든 '부족'이 다음에 해야 할 일을 가리킨다" — 병목의 가시성이 목표 생성 메커니즘으로 작동</td>
+        </tr>
+        <tr>
+          <td><strong>적 전투 & 방어</strong></td>
+          <td>○ "protect from creatures"</td>
+          <td>○ 오염→적 진화</td>
+          <td>△ 태그 미상위. 벌레 피로 불만 존재</td>
+          <td><span class="verdict weakness">실행 미흡</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅 피치의 마지막 문장이지만, 유저는 전투를 핵심이 아닌 "방해 요소"로 인식. 평화 모드 존재가 이를 반증</td>
+        </tr>
+        <tr>
+          <td><strong>모딩 생태계</strong></td>
+          <td>✕ 한 줄 피치 미언급</td>
+          <td>○ 게임 내 모드 브라우저</td>
+          <td>◎ Moddable(1,347), 13K시간 유저</td>
+          <td><span class="verdict hidden">숨은 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">마케팅에서 완전히 빠졌지만 리플레이 가치의 핵심 원천. Angel's/Bob's 등 모드가 사실상 새 게임 제공</td>
+        </tr>
+        <tr>
+          <td><strong>열차 시스템</strong></td>
+          <td>✕ 미언급</td>
+          <td>○ 시그널 + 스케줄링</td>
+          <td>◎ Trains 태그(1,296) 독립 존재</td>
+          <td><span class="verdict hidden">숨은 강점</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">별도 태그까지 생성될 만큼 유저에게 독립적 서브 게임으로 인식. 멀티에서 "레일 신호 때문에 이혼" 밈</td>
+        </tr>
+        <tr>
+          <td><strong>멀티플레이어</strong></td>
+          <td>✕ 미언급</td>
+          <td>○ 동기 협동 구현</td>
+          <td>△ 2,171표이나 갈등 유발</td>
+          <td><span class="verdict marketing">양면적</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">협력이 가능하나 "버스 설계 철학 차이로 30분 내 수동공격적 논쟁" — 공유 인프라의 구조적 갈등</td>
+        </tr>
+        <tr>
+          <td><strong>최적화 강박</strong></td>
+          <td>✕ 미언급</td>
+          <td>○ 시각적 병목 피드백</td>
+          <td>◎ EN 20/200, 약물 은유 문화횡단</td>
+          <td><span class="verdict emergent">커뮤니티 창발</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">"게임이 시키지 않아도" 유저가 자발적으로 최적화. 현실 사고방식 전이까지 발생</td>
+        </tr>
+        <tr>
+          <td><strong>"The Factory Must Grow" 밈</strong></td>
+          <td>✕ 미언급</td>
+          <td>△ 직접 구현 아님</td>
+          <td>◎ 3개 언어 독립 자생</td>
+          <td><span class="verdict emergent">커뮤니티 창발</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">시스템 구조가 만들어낸 집단 만트라. 개발사가 의도하지 않은 마케팅 자산</td>
+        </tr>
+        <tr>
+          <td><strong>Space Age DLC</strong></td>
+          <td>○ (DLC 마케팅)</td>
+          <td>○ 다행성 물류</td>
+          <td>△ Gleba 부패 메커니즘 호불호</td>
+          <td><span class="verdict weakness">실행 미흡</span></td>
+          <td style="font-size:.78rem;color:var(--text-dim)">코어 루프(축적/최적화)와 부패(시간제한) 메커니즘의 구조적 긴장. 기존 콘텐츠 잠금에 대한 반발</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ━━━ STEP 05: 비즈니스 ━━━ -->
+<section>
+  <div class="section-header fade-up">
+    <span class="section-num">STEP 05</span>
+    <h2 class="section-title">비즈니스 구조</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-3 fade-up">
+    <div class="card biz-stat">
+      <div class="card-label">추정 매출</div>
+      <div class="biz-num gold">$175M~$350M</div>
+      <div class="biz-calc">5~10M owners × $35 × Steam 70%</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="card-label">가격당 플레이타임</div>
+      <div class="biz-num green">5.05h/$</div>
+      <div class="biz-calc">176.9h ÷ $35.00</div>
+    </div>
+    <div class="card biz-stat">
+      <div class="card-label">수익 모델</div>
+      <div class="biz-num purple">EA→풀가+DLC</div>
+      <div class="biz-calc">무할인 정가 + Space Age $35</div>
+    </div>
+  </div>
+
+  <!-- Twitch -->
+  <div class="card fade-up">
+    <div class="card-title">Twitch 스트리밍 (2026-03-18 스냅샷)</div>
+    <div class="grid-3" style="margin:1rem 0">
+      <div class="sys-card">
+        <strong>51 채널 라이브</strong>
+        <p>1,151명 시청 중. 채널당 평균 22.6명 — 소규모 커뮤니티 중심 스트리밍</p>
+      </div>
+      <div class="sys-card">
+        <strong>Top: en(24), ru(10), de(5)</strong>
+        <p>리뷰 언어 분포와 일치. 스트리밍도 3개 핵심 시장이 지배</p>
+      </div>
+      <div class="sys-card alt">
+        <strong>"Watchability" 보통</strong>
+        <p>자동화 과정은 시청보다 직접 플레이가 매력적. 상위 스트리머 1인 집중 구조가 아님</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CheapShark -->
+  <div class="card fade-up">
+    <div class="card-title">가격 전략 분석</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      CheapShark 최저가 <strong>$19.99</strong>(2016-02-25, Early Access 시절). 현재 정가 $35 대비 43% 낮은 가격이 존재했으나 정식 출시 이후 <strong>단 한 번도 할인한 적 없다</strong>. Deal Rating 0.0은 현재 할인이 전혀 없다는 의미. 이 "무할인 정책"은 부정 리뷰의 주요 원인(EN 25%, RU 31%)이면서도, 동시에 "이 가격이 정당하다"는 팬 옹호를 만들어내는 양면적 전략이다. $35 × 5.05h/$ = 달러당 5시간이라는 압도적 가성비가 이 전략을 지탱한다.
+    </p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-title">수익 확장 가능성</div>
+    <p style="color:var(--text-dim);font-size:.88rem;line-height:1.8">
+      <strong>1. DLC 확장</strong>: Space Age($35)가 이미 본편과 동일 가격으로 출시되어, 향후 DLC도 프리미엄 가격이 가능한 선례를 만들었다. 다만 "기존 콘텐츠 잠금" 방식에 대한 반발 관리가 필요하다.<br>
+      <strong>2. 모딩 마켓플레이스</strong>: 현재 무료 모드 생태계가 리플레이 가치의 핵심이나, Paradox 모델처럼 유료 모드 마켓으로의 전환 가능성은 낮다 — 무료 모딩이 Factorio의 핵심 정체성이자 경쟁 해자이기 때문.<br>
+      <strong>3. 콘솔 포팅</strong>: Nintendo Switch 버전이 이미 출시되어 있으며, 컨트롤러 지원(PCGamingWiki 미확인이나 Switch 존재)으로 새로운 시장 접근 가능.<br>
+      <strong>4. 교육 시장</strong>: "프로그래밍 사고를 가르친다"는 리뷰 패턴(RU 프로그래머 15~20/200)이 시사하는 교육용 라이선스 가능성.
+    </p>
+  </div>
+</section>
+
+<!-- ━━━ 결론 ━━━ -->
+<section class="conclusion">
+  <div class="conclusion-text fade-up">
+    Factorio가 98.3%라는 경이적 긍정률을 달성한 이유는,<br>
+    <strong>"부족"이라는 피드백 하나로</strong><br>
+    다음 행동을 스스로 생성하는 <strong>자기 증식 목표 구조</strong>를 만들었기 때문이다.<br>
+    <em>최적화의 쾌감</em>과 <em>확장의 시각적 보상</em>이<br>
+    하나의 루프에서 교차하며,<br>
+    "The Factory Must Grow"라는 <strong>자생적 집단 만트라</strong>를<br>
+    3개 대륙에서 독립적으로 탄생시켰다.
+  </div>
+  <p style="position:relative;font-size:.82rem;color:var(--text-faint);max-width:700px;margin:1.5rem auto 0;text-align:center;line-height:1.8">
+    태그 데이터가 이를 증명한다: Automation(4,756) + Base-Building(4,387) + Resource Management(3,753) — 세 축이 거의 대등한 규모로 공존하며 어느 하나의 정체성으로 환원되지 않는 <strong>다축 설계</strong>가 핵심이다. 50-100시간대 긍정률 99.0%, 100시간+ 리뷰어 비율 55%는 "한 번 빠지면 빠져나올 수 없는" 루프 설계의 직접적 증거이며, 모딩 생태계(Moddable 1,347)가 이 루프를 무한으로 확장한다.
+  </p>
+</section>
+
+</div>
+
+<footer class="footer">
+  <p>Steam Game Insight Report &middot; Generated 2026-03-20 &middot; Data: SteamSpy + Steam Reviews API + IGDB + RAWG + HLTB + CheapShark + Twitch + Wikidata &middot; 10,001 reviews analyzed</p>
+  <details style="margin-top:.8rem;font-size:.78rem;color:var(--text-faint)">
+    <summary>에이전트 분석 상세 (6개 에이전트, 총 ~176K 토큰)</summary>
+    <table style="width:100%;margin-top:.5rem;font-size:.75rem;border-collapse:collapse;color:var(--text-faint)">
+      <tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:.3rem .5rem">에이전트</th>
+        <th style="text-align:left;padding:.3rem .5rem">모델</th>
+        <th style="text-align:left;padding:.3rem .5rem">구역</th>
+        <th style="text-align:left;padding:.3rem .5rem">리뷰수</th>
+        <th style="text-align:left;padding:.3rem .5rem">입력≈</th>
+        <th style="text-align:left;padding:.3rem .5rem">출력≈</th>
+        <th style="text-align:left;padding:.3rem .5rem">핵심 발견</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.3rem .5rem">Main-Deep</td>
+        <td style="padding:.3rem .5rem">opus</td>
+        <td style="padding:.3rem .5rem">TOP 100</td>
+        <td style="padding:.3rem .5rem">100</td>
+        <td style="padding:.3rem .5rem">~13K</td>
+        <td style="padding:.3rem .5rem">~5K</td>
+        <td style="padding:.3rem .5rem">기획성공 5, 약점 5, 인용후보 10, 코어루프 3</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.3rem .5rem">EN-Positive</td>
+        <td style="padding:.3rem .5rem">sonnet</td>
+        <td style="padding:.3rem .5rem">english·긍정</td>
+        <td style="padding:.3rem .5rem">200</td>
+        <td style="padding:.3rem .5rem">~11K</td>
+        <td style="padding:.3rem .5rem">~4K</td>
+        <td style="padding:.3rem .5rem">패턴 5, 특이점 2, 루프증거 2</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.3rem .5rem">EN-Negative</td>
+        <td style="padding:.3rem .5rem">sonnet</td>
+        <td style="padding:.3rem .5rem">english·부정</td>
+        <td style="padding:.3rem .5rem">56</td>
+        <td style="padding:.3rem .5rem">~6K</td>
+        <td style="padding:.3rem .5rem">~3K</td>
+        <td style="padding:.3rem .5rem">패턴 5, 가격 25%, 오일절벽 16%</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.3rem .5rem">RU-Positive</td>
+        <td style="padding:.3rem .5rem">sonnet</td>
+        <td style="padding:.3rem .5rem">russian·긍정</td>
+        <td style="padding:.3rem .5rem">200</td>
+        <td style="padding:.3rem .5rem">~12K</td>
+        <td style="padding:.3rem .5rem">~4K</td>
+        <td style="padding:.3rem .5rem">패턴 5, 소비에트 레퍼런스, 프로그래머 공명</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.03)">
+        <td style="padding:.3rem .5rem">RU-Negative</td>
+        <td style="padding:.3rem .5rem">sonnet</td>
+        <td style="padding:.3rem .5rem">russian·부정</td>
+        <td style="padding:.3rem .5rem">26</td>
+        <td style="padding:.3rem .5rem">~6K</td>
+        <td style="padding:.3rem .5rem">~3K</td>
+        <td style="padding:.3rem .5rem">정치항의 31%, DLC불만 15%, 온보딩실패 19%</td>
+      </tr>
+      <tr>
+        <td style="padding:.3rem .5rem">DE-Positive</td>
+        <td style="padding:.3rem .5rem">sonnet</td>
+        <td style="padding:.3rem .5rem">german·긍정</td>
+        <td style="padding:.3rem .5rem">200</td>
+        <td style="padding:.3rem .5rem">~11K</td>
+        <td style="padding:.3rem .5rem">~4K</td>
+        <td style="padding:.3rem .5rem">Cracktorio 밈, 엔지니어 정체성, 중독은유 55%</td>
+      </tr>
+    </table>
+  </details>
+</footer>
+
+</body>
+</html>

@@ -2,7 +2,12 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from rich.console import Console
 
@@ -15,10 +20,26 @@ from steam_crawler.api.resilience import FailureTracker
 from steam_crawler.api.steam_reviews import SteamReviewsClient
 from steam_crawler.api.steam_store import SteamStoreClient
 from steam_crawler.api.steamspy import SteamSpyClient
-from steam_crawler.db.repository import create_version, update_version_status
+from steam_crawler.db.repository import (
+    acquire_crawl_lock,
+    cleanup_expired_locks,
+    create_version,
+    get_games_by_version,
+    release_crawl_lock,
+    update_version_status,
+    validate_source_tags,
+)
 from steam_crawler.pipeline.step1_collect import run_step1
 from steam_crawler.pipeline.step1b_enrich import run_step1b
 from steam_crawler.pipeline.step1c_store import run_step1c
+from steam_crawler.pipeline.step1d_igdb import run_step1d
+from steam_crawler.pipeline.step1e_rawg import run_step1e
+from steam_crawler.pipeline.step1f_twitch import run_step1f
+from steam_crawler.pipeline.step1h_hltb import run_step1h
+from steam_crawler.pipeline.step1i_cheapshark import run_step1i
+from steam_crawler.pipeline.step1j_opencritic import run_step1j
+from steam_crawler.pipeline.step1k_pcgamingwiki import run_step1k
+from steam_crawler.pipeline.step1l_wikidata import run_step1l
 from steam_crawler.pipeline.step2_scan import run_step2
 from steam_crawler.pipeline.step3_crawl import run_step3
 
@@ -38,18 +59,19 @@ def run_pipeline(
     query_value: str | None = None,
     limit: int = 50,
     top_n: int = 10,
-    max_reviews: int = 500,
+    max_reviews: int = 1000,
     language: str = "all",
     review_type: str = "all",
     step: int | None = None,
     resume: bool = False,
     note: str | None = None,
+    appids: list[int] | None = None,
 ) -> None:
     """Run the full pipeline or a single step.
 
     Args:
         conn: Database connection.
-        query_type: One of "tag", "genre", "top100".
+        query_type: One of "tag", "genre", "top100", "appids".
         query_value: The tag/genre name (not needed for top100).
         limit: Max games to collect in step 1.
         top_n: Number of top games to crawl reviews for in step 3.
@@ -59,6 +81,7 @@ def run_pipeline(
         step: If set, only run this step (1, 2, or 3).
         resume: If True, resume the last interrupted version.
         note: Optional note for the version.
+        appids: If set, restrict step 3 to these specific app IDs.
     """
     tracker = FailureTracker()
 
@@ -123,12 +146,19 @@ def run_pipeline(
         )
 
     source_tag = build_source_tag(query_type, query_value)
+    lock_owner = f"pipeline:{version}"
     console.print(
         f"[bold]Pipeline v{version} started[/bold] ({query_type}:{query_value or ''})"
     )
 
+    # Clean up any expired locks from crashed sessions
+    expired = cleanup_expired_locks(conn)
+    if expired:
+        console.print(f"[dim]Cleaned up {expired} expired crawl lock(s)[/dim]")
+
     games_total = 0
     reviews_total = 0
+    locked_appids: list[int] = []
 
     try:
         if step is None or step == 1:
@@ -140,12 +170,99 @@ def run_pipeline(
                 version,
                 steamspy_client=spy_client,
             )
+
+            # Acquire per-game locks after step1 discovers games
+            all_games = get_games_by_version(conn, source_tag=source_tag)
+            skipped = 0
+            for g in all_games:
+                if acquire_crawl_lock(conn, g["appid"], owner=lock_owner):
+                    locked_appids.append(g["appid"])
+                else:
+                    skipped += 1
+            if skipped:
+                console.print(
+                    f"[yellow]{skipped} game(s) skipped — already being crawled by another process[/yellow]"
+                )
+
             run_step1b(
-                conn, version, source_tag=source_tag, steamspy_client=spy_client
+                conn, version, source_tag=source_tag, steamspy_client=spy_client,
+                lock_owner=lock_owner,
             )
+
+            # Validate source_tag against actual tags after enrichment
+            mismatched = validate_source_tags(conn, source_tag=source_tag)
+            if mismatched:
+                console.print(
+                    f"[yellow]Source tag validation: {len(mismatched)} games don't match '{source_tag}'[/yellow]"
+                )
+                for g in mismatched:
+                    tracker.log_failure(
+                        conn=conn, session_id=version, api_name="source_tag_validation",
+                        appid=g["appid"], step="step1b_validate",
+                        error_type="data_quality",
+                        error_message=f"Game '{g['name']}' lacks expected tag from {source_tag}",
+                    )
+                    console.print(f"  [dim]- {g['name']} (appid={g['appid']})[/dim]")
+
             run_step1c(
                 conn, version, source_tag=source_tag, store_client=store_client,
-                failure_tracker=tracker,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1d: IGDB enrichment (optional, needs env vars)
+            igdb_cid = os.environ.get("TWITCH_CLIENT_ID") or None
+            igdb_csec = os.environ.get("TWITCH_CLIENT_SECRET") or None
+            run_step1d(
+                conn, version, source_tag=source_tag,
+                client_id=igdb_cid, client_secret=igdb_csec,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1e: RAWG enrichment (optional, needs env var)
+            rawg_key = os.environ.get("RAWG_API_KEY") or None
+            run_step1e(
+                conn, version, source_tag=source_tag,
+                api_key=rawg_key,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1f: Twitch streaming data (optional, uses same Twitch creds as IGDB)
+            run_step1f(
+                conn, version, source_tag=source_tag,
+                client_id=igdb_cid, client_secret=igdb_csec,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1h: HowLongToBeat completion times (no auth needed)
+            run_step1h(
+                conn, version, source_tag=source_tag,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1i: CheapShark deal/price data (no auth needed)
+            run_step1i(
+                conn, version, source_tag=source_tag,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1j: OpenCritic critic scores (optional, needs RAPIDAPI_KEY)
+            rapidapi_key = os.environ.get("RAPIDAPI_KEY") or None
+            run_step1j(
+                conn, version, source_tag=source_tag,
+                rapidapi_key=rapidapi_key,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1k: PCGamingWiki technical data (no auth needed)
+            run_step1k(
+                conn, version, source_tag=source_tag,
+                failure_tracker=tracker, lock_owner=lock_owner,
+            )
+
+            # Step 1l: Wikidata structured design data (no auth needed)
+            run_step1l(
+                conn, version, source_tag=source_tag,
+                failure_tracker=tracker, lock_owner=lock_owner,
             )
         if step is None or step == 2:
             run_step2(
@@ -154,6 +271,7 @@ def run_pipeline(
                 source_tag=source_tag,
                 reviews_client=rev_client,
                 failure_tracker=tracker,
+                lock_owner=lock_owner,
             )
         if step is None or step == 3:
             reviews_total = run_step3(
@@ -165,6 +283,8 @@ def run_pipeline(
                 language=language,
                 review_type=review_type,
                 reviews_client=rev_client,
+                lock_owner=lock_owner,
+                appids=appids,
             )
 
         update_version_status(
@@ -198,6 +318,10 @@ def run_pipeline(
         console.print(f"[red]Pipeline v{version} failed: {e}[/red]")
         raise
     finally:
+        # Release all locks held by this pipeline
+        for appid in locked_appids:
+            release_crawl_lock(conn, appid)
+
         save_rate_stats(conn, spy_limiter, session_id=version)
         save_rate_stats(conn, rev_limiter, session_id=version)
         save_rate_stats(conn, store_limiter, session_id=version)

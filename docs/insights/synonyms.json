@@ -1,0 +1,249 @@
+{
+  "생존": [
+    "Survival"
+  ],
+  "로그라이크": [
+    "Roguelike",
+    "Rogue-lite",
+    "Action Roguelike"
+  ],
+  "로그라이트": [
+    "Rogue-lite",
+    "Roguelike"
+  ],
+  "경영": [
+    "Management",
+    "Simulation"
+  ],
+  "시뮬레이션": [
+    "Simulation"
+  ],
+  "농사": [
+    "Farming Sim",
+    "Agriculture"
+  ],
+  "액션": [
+    "Action",
+    "Hack and Slash"
+  ],
+  "인디": [
+    "Indie"
+  ],
+  "오픈월드": [
+    "Open World"
+  ],
+  "멀티": [
+    "Multiplayer",
+    "Co-op"
+  ],
+  "협동": [
+    "Co-op",
+    "Multiplayer"
+  ],
+  "싱글": [
+    "Singleplayer"
+  ],
+  "전략": [
+    "Strategy"
+  ],
+  "퍼즐": [
+    "Puzzle"
+  ],
+  "공포": [
+    "Horror"
+  ],
+  "어드벤처": [
+    "Adventure"
+  ],
+  "플랫포머": [
+    "Platformer"
+  ],
+  "샌드박스": [
+    "Sandbox"
+  ],
+  "크래프팅": [
+    "Crafting"
+  ],
+  "건설": [
+    "Building",
+    "Base Building"
+  ],
+  "카드": [
+    "Card Game",
+    "TCG"
+  ],
+  "턴제": [
+    "Turn-Based"
+  ],
+  "실시간": [
+    "Real-Time"
+  ],
+  "소울라이크": [
+    "Souls-like"
+  ],
+  "메트로배니아": [
+    "Metroidvania"
+  ],
+  "타워디펜스": [
+    "Tower Defense"
+  ],
+  "슈팅": [
+    "Shooter",
+    "FPS",
+    "TPS"
+  ],
+  "격투": [
+    "Fighting"
+  ],
+  "레이싱": [
+    "Racing"
+  ],
+  "스포츠": [
+    "Sports"
+  ],
+  "음악": [
+    "Rhythm",
+    "Music"
+  ],
+  "비주얼노벨": [
+    "Visual Novel"
+  ],
+  "연애": [
+    "Dating Sim",
+    "Romance"
+  ],
+  "요리": [
+    "Cooking"
+  ],
+  "낚시": [
+    "Fishing"
+  ],
+  "탐험": [
+    "Exploration"
+  ],
+  "스텔스": [
+    "Stealth"
+  ],
+  "좀비": [
+    "Zombies"
+  ],
+  "우주": [
+    "Space"
+  ],
+  "중세": [
+    "Medieval"
+  ],
+  "판타지": [
+    "Fantasy"
+  ],
+  "SF": [
+    "Sci-fi"
+  ],
+  "디펜스": [
+    "Tower Defense",
+    "Defense"
+  ],
+  "로봇": [
+    "Robots",
+    "Mechs"
+  ],
+  "해적": [
+    "Pirates"
+  ],
+  "뱀파이어": [
+    "Vampire"
+  ],
+  "마법": [
+    "Magic"
+  ],
+  "게리 모드": [
+    "Garry's Mod"
+  ],
+  "그랜드 테프트 오토 IV": [
+    "Grand Theft Auto IV: The Complete Edition"
+  ],
+  "프로젝트 좀보이드": [
+    "Project Zomboid"
+  ],
+  "더 워킹 데드": [
+    "The Walking Dead"
+  ],
+  "유로 트럭 시뮬레이터 2": [
+    "Euro Truck Simulator 2"
+  ],
+  "워 썬더": [
+    "War Thunder"
+  ],
+  "더 포레스트": [
+    "The Forest"
+  ],
+  "세븐 데이즈 투 다이": [
+    "7 Days to Die"
+  ],
+  "시티즈: 스카이라인": [
+    "Cities: Skylines"
+  ],
+  "마운트 앤 블레이드 2: 배너로드": [
+    "Mount & Blade II: Bannerlord"
+  ],
+  "빔엔지 드라이브": [
+    "BeamNG.drive"
+  ],
+  "림월드": [
+    "RimWorld"
+  ],
+  "다크 소울 3": [
+    "DARK SOULS III"
+  ],
+  "하츠 오브 아이언 4": [
+    "Hearts of Iron IV"
+  ],
+  "스타듀 밸리": [
+    "Stardew Valley"
+  ],
+  "휴먼: 폴 플랫": [
+    "Human Fall Flat"
+  ],
+  "새티스팩토리": [
+    "Satisfactory"
+  ],
+  "KARDS - 제2차 세계 대전 카드 게임": [
+    "KARDS - The WWII Card Game"
+  ],
+  "하우스 플리퍼": [
+    "House Flipper"
+  ],
+  "PC 제작 시뮬레이터": [
+    "PC Building Simulator"
+  ],
+  "래프트": [
+    "Raft"
+  ],
+  "두근두근 문예부!": [
+    "Doki Doki Literature Club!"
+  ],
+  "당구 2D - Poolians": [
+    "Pool 2D - Poolians"
+  ],
+  "페르소나4 더 골든": [
+    "Persona 4 Golden"
+  ],
+  "하데스": [
+    "Hades"
+  ],
+  "헬테이커": [
+    "Helltaker"
+  ],
+  "선즈 오브 더 포레스트": [
+    "Sons Of The Forest"
+  ],
+  "팰월드": [
+    "Palworld"
+  ],
+  "페르소나 5 더 로열": [
+    "Persona 5 Royal"
+  ],
+  "옛날 재래시장 시뮬레이터": [
+    "Old Market Simulator"
+  ]
+}
