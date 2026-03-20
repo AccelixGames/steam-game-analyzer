@@ -309,10 +309,10 @@ def build_reports_json(
                     ).fetchone()
                     if row and row[0] and row[0].strip():
                         entry["name_ko"] = row[0].strip()
-                # Fill review_count from DB if missing
+                # Fill review_count from Steam total (not crawled sample)
                 if entry.get("review_count") is None:
                     row = conn.execute(
-                        "SELECT count(*) FROM reviews WHERE appid = ?",
+                        "SELECT COALESCE(steam_positive, 0) + COALESCE(steam_negative, 0) FROM games WHERE appid = ?",
                         (appid,),
                     ).fetchone()
                     if row and row[0]:

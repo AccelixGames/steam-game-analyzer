@@ -260,16 +260,40 @@
   }
   .card-date-badge {
     position: absolute;
-    top: 6px;
+    bottom: 4px;
     left: 6px;
-    background: rgba(0,0,0,0.7);
-    color: var(--text-dim);
-    font-size: 9px;
+    background: rgba(0,0,0,0.5);
+    color: var(--text-faint);
+    font-size: 8px;
     font-family: 'JetBrains Mono', monospace;
-    padding: 2px 7px;
-    border-radius: 4px;
+    padding: 1px 6px;
+    border-radius: 3px;
     backdrop-filter: blur(4px);
     z-index: 1;
+    opacity: 0.7;
+  }
+  .card-status-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 2;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+  .card-status-badge.unread {
+    background: #4c94f0;
+    color: #fff;
+    box-shadow: 0 0 8px rgba(76, 148, 240, 0.6), 0 0 2px rgba(76, 148, 240, 0.8);
+  }
+  .card-status-badge.updated {
+    background: #f0c040;
+    color: #1a1d2a;
+    box-shadow: 0 0 8px rgba(240, 192, 64, 0.6), 0 0 2px rgba(240, 192, 64, 0.8);
   }
   .card-img-fallback {
     width: 100%;
@@ -523,6 +547,39 @@
     if (rate >= 90) return 'green';
     if (rate >= 70) return 'gold';
     return 'red';
+  }
+
+  // ── Read Status Tracking ──
+  var STORAGE_KEY = 'steam-insight-read';
+
+  function getReadStore() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function getReadStatus(slug, currentHash) {
+    var store = getReadStore();
+    if (!store[slug]) return 'unread';
+    if (store[slug] !== currentHash) return 'updated';
+    return null;
+  }
+
+  function markAsRead(slug, hash) {
+    var store = getReadStore();
+    store[slug] = hash;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    } catch (e) { /* quota exceeded — silent */ }
+  }
+
+  function formatDateBadge(dateStr) {
+    if (!dateStr) return '';
+    var parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    return 'UpdatedAt ' + parts[0].slice(2) + '.' + parts[1] + '.' + parts[2];
   }
 
   // ── Data Loading ──
@@ -931,11 +988,28 @@
     if (report.modified || report.date) {
       var dateBadge = document.createElement('div');
       dateBadge.className = 'card-date-badge';
-      dateBadge.textContent = report.modified || report.date;
+      dateBadge.textContent = formatDateBadge(report.modified || report.date);
       imgWrap.appendChild(dateBadge);
     }
 
+    // Status badge (top-right)
+    var fileHash = report._file_hash || '';
+    var status = getReadStatus(report.slug, fileHash);
+    if (status) {
+      var statusBadge = document.createElement('div');
+      statusBadge.className = 'card-status-badge ' + status;
+      statusBadge.textContent = status === 'unread' ? 'UNREAD' : 'UPDATED';
+      imgWrap.appendChild(statusBadge);
+    }
+
     a.appendChild(imgWrap);
+
+    // Mark as read on click
+    a.addEventListener('click', function() {
+      markAsRead(report.slug, fileHash);
+      var badge = imgWrap.querySelector('.card-status-badge');
+      if (badge) badge.remove();
+    });
 
     // Body
     var body = document.createElement('div');
