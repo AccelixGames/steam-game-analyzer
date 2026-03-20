@@ -256,6 +256,25 @@ CREATE TABLE IF NOT EXISTS game_wikidata_claims (
 CREATE INDEX IF NOT EXISTS idx_wdc_appid ON game_wikidata_claims(appid);
 CREATE INDEX IF NOT EXISTS idx_wdc_type ON game_wikidata_claims(claim_type);
 CREATE INDEX IF NOT EXISTS idx_wdc_name ON game_wikidata_claims(name);
+
+CREATE TABLE IF NOT EXISTS skill_errors (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    skill_name      TEXT NOT NULL,
+    error_type      TEXT NOT NULL,
+    error_message   TEXT NOT NULL,
+    traceback       TEXT,
+    command         TEXT,
+    context         TEXT,
+    fix_applied     TEXT,
+    resolved        INTEGER DEFAULT 0,
+    resolution      TEXT,
+    created_at      TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_skill_errors_unresolved
+    ON skill_errors(resolved) WHERE resolved = 0;
+CREATE INDEX IF NOT EXISTS idx_skill_errors_skill
+    ON skill_errors(skill_name);
 """
 
 VIEWS_SQL = """
