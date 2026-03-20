@@ -518,7 +518,7 @@
 
   var selectedGenres = new Set();
   var selectedTags = new Set();
-  var currentSort = 'positive_rate';
+  var currentSort = 'modified';
 
   var sortOptions = [
     { key: 'positive_rate', label: '긍정률순' },
@@ -580,9 +580,14 @@
 
   function formatDateBadge(dateStr) {
     if (!dateStr) return '';
-    var parts = dateStr.split('-');
+    // Handle "2026-03-20 14:30" or "2026-03-20"
+    var datePart = dateStr.slice(0, 10);
+    var timePart = dateStr.length > 10 ? dateStr.slice(11, 16) : '';
+    var parts = datePart.split('-');
     if (parts.length !== 3) return dateStr;
-    return 'UpdatedAt ' + parts[0].slice(2) + '.' + parts[1] + '.' + parts[2];
+    var result = 'UpdatedAt: ' + parts[0].slice(2) + '.' + parts[1] + '.' + parts[2];
+    if (timePart) result += ' ' + timePart;
+    return result;
   }
 
   // ── Data Loading ──
@@ -949,7 +954,7 @@
     // Reset sort selection
     var sortLabels = sortPanel.querySelectorAll('label');
     for (var j = 0; j < sortLabels.length; j++) {
-      sortLabels[j].className = sortLabels[j].dataset.sort === 'positive_rate' ? 'selected' : '';
+      sortLabels[j].className = sortLabels[j].dataset.sort === 'modified' ? 'selected' : '';
     }
 
     updateDropdownBtnState('genreDropdown', false);

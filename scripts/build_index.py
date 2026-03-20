@@ -281,13 +281,12 @@ def build_reports_json(
             entry["_file_hash"] = h
             parsed.append((html_path.stat().st_mtime, entry))
 
-    # Fill missing date/modified from file mtime
+    # Always use file mtime for modified (includes time for sorting precision)
+    from datetime import datetime, timezone
     for mtime, entry in parsed:
-        if not entry.get("modified"):
-            from datetime import datetime, timezone
-            entry["modified"] = datetime.fromtimestamp(mtime, tz=timezone.utc).strftime("%Y-%m-%d")
+        entry["modified"] = datetime.fromtimestamp(mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M")
         if not entry.get("date"):
-            entry["date"] = entry.get("modified")
+            entry["date"] = entry["modified"][:10]
 
     # Enrich entries with missing tags/genres/header_image from DB
     if db_path is not None and Path(db_path).exists():
