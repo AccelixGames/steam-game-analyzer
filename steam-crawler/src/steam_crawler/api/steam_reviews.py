@@ -21,6 +21,7 @@ class SteamReviewsClient:
         response = self._client.get(
             f"{REVIEWS_BASE}/{appid}",
             params={"json": "1", "cursor": "*", "filter": "all",
+                    "language": "all",
                     "purchase_type": "all", "num_per_page": "0"},
         )
         response.raise_for_status()
